@@ -57,7 +57,7 @@ target_include_directories(
 add_subdirectory(src)
 add_subdirectory(include)
 
-target_link_libraries(libgit libgit2::libgit2package)
+target_link_libraries(libgit libgit2)
 set_property(TARGET libgit PROPERTY CXX_STANDARD 17)
 
 if(BUILD_TESTS)

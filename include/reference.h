@@ -4,6 +4,7 @@
 #include <git2/refs.h>
 #include <memory>
 #include <string>
+#include <optional>
 
 class Reference {
 
