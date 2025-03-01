@@ -1,4 +1,3 @@
-find_package(GTest)
 include(GoogleTest)
 
 set(target_test ${PROJECT_NAME}-test)

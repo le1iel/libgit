@@ -23,8 +23,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 message("${PROJECT_NAME}")
 
 include(cmake/options.cmake)
-
-find_package(libgit2)
+include(cmake/deps.cmake)
 
 add_library(libgit SHARED)
 
@@ -33,7 +32,6 @@ set_target_properties(
     PROPERTIES VERSION ${PROJECT_VERSION}
                SOVERSION ${PROJECT_VERSION_MAJOR}
 )
-
 target_include_directories(
     libgit
     PRIVATE src
