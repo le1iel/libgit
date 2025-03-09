@@ -1,4 +1,4 @@
-target_sources(libgit 
+target_sources(${PROJECT_NAME} 
     PRIVATE 
         repository.cpp
         reference.cpp

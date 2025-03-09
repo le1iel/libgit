@@ -1,6 +1,6 @@
 create_test(
     NAME
-    "repository"
+        "repository"
     SRC
-    "${CMAKE_CURRENT_LIST_DIR}/repository.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/repository.cpp"
 )

@@ -6,19 +6,28 @@
 #include <string>
 #include <optional>
 
+#include "object.h"
+
+namespace git {
+
 class Reference {
 
 public:
-
   Reference(git_reference *ptr);
 
   std::string name() const noexcept;
+
   Reference(const Reference &other);
 
-  bool is_branch() const noexcept;
-  bool is_tag() const noexcept;
-  bool is_remote() const noexcept;
-  bool is_note() const noexcept;
+  ~Reference() = default;
+
+  bool isBranch() const noexcept;
+
+  bool isTag() const noexcept;
+
+  bool isNote() const noexcept;
+
+  bool isRemote() const noexcept;
 
   std::string shorthand() const noexcept;
 
@@ -26,7 +35,7 @@ public:
 
   git_reference_t type() const noexcept;
 
-  git_object* peel() const noexcept;
+  Object peel() const noexcept;
 
 private:
   struct GitRefDeletor {
@@ -36,4 +45,5 @@ private:
   std::unique_ptr<git_reference, GitRefDeletor> m_ref;
 };
 
+} // namespace git
 #endif
