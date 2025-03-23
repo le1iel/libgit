@@ -23,10 +23,12 @@ enum class FileStatus {
   Conflicted
 };
 
-class Status {};
-
 class StatusEntry {
   StatusEntry(git_status_entry &entry);
+
+private:
+
+
 };
 
 } // namespace git
