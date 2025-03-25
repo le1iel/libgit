@@ -1,5 +1,7 @@
 target_sources(${PROJECT_NAME} 
     PRIVATE 
-        repository.cpp
+        object.cpp
         reference.cpp
+        repository.cpp
+        # status.cpp
 )

@@ -17,7 +17,7 @@ Repository::Open(std::string_view path) noexcept {
 
 Repository::Repository(std::string_view path, int *resOut) noexcept {
   git_repository *repo = nullptr;
-  auto openRes = git_repository_open(&repo, path.cbegin());
+  int openRes = git_repository_open(&repo, path.cbegin());
 
   if (openRes != 0) {
     *resOut = -1;
@@ -45,6 +45,19 @@ std::string Repository::path() const noexcept {
   }
 
   return path;
+}
+
+std::optional<Reference> Repository::head() const noexcept {
+
+  git_reference *ref = nullptr;
+
+  int res = git_repository_head(&ref, m_repo.get());
+  if (res != 0)
+  {
+      return std::nullopt;
+  }
+
+  return Reference {ref};
 }
 
 }; // namespace git

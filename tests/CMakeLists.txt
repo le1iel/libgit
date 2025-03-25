@@ -6,5 +6,10 @@ add_custom_target(${target_test})
 
 include(cmake/create_test.cmake)
 
-add_subdirectory(unit)
-# add_subdirectory(common)
+# TODO ISSUE #2
+# add_subdirectory(mocks)
+add_subdirectory(common)
+
+# add_subdirectory(unit)
+add_subdirectory(binary)
+
