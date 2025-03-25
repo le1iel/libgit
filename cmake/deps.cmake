@@ -23,7 +23,6 @@ if(NOT libgit2_FOUND)
     cache(BUILD_CLI OFF BOOL)
 
     FetchContent_MakeAvailable(libgit2)
-    add_library(libgit2::libgit2package ALIAS libgit2)
 endif()
 
 if(LIBGIT_BUILD_TESTS)

@@ -64,9 +64,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 add_subdirectory(src)
 add_subdirectory(include)
 
+include(cmake/deps.cmake)
+
 target_link_libraries(libgit PUBLIC libgit2::libgit2package)
 
-include(cmake/deps.cmake)
 set_property(TARGET libgit PROPERTY CXX_STANDARD 17)
 
 if(LIBGIT_BUILD_TESTS)
