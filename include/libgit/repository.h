@@ -11,6 +11,7 @@ namespace git {
 class Repository {
 public:
   /// @brief Open from a path.
+  /// @warning The path shall be null-terminated.
   static std::optional<Repository> Open(std::string_view path) noexcept;
 
   /// @brief Destructor.

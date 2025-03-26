@@ -52,12 +52,11 @@ std::optional<Reference> Repository::head() const noexcept {
   git_reference *ref = nullptr;
 
   int res = git_repository_head(&ref, m_repo.get());
-  if (res != 0)
-  {
-      return std::nullopt;
+  if (res != 0) {
+    return std::nullopt;
   }
 
-  return Reference {ref};
+  return Reference{ref};
 }
 
 }; // namespace git
