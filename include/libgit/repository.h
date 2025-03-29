@@ -1,10 +1,12 @@
 #ifndef GIT_REPOSITORY_H
 #define GIT_REPOSITORY_H
 
-#include <git2/repository.h>
 #include <optional>
-
 #include "reference.h"
+
+
+// forward declaration to hide libgit2 headers
+struct git_repository;
 
 namespace git {
 
@@ -35,16 +37,18 @@ public:
   /// @brief returns the head of the repo.
   std::optional<Reference> head() const noexcept;
 
+  friend class StatusIterator;
+
 private:
+  /// @brief Private constructor so that error handling can be done.
+  /// @warning The path shall be null-terminated.
+  /// @param path The path to the repository.
+  /// @param res The result of the operation.
   Repository(std::string_view path, int *res) noexcept;
 
+  /// @brief Deleter for the repository.
   struct GitRepositoryDeletor {
-    void operator()(git_repository *ptr) {
-      if (ptr == nullptr) {
-        return;
-      }
-      git_repository_free(ptr);
-    }
+    void operator()(git_repository *ptr) const noexcept;
   };
 
   std::unique_ptr<git_repository, GitRepositoryDeletor> m_repo{nullptr};

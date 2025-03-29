@@ -6,9 +6,8 @@ function(create_test)
         "LINKS;INCLUDES"
         ${ARGN}
     )
-    message("--${ARG_DEPENDENCY}")
 
-    set(target ${ARG_DEPNDENCY}-${ARG_NAME})
+    set(target ${ARG_DEPENDENCY}-${ARG_NAME})
     add_custom_target(target)
     add_dependencies(${ARG_DEPENDENCY} ${target})
 
@@ -34,14 +33,12 @@ function(create_test)
         "${ARG_SRC}"
     )
 
-
     target_link_libraries(
         ${target}
         PUBLIC
         "${ARG_LINKS}"
         GTest::gtest_main
         # libgit
-        # libgit2::libgit2package
     )
 
     target_include_directories(
@@ -75,11 +72,10 @@ function(create_binary_test)
         SRC
             "${ARG_SRC}"
         DEPENDENCY
-            ${target_test}-binary
+            "${target_test}-binary"
         LINKS
             "${ARG_LINKS}"
             libgit
-            libgit2::libgit2package
     )
 endfunction()
 

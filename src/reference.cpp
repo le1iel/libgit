@@ -2,17 +2,24 @@
 #include <git2/types.h>
 #include <libgit/reference.h>
 #include <memory>
-#include <optional>
 
 namespace git {
 
+void
+Reference::GitReferenceDeletor::operator()(git_reference *ref) const noexcept {
+  if (ref == nullptr) {
+    return;
+  }
+  git_reference_free(ref);
+}
+
 Reference::Reference(git_reference *ptr)
-    : m_ref(std::unique_ptr<git_reference, GitRefDeletor>(ptr)) {};
+    : m_ref(std::unique_ptr<git_reference, GitReferenceDeletor>(ptr)) {};
 
 Reference::Reference(const Reference &other) {
   git_reference *ref = nullptr;
   git_reference_dup(&ref, other.m_ref.get());
-  m_ref = std::unique_ptr<git_reference, GitRefDeletor>(ref);
+  m_ref = std::unique_ptr<git_reference, GitReferenceDeletor>(ref);
 }
 
 std::string Reference::name() const noexcept {
@@ -47,19 +54,19 @@ std::string Reference::shorthand() const noexcept {
   return out;
 }
 
-git_reference_t Reference::type() const noexcept {
-  return git_reference_type(m_ref.get());
-}
+// ReferenceType Reference::type() const noexcept {
+// return git_reference_type(m_ref.get());
+// }
 
-std::optional<git_error> Reference::resolve() noexcept {
+int Reference::resolve() noexcept {
   git_reference *ref = nullptr;
   int res = git_reference_resolve(&ref, m_ref.get());
   if (res < 0) {
-    return *git_error_last();
+    return -1;
   }
 
   m_ref.reset(ref);
-  return std::nullopt;
+  return 0;
 }
 
 } // namespace git

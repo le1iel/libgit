@@ -4,4 +4,5 @@ target_sources(${PROJECT_NAME}
         reference.cpp
         repository.cpp
         # status.cpp
+        init.cpp
 )

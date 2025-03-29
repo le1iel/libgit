@@ -3,8 +3,11 @@
 
 #include "libgit/repository.h"
 #include <cstdint>
-#include <git2/status.h>
 #include <string>
+
+// forward declaration to hide libgit2 headers
+struct git_status_entry;
+struct git_status_list;
 
 namespace git {
 
@@ -41,17 +44,40 @@ struct StatusOptions {
   std::uint16_t rename_threshold;
 };
 
+class StatusIterator;
+
 class StatusEntry {
-private:
+public:
+    using Iterator = StatusIterator;
+
   StatusEntry(git_status_entry &entry);
+private:
 };
 
 class StatusIterator {
 public:
-private:
-  StatusIterator(Repository *repo, StatusOptions options);
+    using ValueType = StatusEntry;
+    using PointerType = ValueType*;
+    using ReferenceType = ValueType&;
 
-  std::unique_ptr<git_status_list> m_statusList;
+    /// @brief Constructor.
+    StatusIterator(Repository *repo, StatusOptions options);
+
+    /// @brief Pre-increment operator.
+    StatusIterator& operator++() noexcept;
+
+    /// @brief Post-increment operator.
+    StatusIterator& operator++(int) noexcept;
+
+    /// @brief Dereference operator.
+    ReferenceType operator*() const noexcept;
+private:
+  /// @brief Deleter for the status list.
+  struct GitStatusListDeletor {
+    void operator()(git_status_list *list) const noexcept;
+  };
+
+  std::unique_ptr<git_status_list, GitStatusListDeletor> m_statusList;
 };
 
 } // namespace git
