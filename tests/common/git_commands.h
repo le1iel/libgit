@@ -50,6 +50,11 @@ class GitCommands {
     return 0;
   }
 
+  void printStatus() {
+    std::string command{"git status"};
+    runCommand(command);
+  }
+
   int deleteFile(std::string_view filename) {
     std::string filePath = m_path + "/" + std::string(filename);
     std::filesystem::remove(filePath);

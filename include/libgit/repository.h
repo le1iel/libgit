@@ -10,6 +10,8 @@ struct git_repository;
 
 namespace git {
 
+class StatusIterator;
+
 class Repository {
 public:
   /// @brief Open from a path.
@@ -36,6 +38,8 @@ public:
 
   /// @brief returns the head of the repo.
   std::optional<Reference> head() const noexcept;
+
+  StatusIterator status() const noexcept;
 
   friend class StatusIterator;
 

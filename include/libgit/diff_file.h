@@ -14,7 +14,6 @@ struct DiffFile {
     std::uint32_t flags;
     std::uint32_t mode;
     std::uint16_t id_abbrev;
-    
 };
 
 } // namespace git

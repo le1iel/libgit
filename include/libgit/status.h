@@ -3,9 +3,9 @@
 
 #include "diff_delta.h"
 #include "libgit/repository.h"
+#include "flagfield.h"
 #include <cstdint>
 #include <string>
-#include <bitset>
 
 
 // forward declaration to hide libgit2 headers
@@ -14,21 +14,20 @@ struct git_status_list;
 namespace git {
 
 enum class FileStatus {
-  FileError = 0,
-  Current,
-  IndexNew,
-  IndexModified,
-  IndexDeleted,
-  IndexRenamed,
-  IndexTypeChanged,
-  WtName,
-  WtModified,
-  WtDeleted,
-  WtTypeChange,
-  WtRenamed,
-  WtUnreadable,
-  Ignored,
-  Conflicted
+  Current=0,
+  IndexNew=1,
+  IndexModified=2,
+  IndexDeleted=3,
+  IndexRenamed=4,
+  IndexTypeChanged=5,
+  WtNew=7,
+  WtModified=8,
+  WtDeleted=9,
+  WtTypeChange=10,
+  WtRenamed=11,
+  WtUnreadable=12,
+  Ignored=13,
+  Conflicted=14
 };
 
 enum class StatusShow {
@@ -48,9 +47,9 @@ struct StatusOptions {
 
 
 struct StatusEntry {
-  std::bitset<11> status;
-  DiffDelta* head_to_index;
-  DiffDelta* index_to_workdir;
+  git::FlagField<git::FileStatus, 14> status {0};
+  std::optional<DiffDelta> head_to_index;
+  std::optional<DiffDelta> index_to_workdir;
 };
 
 class StatusIterator {
@@ -60,7 +59,7 @@ public:
     using ReferenceType = const ValueType&;
 
     /// @brief Constructor.
-    StatusIterator(Repository *repo, StatusOptions options);
+    StatusIterator(const Repository *repo, StatusOptions options);
 
     /// @brief Pre-increment operator.
     StatusIterator& operator++() noexcept;
@@ -80,6 +79,8 @@ private:
   void updateStatusEntry() noexcept;
 
   std::size_t m_index;
+
+  std::size_t m_statusCount;
 
   StatusEntry m_statusEntry;
 

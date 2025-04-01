@@ -7,6 +7,9 @@
 namespace git {
 
 class ObjectId {
+public:
+  ObjectId() = default;
+
   static std::optional<ObjectId> FromString(std::string_view id) noexcept;
 
   std::string_view id() const noexcept;

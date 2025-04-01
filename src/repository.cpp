@@ -4,6 +4,7 @@
 #include <memory>
 #include <optional>
 #include <iostream>
+#include <libgit/status.h>
 
 namespace git {
 
@@ -72,6 +73,11 @@ std::optional<Reference> Repository::head() const noexcept {
   }
 
   return Reference{ref};
+}
+
+StatusIterator
+Repository::status() const noexcept {
+  return StatusIterator{this, StatusOptions{}};
 }
 
 }; // namespace git

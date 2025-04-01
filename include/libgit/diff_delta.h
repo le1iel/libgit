@@ -2,6 +2,7 @@
 #define INCLUDE_LIBGIT_DIFF_DELTA_H_
 
 #include <cstdint>
+#include "diff_file.h"
 
 namespace git {
 
@@ -24,6 +25,8 @@ struct DiffDelta {
   std::uint32_t flags;
   std::uint16_t similarity;
   std::uint16_t nfiles;
+  DiffFile old_file;
+  DiffFile new_file;
 };
 
 } // namespace git

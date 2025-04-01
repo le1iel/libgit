@@ -17,15 +17,19 @@ class status_ut : public ::testing::Test {
 
 TEST_F(status_ut, new_file) {
   git::GitCommands repo{repo_path};
+  repo.makeEmptyCommit("one");
   repo.createFile("test.txt", "content");
+  repo.printStatus();
   
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
 
+  git::Repository grepo = std::move(repoRes.value());
   git::StatusOptions options{};
-  git::StatusIterator it{&repoRes.value(), options};
+
+  auto it = grepo.status();
   
-//   EXPECT_EQ((*it).status, git::FileStatus::WtName);
+  EXPECT_TRUE(it.operator*().status[git::FileStatus::Current]);
 }
 
 TEST_F(status_ut, modified_file) {
@@ -38,10 +42,14 @@ TEST_F(status_ut, modified_file) {
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
 
+  git::Repository grepo = std::move(repoRes.value());
   git::StatusOptions options{};
-  git::StatusIterator it{&repoRes.value(), options};
+
+  auto it = grepo.status();
   
-//   EXPECT_EQ(it.operator*().status, git::FileStatus::WtModified);
+  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtModified]);
+  ASSERT_TRUE(it.operator*().head_to_index.has_value());
+  std::cout << it.operator*().head_to_index->new_file.path << std::endl;
 }
 
 TEST_F(status_ut, deleted_file) {
@@ -50,14 +58,17 @@ TEST_F(status_ut, deleted_file) {
   repo.add("test.txt");
   repo.commit("Initial commit");
   repo.deleteFile("test.txt");
+  repo.printStatus();
   
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
 
+  git::Repository grepo = std::move(repoRes.value());
   git::StatusOptions options{};
-  git::StatusIterator it{&repoRes.value(), options};
+
+  auto it = grepo.status();
   
-    EXPECT_EQ(it.operator*().status.test(static_cast<std::size_t>(git::FileStatus::WtDeleted)), true);
+  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtDeleted]);
 }
 
 int main(int argc, char **argv) {
