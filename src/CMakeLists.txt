@@ -3,6 +3,6 @@ target_sources(${PROJECT_NAME}
         object.cpp
         reference.cpp
         repository.cpp
-        # status.cpp
+        status.cpp
         init.cpp
 )

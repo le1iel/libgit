@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <fstream>
 
 namespace git {
 
@@ -10,11 +11,7 @@ class GitCommands {
   GitCommands(std::string_view path) : m_path(path) {
     std::filesystem::path path_obj(path);
     std::filesystem::create_directories(m_path);
-    std::string command{"cd "};
-    command.append(m_path);
-    command.append(" && git init");
-    std::cout << command << std::endl;
-    system(command.c_str());
+    runCommand("git init");
   };
 
   ~GitCommands() {
@@ -24,15 +21,54 @@ class GitCommands {
 
   }
 
-  void makeEmptyCommit(std::string_view message) {
-    std::string command{"cd "};
-    command.append(m_path);
-    command.append("&& git commit --allow-empty -m \"");
+  int commit(std::string_view message) {
+    return runCommand("git commit -m \"" + std::string(message) + "\"");
+  }
+
+  int makeEmptyCommit(std::string_view message) {
+    std::string command{"git commit --allow-empty -m \""};
     command.append(message);
     command.append("\"");
-    std::cout << command << std::endl;
-    int res = system(command.c_str());
+    return runCommand(command);
   };
+
+  int add(std::string_view filename) {
+    return runCommand("git add " + std::string(filename));
+  }
+
+  int modifyFile(std::string_view filename, std::string_view content) {
+    createFile(filename, content);
+    return 0;
+  }
+
+  int createFile(std::string_view filename, std::string_view content) {
+    std::string filePath = m_path + "/" + std::string(filename);
+    std::ofstream file;
+    file.open(filePath);
+    file << content;
+    file.close();
+    return 0;
+  }
+
+  int deleteFile(std::string_view filename) {
+    std::string filePath = m_path + "/" + std::string(filename);
+    std::filesystem::remove(filePath);
+    return 0;
+  }
+
+private:
+
+  int runCommand(std::string_view command) {
+    if (command.empty()) {
+      return 0;
+    }
+
+    std::string cmd{"cd "};
+    cmd.append(m_path);
+    cmd.append(" && ");
+    cmd.append(command);
+    return system(cmd.c_str());
+  }
 
   std::string path() const { return m_path; }
 

@@ -8,8 +8,6 @@ function(create_test)
     )
 
     set(target ${ARG_DEPENDENCY}-${ARG_NAME})
-    add_custom_target(target)
-    add_dependencies(${ARG_DEPENDENCY} ${target})
 
     if(NOT ARG_NAME)
         message(FATAL_ERROR "You must provide a name")
@@ -32,6 +30,7 @@ function(create_test)
         ${target}
         "${ARG_SRC}"
     )
+    add_dependencies(${ARG_DEPENDENCY} ${target})
 
     target_link_libraries(
         ${target}

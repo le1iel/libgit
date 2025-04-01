@@ -1,12 +1,14 @@
 #ifndef GIT_STATUS_H
 #define GIT_STATUS_H
 
+#include "diff_delta.h"
 #include "libgit/repository.h"
 #include <cstdint>
 #include <string>
+#include <bitset>
+
 
 // forward declaration to hide libgit2 headers
-struct git_status_entry;
 struct git_status_list;
 
 namespace git {
@@ -44,21 +46,18 @@ struct StatusOptions {
   std::uint16_t rename_threshold;
 };
 
-class StatusIterator;
 
-class StatusEntry {
-public:
-    using Iterator = StatusIterator;
-
-  StatusEntry(git_status_entry &entry);
-private:
+struct StatusEntry {
+  std::bitset<11> status;
+  DiffDelta* head_to_index;
+  DiffDelta* index_to_workdir;
 };
 
 class StatusIterator {
 public:
     using ValueType = StatusEntry;
     using PointerType = ValueType*;
-    using ReferenceType = ValueType&;
+    using ReferenceType = const ValueType&;
 
     /// @brief Constructor.
     StatusIterator(Repository *repo, StatusOptions options);
@@ -67,7 +66,7 @@ public:
     StatusIterator& operator++() noexcept;
 
     /// @brief Post-increment operator.
-    StatusIterator& operator++(int) noexcept;
+    StatusIterator operator++(int) noexcept;
 
     /// @brief Dereference operator.
     ReferenceType operator*() const noexcept;
@@ -76,6 +75,13 @@ private:
   struct GitStatusListDeletor {
     void operator()(git_status_list *list) const noexcept;
   };
+
+  /// @brief Updates the status entry.
+  void updateStatusEntry() noexcept;
+
+  std::size_t m_index;
+
+  StatusEntry m_statusEntry;
 
   std::unique_ptr<git_status_list, GitStatusListDeletor> m_statusList;
 };
