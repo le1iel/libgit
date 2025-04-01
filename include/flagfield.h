@@ -41,6 +41,14 @@ class FlagField {
             return m_value.to_string();
         }
 
+        bool any() const {
+            return m_value.any();
+        }
+
+        bool none() const {
+            return m_value.none();
+        }
+
     private:
         std::bitset<N> m_value;
 };

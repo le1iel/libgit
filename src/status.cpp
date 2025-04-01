@@ -1,10 +1,36 @@
 #include <libgit/repository.h>
 #include <libgit/status.h>
+#include <libgit/diff_delta.h>
 #include <git2/status.h>
 #include <iostream>
 #include <stdexcept>
-#include "flagfield.h"
-#include "detail/diff_delta.h"
+#include <flagfield.h>
+
+namespace {
+
+    git::DiffFile DiffFileFromGit2(const git_diff_file &file) {
+        return git::DiffFile {
+            .path = std::string(file.path),
+            .size = file.size,
+            .mode = file.mode,
+        };
+    }
+
+    std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
+        if(delta == nullptr) {
+            return std::nullopt;
+        }
+
+        return git::DiffDelta {
+            .flags = delta->flags,
+            .similarity = delta->similarity,
+            .nfiles = delta->nfiles,
+            .old_file = DiffFileFromGit2(delta->old_file),
+            .new_file = DiffFileFromGit2(delta->new_file),
+        };
+    }
+} // namespace detail
+
 namespace git {
 
 void    
@@ -54,8 +80,9 @@ void StatusIterator::updateStatusEntry() noexcept {
         return;
     }
     m_statusEntry.status = std::move(git::FlagField<git::FileStatus, 14> {entry->status});
-    m_statusEntry.head_to_index = detail::DiffDeltaFromGit2(entry->head_to_index);
-    m_statusEntry.index_to_workdir = detail::DiffDeltaFromGit2(entry->index_to_workdir);
+
+    m_statusEntry.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
+    m_statusEntry.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
 }
 
 StatusIterator::ReferenceType

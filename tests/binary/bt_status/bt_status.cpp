@@ -29,15 +29,18 @@ TEST_F(status_ut, new_file) {
 
   auto it = grepo.status();
   
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::Current]);
+  EXPECT_TRUE(it.operator*().status.none());
 }
 
 TEST_F(status_ut, modified_file) {
   git::GitCommands repo{repo_path};
-  repo.createFile("test.txt", "content");
-  repo.add("test.txt");
+
+  std::string modified_file = "test.txt";
+
+  repo.createFile(modified_file, "content");
+  repo.add(modified_file);
   repo.commit("Initial commit");
-  repo.modifyFile("test.txt", "new content");
+  repo.modifyFile(modified_file, "new content");
   
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
@@ -48,8 +51,8 @@ TEST_F(status_ut, modified_file) {
   auto it = grepo.status();
   
   EXPECT_TRUE(it.operator*().status[git::FileStatus::WtModified]);
-  ASSERT_TRUE(it.operator*().head_to_index.has_value());
-  std::cout << it.operator*().head_to_index->new_file.path << std::endl;
+  ASSERT_TRUE(it.operator*().index_to_workdir.has_value());
+  EXPECT_EQ(it.operator*().index_to_workdir->new_file.path, modified_file);
 }
 
 TEST_F(status_ut, deleted_file) {

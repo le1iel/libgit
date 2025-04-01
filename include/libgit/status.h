@@ -13,6 +13,7 @@ struct git_status_list;
 
 namespace git {
 
+/// @brief Enum representing the status of a file in the repository.
 enum class FileStatus {
   Current=0,
   IndexNew=1,
