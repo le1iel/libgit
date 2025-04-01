@@ -51,6 +51,7 @@ private:
     void operator()(git_repository *ptr) const noexcept;
   };
 
+  /// @brief The libgit2 repository object.
   std::unique_ptr<git_repository, GitRepositoryDeletor> m_repo{nullptr};
 };
 
