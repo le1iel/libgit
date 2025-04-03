@@ -2,7 +2,6 @@
 #include <libgit/repository.h>
 #include <libgit/status_options.h>
 #include <libgit/init.h>
-#include <flagfield.h>
 #include <libgit/status.h>
 #include <filesystem>
 
@@ -19,25 +18,7 @@ class status_ut : public ::testing::Test {
 
 /// @brief Test that a new file is not in the status list.
 /// @note The status will not show new files it the option is not set.
-TEST_F(status_ut, new_file_tracked) {
-  git::GitCommands internalRepo{repo_path};
-  internalRepo.makeEmptyCommit("one");
-  internalRepo.createFile("test.txt", "content");
-  internalRepo.printStatus();
-  
-  auto repoRes = git::Repository::Open(repo_path);
-  ASSERT_TRUE(repoRes.has_value());
-  git::Repository repo = std::move(repoRes.value());
-
-  auto it = repo.status(git::StatusOptions {
-    .show = git::StatusShow::IndexAndWorkdir,
-    .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
-  });
-  
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtNew]);
-}
-
-TEST_F(status_ut, new_file_untracked) {
+TEST_F(status_ut, new_file) {
   git::GitCommands internalRepo{repo_path};
   internalRepo.makeEmptyCommit("one");
   internalRepo.createFile("test.txt", "content");

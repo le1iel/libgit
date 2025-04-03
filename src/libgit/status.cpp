@@ -2,12 +2,24 @@
 #include <libgit/status.h>
 #include <libgit/diff_delta.h>
 #include <git2/status.h>
+#include <git2/errors.h>
 #include <iostream>
 #include <stdexcept>
+#include "gtest/gtest.h"
 #include <flagfield.h>
 
 namespace {
 
+    git_status_options convertOptions(const git::StatusOptions &options) {
+        git_status_options opts = GIT_STATUS_OPTIONS_INIT;
+        opts.version = 1U;
+        // opts.show = static_cast<git_status_show_t>(options.show);
+        std::cerr << "Flags: " << options.flags.value() << std::endl;
+        opts.flags = options.flags.value();
+        // opts.pathspec = options.pathspec.c_str();
+        opts.rename_threshold = options.rename_threshold;
+        return opts;
+    }
     git::DiffFile DiffFileFromGit2(const git_diff_file &file) {
         return git::DiffFile {
             .path = std::string(file.path),
@@ -42,18 +54,20 @@ StatusIterator::GitStatusListDeletor::operator()(git_status_list *ptr) const noe
 }
 
 StatusIterator::StatusIterator(const Repository *repo, StatusOptions options) {
-    std::cout << "Making:" << std::endl;
     if(repo == nullptr) {
         throw std::runtime_error("Repository is nullptr");
     }
 
     m_index = 0;
-    git_status_options temp = GIT_STATUS_OPTIONS_INIT;
+    git_status_options temp = convertOptions(options);
 
     git_status_list *statusList = nullptr;
 
     int res = git_status_list_new(&statusList, repo->m_repo.get(), &temp);
     if (res != 0) {
+        std::cerr << "Error creating status list: " << res << std::endl;
+        std::cerr << "Error creating status list: " << git_error_last()->message << std::endl;
+        std::cerr << "Error creating status list: " << git_error_last()->klass << std::endl;    
         throw std::runtime_error("Failed to create status list");
     }
 
@@ -79,7 +93,7 @@ void StatusIterator::updateStatusEntry() noexcept {
         std::cout << "Entry is nullptr" << std::endl;
         return;
     }
-    m_statusEntry.status = std::move(git::FlagField<git::FileStatus, 14> {entry->status});
+    m_statusEntry.status = std::move(git::FlagField<git::FileStatus> {entry->status});
 
     m_statusEntry.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
     m_statusEntry.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);

@@ -23,7 +23,7 @@ public:
 private:
   ObjectId(std::string_view id) noexcept;
 
-  std::array<std::uint8_t, 20> m_id{};
+  std::array<std::uint8_t, 20> m_id {};
 };
 
 } // namespace git

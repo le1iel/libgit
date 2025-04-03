@@ -6,6 +6,7 @@
 
 namespace git {
 
+/// @brief The status of a diff delta.
 enum class DiffDeltaStatus {
   Unmodified = 0,
   Added = 1,
@@ -23,9 +24,13 @@ enum class DiffDeltaStatus {
 struct DiffDelta {
   DiffDeltaStatus status;
   std::uint32_t flags;
+  ///@brief How similar the file is.
   std::uint16_t similarity;
+  ///@brief The number of files in the delta.
   std::uint16_t nfiles;
+  ///@brief The old file.
   DiffFile old_file;
+  ///@brief The new file.
   DiffFile new_file;
 };
 

@@ -1,8 +1,9 @@
-#ifndef GIT_REPOSITORY_H
-#define GIT_REPOSITORY_H
+#ifndef INCLUDE_LIBGIT_REPOSITORY_H_
+#define INCLUDE_LIBGIT_REPOSITORY_H_
 
 #include <optional>
 #include "reference.h"
+#include "status_options.h"
 
 
 // forward declaration to hide libgit2 headers
@@ -39,7 +40,11 @@ public:
   /// @brief returns the head of the repo.
   std::optional<Reference> head() const noexcept;
 
+  /// @brief returns the status of the repo.
   StatusIterator status() const noexcept;
+
+  /// @brief returns the status of the repo.
+  StatusIterator status(StatusOptions options) const noexcept;
 
   friend class StatusIterator;
 
@@ -61,4 +66,4 @@ private:
 
 } // namespace git
 
-#endif
+#endif // INCLUDE_LIBGIT_REPOSITORY_H_

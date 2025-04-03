@@ -1,5 +1,5 @@
-#ifndef GIT_REFERENCE_H
-#define GIT_REFERENCE_H
+#ifndef INCLUDE_LIBGIT_REFERENCE_H_
+#define INCLUDE_LIBGIT_REFERENCE_H_
 #include <memory>
 #include <string>
 
@@ -59,4 +59,4 @@ private:
 };
 
 } // namespace git
-#endif
+#endif // INCLUDE_LIBGIT_REFERENCE_H_

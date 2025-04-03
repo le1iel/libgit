@@ -77,7 +77,12 @@ std::optional<Reference> Repository::head() const noexcept {
 
 StatusIterator
 Repository::status() const noexcept {
-  return StatusIterator{this, StatusOptions{}};
+  return status(StatusOptions{});
+}
+
+StatusIterator
+Repository::status(StatusOptions options) const noexcept {
+  return StatusIterator{this, options};
 }
 
 }; // namespace git

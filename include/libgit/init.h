@@ -1,8 +1,8 @@
-#ifndef LIBGIT_INIT_H
-#define LIBGIT_INIT_H
+#ifndef INCLUDE_LIBGIT_INIT_H_
+#define INCLUDE_LIBGIT_INIT_H_
 
 void init_libgit();
 
 void deinit_libgit();
 
-#endif
+#endif // INCLUDE_LIBGIT_INIT_H_

@@ -18,33 +18,28 @@ public:
 };
 
 TEST(flagfield_ut, single_flag) {
-    git::FlagField<git::TestFlags, 3> flags(1);
+    git::FlagField<git::TestFlags> flags(1);
     EXPECT_TRUE(flags[git::TestFlags::Flag1]);
     EXPECT_FALSE(flags[git::TestFlags::Flag2]);
     EXPECT_FALSE(flags[git::TestFlags::Flag3]);
-
-    EXPECT_TRUE(flags.at(0));
-    EXPECT_FALSE(flags.at(1));
-    EXPECT_FALSE(flags.at(2));
 }
 
 TEST(flagfield_ut, multiple_flags) {
-    git::FlagField<git::TestFlags, 3> flags(3);
+    git::FlagField<git::TestFlags> flags(3);
     EXPECT_TRUE(flags[git::TestFlags::Flag1]);
     EXPECT_TRUE(flags[git::TestFlags::Flag2]);
     EXPECT_FALSE(flags[git::TestFlags::Flag3]);
 }
 
 TEST(flagfield_ut, all_flags) {
-    git::FlagField<git::TestFlags, 3> flags(7);
-    std::cout << flags.to_string() << std::endl;
+    git::FlagField<git::TestFlags> flags(7);
     EXPECT_TRUE(flags[git::TestFlags::Flag1]);
     EXPECT_TRUE(flags[git::TestFlags::Flag2]);
     EXPECT_TRUE(flags[git::TestFlags::Flag3]);
 }
 
 TEST(flagfield_ut, no_flags) {
-    git::FlagField<git::TestFlags, 3> flags(0);
+    git::FlagField<git::TestFlags> flags(0);
     EXPECT_FALSE(flags[git::TestFlags::Flag1]);
     EXPECT_FALSE(flags[git::TestFlags::Flag2]);
     EXPECT_FALSE(flags[git::TestFlags::Flag3]);

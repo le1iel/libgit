@@ -1,11 +1,10 @@
-#ifndef GIT_STATUS_H
-#define GIT_STATUS_H
+#ifndef INCLUDE_LIBGIT_STATUS_H_
+#define INCLUDE_LIBGIT_STATUS_H_
 
 #include "diff_delta.h"
-#include "libgit/repository.h"
 #include "flagfield.h"
-#include <cstdint>
-#include <string>
+#include "repository.h"
+#include "status_options.h"
 
 
 // forward declaration to hide libgit2 headers
@@ -15,40 +14,39 @@ namespace git {
 
 /// @brief Enum representing the status of a file in the repository.
 enum class FileStatus {
+  ///@brief No changes.
   Current=0,
+  ///@brief New in index.
   IndexNew=1,
+  ///@brief Modified in index.
   IndexModified=2,
+  ///@brief Deleted in index.
   IndexDeleted=3,
+  ///@brief Renamed in index.
   IndexRenamed=4,
+  ///@brief Type changed in index.
   IndexTypeChanged=5,
+  ///@brief New in workdir.
   WtNew=7,
+  ///@brief Modified in workdir.
   WtModified=8,
+  ///@brief Deleted in workdir.
   WtDeleted=9,
+  ///@brief Type changed in workdir.
   WtTypeChange=10,
+  ///@brief Renamed in workdir.
   WtRenamed=11,
+  ///@brief Unreadable in workdir.
   WtUnreadable=12,
+  ///@brief File in ignored.
   Ignored=13,
+  ///@brief File is conflicted.
   Conflicted=14
-};
-
-enum class StatusShow {
-  IndexAndWorkdir = 0,
-  Index,
-  Workdir,
-};
-
-struct StatusOptions {
-  std::uint16_t version;
-  StatusShow show;
-  std::uint16_t flags;
-  std::string pathspec;
-  // Tree* tree; TODO
-  std::uint16_t rename_threshold;
 };
 
 
 struct StatusEntry {
-  git::FlagField<git::FileStatus, 14> status {0};
+  git::FlagField<git::FileStatus> status {0};
   std::optional<DiffDelta> head_to_index;
   std::optional<DiffDelta> index_to_workdir;
 };
@@ -79,14 +77,18 @@ private:
   /// @brief Updates the status entry.
   void updateStatusEntry() noexcept;
 
+  /// @brief The index of the current status entry.
   std::size_t m_index;
 
+  /// @brief The number of status entries.
   std::size_t m_statusCount;
 
+  /// @brief The current status entry.
   StatusEntry m_statusEntry;
 
+  /// @brief The status list.
   std::unique_ptr<git_status_list, GitStatusListDeletor> m_statusList;
 };
 
 } // namespace git
-#endif
+#endif // INCLUDE_LIBGIT_STATUS_H_
