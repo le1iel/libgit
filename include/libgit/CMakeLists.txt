@@ -1,5 +1,6 @@
 target_sources(${PROJECT_NAME}
     PRIVATE 
+        error.h
         diff_delta.h
         diff_file.h
         object.h

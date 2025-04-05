@@ -65,9 +65,7 @@ StatusIterator::StatusIterator(const Repository *repo, StatusOptions options) {
 
     int res = git_status_list_new(&statusList, repo->m_repo.get(), &temp);
     if (res != 0) {
-        std::cerr << "Error creating status list: " << res << std::endl;
-        std::cerr << "Error creating status list: " << git_error_last()->message << std::endl;
-        std::cerr << "Error creating status list: " << git_error_last()->klass << std::endl;    
+        // ToDo Errors
         throw std::runtime_error("Failed to create status list");
     }
 

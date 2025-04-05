@@ -52,6 +52,26 @@ TEST_F(status_ut, new_file_untracked) {
   EXPECT_TRUE(it.operator*().status.none());
 }
 
+TEST_F(status_ut, 2_new_file_untracked) {
+  git::GitCommands internalRepo{repo_path};
+  internalRepo.makeEmptyCommit("one");
+  internalRepo.createFile("test.txt", "content");
+  internalRepo.printStatus();
+  
+  auto repoRes = git::Repository::Open(repo_path);
+  ASSERT_TRUE(repoRes.has_value());
+  git::Repository repo = std::move(repoRes.value());
+
+  auto it = repo.status(git::StatusOptions {
+    .show = git::StatusShow::IndexAndWorkdir,
+    .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
+  });
+  
+  EXPECT_TRUE(it.operator*().status.any());
+  ++it;
+  EXPECT_TRUE(it.operator*().status.any());
+}
+
 TEST_F(status_ut, modified_file) {
   git::GitCommands internalRepo{repo_path};
 

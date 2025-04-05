@@ -1,5 +1,5 @@
-target_sources(${PROJECT_NAME} 
-    PRIVATE 
-        logging.h
-        logstream.h
+target_sources(${PROJECT_NAME}
+  PRIVATE
+    logger.h
+    logstream.h
 )

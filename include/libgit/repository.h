@@ -1,7 +1,9 @@
 #ifndef INCLUDE_LIBGIT_REPOSITORY_H_
 #define INCLUDE_LIBGIT_REPOSITORY_H_
 
+#include <expected>
 #include <optional>
+#include "libgit/error.h"
 #include "reference.h"
 #include "status_options.h"
 
@@ -17,7 +19,7 @@ class Repository {
 public:
   /// @brief Open from a path.
   /// @warning The path shall be null-terminated.
-  static std::optional<Repository> Open(std::string_view path) noexcept;
+  static std::expected<Repository, GitErrc> Open(std::string_view path) noexcept;
 
   /// @brief Destructor.
   ~Repository();
