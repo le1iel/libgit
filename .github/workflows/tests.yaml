@@ -15,3 +15,9 @@ jobs:
     - name: Install dependencies
       run: |
         brew install cmake libgit2
+    - name: CMake Configure
+      run: |
+        cmake -S . -B build
+    - name: CMake Build
+      run: |
+        cmake --build build
