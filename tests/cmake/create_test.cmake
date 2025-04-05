@@ -6,11 +6,8 @@ function(create_test)
         "LINKS;INCLUDES"
         ${ARGN}
     )
-    message("--${ARG_DEPENDENCY}")
 
-    set(target ${ARG_DEPNDENCY}-${ARG_NAME})
-    add_custom_target(target)
-    add_dependencies(${ARG_DEPENDENCY} ${target})
+    set(target ${ARG_DEPENDENCY}-${ARG_NAME})
 
     if(NOT ARG_NAME)
         message(FATAL_ERROR "You must provide a name")
@@ -33,7 +30,7 @@ function(create_test)
         ${target}
         "${ARG_SRC}"
     )
-
+    add_dependencies(${ARG_DEPENDENCY} ${target})
 
     target_link_libraries(
         ${target}
@@ -41,7 +38,6 @@ function(create_test)
         "${ARG_LINKS}"
         GTest::gtest_main
         # libgit
-        # libgit2::libgit2package
     )
 
     target_include_directories(
@@ -75,11 +71,10 @@ function(create_binary_test)
         SRC
             "${ARG_SRC}"
         DEPENDENCY
-            ${target_test}-binary
+            "${target_test}-binary"
         LINKS
             "${ARG_LINKS}"
             libgit
-            libgit2::libgit2package
     )
 endfunction()
 

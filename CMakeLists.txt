@@ -33,7 +33,7 @@ set_target_properties(
 target_include_directories(
     libgit
     PRIVATE 
-        src
+        src/include
     PUBLIC 
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"

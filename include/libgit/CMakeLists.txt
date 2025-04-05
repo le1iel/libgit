@@ -7,4 +7,6 @@ target_sources(${PROJECT_NAME}
         reference.h
         repository.h
         status.h
+        status_options.h
+        init.h
 )

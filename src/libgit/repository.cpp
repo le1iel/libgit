@@ -1,9 +1,20 @@
 #include <git2/repository.h>
+#include <git2/errors.h>
 #include <libgit/repository.h>
 #include <memory>
 #include <optional>
+#include <iostream>
+#include <libgit/status.h>
 
 namespace git {
+
+void
+Repository::GitRepositoryDeletor::operator()(git_repository *ptr) const noexcept {
+      if (ptr == nullptr) {
+        return;
+      }
+      git_repository_free(ptr);
+}
 
 std::optional<git::Repository>
 Repository::Open(std::string_view path) noexcept {
@@ -52,12 +63,26 @@ std::optional<Reference> Repository::head() const noexcept {
   git_reference *ref = nullptr;
 
   int res = git_repository_head(&ref, m_repo.get());
-  if (res != 0)
-  {
-      return std::nullopt;
+  if (res != 0) {
+    std::cerr << "Error getting head: " << res << std::endl;
+    std::cerr << "Error getting head: " << git_error_last()->message << std::endl;
+    std::cerr << "Error getting head: " << git_error_last()->klass << std::endl;
+    std::cerr << "Error getting head: " << GIT_EUNBORNBRANCH << std::endl;
+
+    return std::nullopt;
   }
 
-  return Reference {ref};
+  return Reference{ref};
+}
+
+StatusIterator
+Repository::status() const noexcept {
+  return status(StatusOptions{});
+}
+
+StatusIterator
+Repository::status(StatusOptions options) const noexcept {
+  return StatusIterator{this, options};
 }
 
 }; // namespace git

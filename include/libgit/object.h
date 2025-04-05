@@ -1,9 +1,10 @@
-#ifndef GIT_OBJECT_ID_H
-#define GIT_OBJECT_ID_H
+#ifndef INCLUDE_LIBGIT_OBJECT_H_
+#define INCLUDE_LIBGIT_OBJECT_H_
 
 namespace git {
 
 class Object {};
 
 } // namespace git
-#endif
+
+#endif // INCLUDE_LIBGIT_OBJECT_H_
