@@ -5,23 +5,26 @@ on:
   - pull_request
 
 env:
-  BUILD_DIR: _build
+  BUILD_DIR: build
+  LIBGIT_CMAKE: /opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake
 
 jobs:
-  Linux:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+  build:
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        sudo apt install -y cmake
-    - name: build
+        brew install libgit2 googletest
+    - name: Make libgit2 work
+      run: |
+        sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
+    - name: CMake Configure
       run: |
         cmake -S . -B ${{env.BUILD_DIR}}
+    - name: CMake Build
+      run: |
         cmake --build ${{env.BUILD_DIR}}
-    - name: test
+    - name: Test
       run: |
         cd ${{env.BUILD_DIR}} && ctest
