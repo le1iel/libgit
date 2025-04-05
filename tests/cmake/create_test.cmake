@@ -1,11 +1,13 @@
+# ---- Create Test ---
+#
 function(create_test)
-    cmake_parse_arguments(
-        ARG
-        ""
-        "NAME;SRC;DEPENDENCY"
-        "LINKS;INCLUDES"
-        ${ARGN}
-    )
+  cmake_parse_arguments(
+    ARG
+      ""
+      "NAME;SRC;DEPENDENCY"
+      "LINKS;INCLUDES"
+      ${ARGN}
+  )
 
     set(target ${ARG_DEPENDENCY}-${ARG_NAME})
 
@@ -13,7 +15,7 @@ function(create_test)
         message(FATAL_ERROR "You must provide a name")
     endif()
 
-    
+
     # TODO coverage
     # set_source_files_properties(
     #         ${ARG_SRC}
@@ -46,7 +48,7 @@ function(create_test)
         "${ARG_INCLUDES}"
     )
 
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 17)
+    set_property(TARGET ${target} PROPERTY CXX_STANDARD 23)
 
     set_target_properties(${target} PROPERTIES OUTPUT_NAME "${ARG_NAME}")
 

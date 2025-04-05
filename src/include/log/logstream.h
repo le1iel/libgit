@@ -19,7 +19,7 @@ class LogStream {
   LogStream& operator<<(const long& message);
   LogStream& operator<<(const float& message);
   LogStream& operator<<(const double& message);
-  
+
 private:
     /// @brief Write to the buffer
     void writeToBuffer(const std::string& message);

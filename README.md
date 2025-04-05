@@ -11,6 +11,3 @@ A c++ wrapper for libgit2.
     - User does not need to install libgit2.
 
 2. Make builds & testing work on github actions.
-
-3. Continue implementation.
-    - Iterator for status.

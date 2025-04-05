@@ -1,12 +1,13 @@
 target_sources(${PROJECT_NAME}
-    PRIVATE 
-        diff_delta.h
-        diff_file.h
-        object.h
-        object_id.h
-        reference.h
-        repository.h
-        status.h
-        status_options.h
-        init.h
+  PRIVATE
+    error.h
+    diff_delta.h
+    diff_file.h
+    object.h
+    object_id.h
+    reference.h
+    repository.h
+    status.h
+    status_options.h
+    init.h
 )

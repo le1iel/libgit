@@ -1,12 +1,29 @@
-#include <log/logging.h>
+#include <log/logger.h>
+#include <unistd.h>
 
 namespace libgit {
 
 namespace log {
 
-Log::Log() {
+Log::Log(int fd) : m_fd(fd) {}
+
+Log& Log::getLogger() {
+  if (not m_instance) std::unique_ptr<Log>(new Log(STDOUT_FILENO));
+  return *m_instance.get();
 }
 
-} // namespace log
+void
+Log::writeToBuffer(const std::string_view message)
+{
+    std::copy(message.begin(), message.end(), std::next(m_buffer.begin(), m_pos));
+}
 
-} // namespace libgit
+void
+Log::error(const std::string_view message)
+{
+    Log::getLogger();
+}
+
+}  // namespace log
+
+}  // namespace libgit

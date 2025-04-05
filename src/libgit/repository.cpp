@@ -1,9 +1,11 @@
 #include <git2/repository.h>
 #include <git2/errors.h>
 #include <libgit/repository.h>
+#include <expected>
 #include <memory>
 #include <optional>
 #include <iostream>
+#include "libgit/error.h"
 #include <libgit/status.h>
 
 namespace git {
@@ -16,12 +18,13 @@ Repository::GitRepositoryDeletor::operator()(git_repository *ptr) const noexcept
       git_repository_free(ptr);
 }
 
-std::optional<git::Repository>
-Repository::Open(std::string_view path) noexcept {
+std::expected<git::Repository, GitErrc>
+Repository::Open(std::string_view path) noexcept
+{
   int res = 0;
   Repository repo{path, &res};
   if (res != 0) {
-    return std::nullopt;
+    return std::unexpected(GitErrc::example);
   }
   return repo;
 }
