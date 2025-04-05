@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        brew install cmake libgit2 googletest
+        brew install libgit2 googletest
     - name: Make libgit2 work
       run: |
         sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
