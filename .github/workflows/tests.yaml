@@ -8,20 +8,10 @@ env:
   BUILD_DIR: _build
 
 jobs:
-  Linux:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+  build:
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        sudo apt install -y cmake
-    - name: build
-      run: |
-        cmake -S . -B ${{env.BUILD_DIR}}
-        cmake --build ${{env.BUILD_DIR}}
-    - name: test
-      run: |
-        cd ${{env.BUILD_DIR}} && ctest
+        brew install cmake libgit2
