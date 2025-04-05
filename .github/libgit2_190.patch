@@ -1,0 +1,11 @@
+--- libgit2Targets.cmake.old	2025-04-05 17:46:56
++++ libgit2Targets.cmake	2025-04-05 17:49:44
+@@ -59,7 +59,7 @@
+ add_library(libgit2::libgit2package SHARED IMPORTED)
+ 
+ set_target_properties(libgit2::libgit2package PROPERTIES
+-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/./include/git2"
++  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+   INTERFACE_LINK_LIBRARIES "-framework CoreFoundation;-framework Security;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libz.tbd;-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -liconv"
+ )
+ 
