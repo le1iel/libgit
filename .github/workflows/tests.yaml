@@ -15,7 +15,7 @@ jobs:
     - name: Install dependencies
       run: |
         brew install cmake libgit2
-        rm /opt/homebrew/include/stdint.h
+        rm /opt/homebrew/include/git2/stdint.h
     - name: CMake Configure
       run: |
         cmake -S . -B ${{env.BUILD_DIR}}
