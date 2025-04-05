@@ -6,6 +6,7 @@ on:
 
 env:
   BUILD_DIR: build
+  LIBGIT_CMAKE: /opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake
 
 jobs:
   build:
@@ -18,8 +19,7 @@ jobs:
         brew install cmake libgit2
     - name: Make libgit2 work
       run: |
-        # rm /opt/homebrew/include/git2/stdint.h
-        patch -u /opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake .github/libgit2_190.patch
+        sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
     - name: CMake Configure
       run: |
         cmake -S . -B ${{env.BUILD_DIR}}
