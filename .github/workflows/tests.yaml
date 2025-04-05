@@ -5,7 +5,7 @@ on:
   - pull_request
 
 env:
-  BUILD_DIR: _build
+  BUILD_DIR: build
 
 jobs:
   build:
@@ -17,7 +17,10 @@ jobs:
         brew install cmake libgit2
     - name: CMake Configure
       run: |
-        cmake -S . -B build
+        cmake -S . -B ${{env.BUILD_DIR}}
     - name: CMake Build
       run: |
-        cmake --build build
+        cmake --build ${{env.BUILD_DIR}}
+    - name: test
+      run: |
+      cd ${{env.BUILD_DIR}} && ctest
