@@ -15,7 +15,7 @@ jobs:
     - name: Install dependencies
       run: |
         brew update
-        brew install cmake libgit2@1.8
+        brew install cmake libgit2
     - name: Make libgit2 work
       run: |
         # rm /opt/homebrew/include/git2/stdint.h
