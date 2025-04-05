@@ -23,4 +23,4 @@ jobs:
         cmake --build ${{env.BUILD_DIR}}
     - name: test
       run: |
-      cd ${{env.BUILD_DIR}} && ctest
+        cd ${{env.BUILD_DIR}} && ctest
