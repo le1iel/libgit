@@ -25,6 +25,6 @@ jobs:
     - name: CMake Build
       run: |
         cmake --build ${{env.BUILD_DIR}}
-    - name: test
+    - name: Test
       run: |
         cd ${{env.BUILD_DIR}} && ctest
