@@ -13,7 +13,7 @@ project(libgit
   VERSION
     0.0.1
   DESCRIPTION
-    "c++ warpper for libgit2"
+    "c++ wrapper for libgit2"
   HOMEPAGE_URL
     "https://github.com/le1iel/libgit"
   LANGUAGES CXX)

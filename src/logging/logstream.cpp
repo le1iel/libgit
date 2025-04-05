@@ -12,6 +12,6 @@ void LogStream::writeToBuffer(const std::string& message) {
     write(m_fd, m_buffer.data(), message.size());
 }
 
-} // namespace log  
+} // namespace log
 
 } // namespace libgit

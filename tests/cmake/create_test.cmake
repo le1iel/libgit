@@ -15,7 +15,7 @@ function(create_test)
         message(FATAL_ERROR "You must provide a name")
     endif()
 
-    
+
     # TODO coverage
     # set_source_files_properties(
     #         ${ARG_SRC}

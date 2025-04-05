@@ -23,13 +23,13 @@ TEST_F(status_ut, new_file) {
   internalRepo.makeEmptyCommit("one");
   internalRepo.createFile("test.txt", "content");
   internalRepo.printStatus();
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
   auto it = repo.status();
-  
+
   EXPECT_TRUE(it.operator*().status.none());
 }
 
@@ -42,13 +42,13 @@ TEST_F(status_ut, modified_file) {
   internalRepo.add(modified_file);
   internalRepo.commit("Initial commit");
   internalRepo.modifyFile(modified_file, "new content");
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
   auto it = repo.status();
-  
+
   EXPECT_TRUE(it.operator*().status[git::FileStatus::WtModified]);
 }
 
@@ -59,13 +59,13 @@ TEST_F(status_ut, deleted_file) {
   internalRepo.commit("Initial commit");
 
   internalRepo.deleteFile("test.txt");
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
   auto it = repo.status();
-  
+
   EXPECT_TRUE(it.operator*().status[git::FileStatus::WtDeleted]);
 }
 

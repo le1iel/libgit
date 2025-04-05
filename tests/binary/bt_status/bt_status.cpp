@@ -24,7 +24,7 @@ TEST_F(status_ut, new_file_tracked) {
   internalRepo.makeEmptyCommit("one");
   internalRepo.createFile("test.txt", "content");
   internalRepo.printStatus();
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
@@ -33,7 +33,7 @@ TEST_F(status_ut, new_file_tracked) {
     .show = git::StatusShow::IndexAndWorkdir,
     .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
   });
-  
+
   EXPECT_TRUE(it.operator*().status[git::FileStatus::WtNew]);
 }
 
@@ -42,13 +42,13 @@ TEST_F(status_ut, new_file_untracked) {
   internalRepo.makeEmptyCommit("one");
   internalRepo.createFile("test.txt", "content");
   internalRepo.printStatus();
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
   auto it = repo.status();
-  
+
   EXPECT_TRUE(it.operator*().status.none());
 }
 
@@ -57,7 +57,7 @@ TEST_F(status_ut, 2_new_file_untracked) {
   internalRepo.makeEmptyCommit("one");
   internalRepo.createFile("test.txt", "content");
   internalRepo.printStatus();
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
@@ -66,7 +66,7 @@ TEST_F(status_ut, 2_new_file_untracked) {
     .show = git::StatusShow::IndexAndWorkdir,
     .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
   });
-  
+
   EXPECT_TRUE(it.operator*().status.any());
   ++it;
   EXPECT_TRUE(it.operator*().status.any());
@@ -81,13 +81,13 @@ TEST_F(status_ut, modified_file) {
   internalRepo.add(modified_file);
   internalRepo.commit("Initial commit");
   internalRepo.modifyFile(modified_file, "new content");
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
   auto it = repo.status();
-  
+
   EXPECT_TRUE(it.operator*().status[git::FileStatus::WtModified]);
 }
 
@@ -98,13 +98,13 @@ TEST_F(status_ut, deleted_file) {
   internalRepo.commit("Initial commit");
 
   internalRepo.deleteFile("test.txt");
-  
+
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
   auto it = repo.status();
-  
+
   EXPECT_TRUE(it.operator*().status[git::FileStatus::WtDeleted]);
 }
 

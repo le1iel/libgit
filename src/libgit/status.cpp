@@ -45,7 +45,7 @@ namespace {
 
 namespace git {
 
-void    
+void
 StatusIterator::GitStatusListDeletor::operator()(git_status_list *ptr) const noexcept {
     if (ptr == nullptr) {
         return;

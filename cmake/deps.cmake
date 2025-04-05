@@ -3,7 +3,7 @@ include(FetchContent)
 
 find_package(libgit2)
 if(NOT libgit2_FOUND)
-  
+
   function (cache var value type)
     set(${var} ${value} CACHE ${type} "" FORCE)
   endfunction()
