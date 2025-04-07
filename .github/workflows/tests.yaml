@@ -29,12 +29,12 @@ jobs:
         run: |
           cmake --build ${{env.BUILD_DIR}}
       - name: "Tar files"
-        run: tar -cvf build-macos-aarch64.tar "${{env.BUILD_DIR}}"
+        run: tar -czf build-macos-aarch64.tar.gz "${{env.BUILD_DIR}}"
       - name: "Upload artifact"
         uses: actions/upload-artifact@v4
         with:
           name: build-macos-aarch64
-          path: build-macos-aarch64.tar
+          path: build-macos-aarch64.tar.gz
   test-macos:
     name: "MacOS Test"
     needs: build-macos
@@ -44,12 +44,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-macos-aarch64
-          path: build-macos-aarch64.tar
+          path: build-macos-aarch64.tar.gz
       - name: "Untar files"
         run: |
-          realpath build-macos-aarch64.tar;
+          realpath build-macos-aarch64.tar.gz;
           echo "";
-          tar -xzvf build-macos-aarch64.tar -C ${{env.BUILD_DIR}}
+          tar -xvf build-macos-aarch64.tar.gz
       - name: "Test"
         run: |
           cd ${{env.BUILD_DIR}} && ctest
