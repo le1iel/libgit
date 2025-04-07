@@ -34,6 +34,7 @@ jobs:
   test-macos:
     name: "MacOS Test"
     needs: build-macos
+    runs-on: macos-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
