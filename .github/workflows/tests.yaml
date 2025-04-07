@@ -25,6 +25,9 @@ jobs:
     - name: CMake Build
       run: |
         cmake --build ${{env.BUILD_DIR}}
+    - uses: actions/upload-artifact@v4
+      name: macos-aarch64
+      path: ${{env.BUILD_DIR}}
     - name: Test
       run: |
         cd ${{env.BUILD_DIR}} && ctest
