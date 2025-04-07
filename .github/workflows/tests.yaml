@@ -47,7 +47,8 @@ jobs:
           path: build-macos-aarch64.tar
       - name: "Untar files"
         run: |
-          ls
+          realpath build-macos-aarch64.tar;
+          echo "";
           tar -xzvf build-macos-aarch64.tar -C ${{env.BUILD_DIR}}
       - name: "Test"
         run: |
