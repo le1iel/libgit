@@ -9,7 +9,7 @@ env:
   LIBGIT_CMAKE: /opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake
 
 jobs:
-  build:
+  Build:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
@@ -27,8 +27,14 @@ jobs:
         cmake --build ${{env.BUILD_DIR}}
     - uses: actions/upload-artifact@v4
       with:
-        name: macos-aarch64
+        name: build-macos-aarch64
         path: "${{env.BUILD_DIR}}"
+  Test:
+    needs: Build
+    - uses: actions/download-artifact@v4
+      with:
+        name: build-macos-aarch64
+        path: ${{env.BUILD_DIR}}
     - name: Test
       run: |
         cd ${{env.BUILD_DIR}} && ctest
