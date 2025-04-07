@@ -3,10 +3,10 @@
 
 #include <expected>
 #include <optional>
+
 #include "libgit/error.h"
 #include "reference.h"
 #include "status_options.h"
-
 
 // forward declaration to hide libgit2 headers
 struct git_repository;
@@ -16,10 +16,11 @@ namespace git {
 class StatusIterator;
 
 class Repository {
-public:
+ public:
   /// @brief Open from a path.
   /// @warning The path shall be null-terminated.
-  static std::expected<Repository, GitErrc> Open(std::string_view path) noexcept;
+  static std::expected<Repository, GitErrc> Open(
+      std::string_view path) noexcept;
 
   /// @brief Destructor.
   ~Repository();
@@ -50,7 +51,7 @@ public:
 
   friend class StatusIterator;
 
-private:
+ private:
   /// @brief Private constructor so that error handling can be done.
   /// @warning The path shall be null-terminated.
   /// @param path The path to the repository.
@@ -66,6 +67,6 @@ private:
   std::unique_ptr<git_repository, GitRepositoryDeletor> m_repo{nullptr};
 };
 
-} // namespace git
+}  // namespace git
 
-#endif // INCLUDE_LIBGIT_REPOSITORY_H_
+#endif  // INCLUDE_LIBGIT_REPOSITORY_H_

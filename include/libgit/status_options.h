@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string>
+
 #include "flagfield.h"
 
 namespace git {
@@ -14,22 +15,22 @@ enum class StatusShow {
 };
 
 enum class StatusFlags {
-IncludeUntracked = 0,
-IncludeIgnored,
-IncludeUnmodified,
-ExcludeSubmodules,
-RecurseUntrackedDirs,
-DisablePathspecMatch,
-RecurseIgnoredDirs,
-RenamesHeadToIndex,
-RenamesIndexToWorkdir,
-SortCaseSensitively,
-SortCaseInsensitively,
-RenamesFromRewrites,
-NoRefresh,
-UpdateIndex,
-IncludeUnreadable,
-IncludeUnreadableAsUntracked,
+  IncludeUntracked = 0,
+  IncludeIgnored,
+  IncludeUnmodified,
+  ExcludeSubmodules,
+  RecurseUntrackedDirs,
+  DisablePathspecMatch,
+  RecurseIgnoredDirs,
+  RenamesHeadToIndex,
+  RenamesIndexToWorkdir,
+  SortCaseSensitively,
+  SortCaseInsensitively,
+  RenamesFromRewrites,
+  NoRefresh,
+  UpdateIndex,
+  IncludeUnreadable,
+  IncludeUnreadableAsUntracked,
 };
 
 struct StatusOptions {
@@ -41,6 +42,6 @@ struct StatusOptions {
   std::uint16_t rename_threshold;
 };
 
-} // namespace git
+}  // namespace git
 
-#endif // INCLUDE_LIBGIT_STATUS_OPTIONS_H_
+#endif  // INCLUDE_LIBGIT_STATUS_OPTIONS_H_

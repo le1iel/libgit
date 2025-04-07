@@ -8,29 +8,29 @@ namespace git {
 
 /// @brief The status of a diff delta.
 enum class DiffDeltaStatus {
-  Unmodified = 0,
-  Added = 1,
-  Deleted = 2,
-  Modified = 3,
-  Renamed = 4,
-  Copied = 5,
-  Ignored = 6,
-  Untracked = 7,
-  TypeChange = 8,
-  Unreadable = 9,
-  Conflicted = 10,
+  Unmodified = 1,
+  Added = 3,
+  Deleted = 5,
+  Modified = 7,
+  Renamed = 9,
+  Copied = 11,
+  Ignored = 13,
+  Untracked = 15,
+  TypeChange = 17,
+  Unreadable = 19,
+  Conflicted = 21,
 };
 
 struct DiffDelta {
   DiffDeltaStatus status;
   std::uint32_t flags;
-  ///@brief How similar the file is.
+  /// @brief How similar the file is.
   std::uint16_t similarity;
-  ///@brief The number of files in the delta.
+  /// @brief The number of files in the delta.
   std::uint16_t nfiles;
-  ///@brief The old file.
+  /// @brief The old file.
   DiffFile old_file;
-  ///@brief The new file.
+  /// @brief The new file.
   DiffFile new_file;
 };
 

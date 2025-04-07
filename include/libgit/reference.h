@@ -15,8 +15,7 @@ enum class ReferenceType {
 };
 
 class Reference {
-
-public:
+ public:
   Reference(git_reference *ptr);
 
   /// @brief Returns the name of the reference.
@@ -49,7 +48,7 @@ public:
   /// @brief Returns the type of the reference.
   ReferenceType type() const noexcept;
 
-private:
+ private:
   /// @brief Deleter for the reference.
   struct GitReferenceDeletor {
     void operator()(git_reference *ref) const noexcept;
@@ -58,5 +57,5 @@ private:
   std::unique_ptr<git_reference, GitReferenceDeletor> m_ref;
 };
 
-} // namespace git
-#endif // INCLUDE_LIBGIT_REFERENCE_H_
+}  // namespace git
+#endif  // INCLUDE_LIBGIT_REFERENCE_H_

@@ -1,5 +1,5 @@
-#ifndef INCLUDE_FLAGFIELD_H_
-#define INCLUDE_FLAGFIELD_H_
+#ifndef LIBGIT_INCLUDE_FLAGFIELD_H_
+#define LIBGIT_INCLUDE_FLAGFIELD_H_
 
 #include <cstdint>
 
@@ -53,4 +53,4 @@ class FlagField {
 
 }  // namespace git
 
-#endif  // INCLUDE_FLAGFIELD_H_
+#endif  // LIBGIT_INCLUDE_FLAGFIELD_H_

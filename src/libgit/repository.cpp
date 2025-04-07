@@ -7,6 +7,7 @@
 #include <iostream>
 #include "libgit/error.h"
 #include <libgit/status.h>
+#include <log/logger.h>
 
 namespace git {
 

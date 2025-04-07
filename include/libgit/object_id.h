@@ -2,12 +2,13 @@
 #define INCLUDE_LIBGIT_OBJECT_ID_H_
 
 #include <array>
+#include <optional>
 #include <string_view>
 
 namespace git {
 
 class ObjectId {
-public:
+ public:
   ObjectId() = default;
 
   static std::optional<ObjectId> FromString(std::string_view id) noexcept;
@@ -20,11 +21,11 @@ public:
 
   int compare(ObjectId other) const noexcept;
 
-private:
+ private:
   ObjectId(std::string_view id) noexcept;
 
-  std::array<std::uint8_t, 20> m_id {};
+  std::array<std::uint8_t, 20> m_id{};
 };
 
-} // namespace git
+}  // namespace git
 #endif  // INCLUDE_LIBGIT_OBJECT_ID_H_
