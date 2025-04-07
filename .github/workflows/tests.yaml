@@ -14,8 +14,9 @@ jobs:
     name: "MacOS Build"
     runs-on: macos-latest
     steps:
-      - name: "Install dependencies"
+      - name: "Checkout"
         uses: actions/checkout@v4
+      - name: "Install dependencies"
         run: |
           brew install libgit2 googletest
       - name: "Make libgit2 work"
