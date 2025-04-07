@@ -48,7 +48,7 @@ jobs:
       - name: "Untar files"
         run: |
           ls
-          tar -xvf build-macos-aarch64.tar -C ${{env.BUILD_DIR}}
+          tar -xzvf build-macos-aarch64.tar -C ${{env.BUILD_DIR}}
       - name: "Test"
         run: |
           cd ${{env.BUILD_DIR}} && ctest
