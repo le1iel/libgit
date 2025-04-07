@@ -1,4 +1,5 @@
-name: Tests
+---
+name: "Tests"
 
 on:
   - push
@@ -6,35 +7,38 @@ on:
 
 env:
   BUILD_DIR: build
-  LIBGIT_CMAKE: /opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake
+  LIBGIT_CMAKE: "/opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake"
 
 jobs:
-  Build:
+  build-macos:
+    name: "MacOS Build"
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies
-      run: |
-        brew install libgit2 googletest
-    - name: Make libgit2 work
-      run: |
-        sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
-    - name: CMake Configure
-      run: |
-        cmake -S . -B ${{env.BUILD_DIR}}
-    - name: CMake Build
-      run: |
-        cmake --build ${{env.BUILD_DIR}}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: build-macos-aarch64
-        path: "${{env.BUILD_DIR}}"
-  Test:
-    needs: Build
-    - uses: actions/download-artifact@v4
-      with:
-        name: build-macos-aarch64
-        path: ${{env.BUILD_DIR}}
-    - name: Test
-      run: |
-        cd ${{env.BUILD_DIR}} && ctest
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          brew install libgit2 googletest
+      - name: Make libgit2 work
+        run: |
+          sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
+      - name: CMake Configure
+        run: |
+          cmake -S . -B ${{env.BUILD_DIR}}
+      - name: CMake Build
+        run: |
+          cmake --build ${{env.BUILD_DIR}}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-macos-aarch64
+          path: "${{env.BUILD_DIR}}"
+  test-macos:
+    name: "MacOS Test"
+    needs: build-macos
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-macos-aarch64
+          path: ${{env.BUILD_DIR}}
+      - name: Test
+        run: |
+          cd ${{env.BUILD_DIR}} && ctest
