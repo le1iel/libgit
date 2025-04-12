@@ -44,7 +44,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-macos-aarch64
-          path: build-macos-aarch64.tar.gz
+          path: artifacts
       - name: "debug"
         run: |
           realpath build-macos-aarch64.tar.gz
