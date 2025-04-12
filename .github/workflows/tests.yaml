@@ -47,9 +47,7 @@ jobs:
           path: artifacts
       - name: "debug"
         run: |
-          realpath build-macos-aarch64.tar.gz
-          echo "---"
-          ls -la build-macos-aarch64.tar.gz
+          find .
           echo "---"
       - name: "Untar files"
         run: |
