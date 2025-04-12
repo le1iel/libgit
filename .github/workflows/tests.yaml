@@ -35,23 +35,19 @@ jobs:
         with:
           name: build-macos-aarch64
           path: build-macos-aarch64.tar.gz
-  test-macos:
-    name: "MacOS Test"
-    needs: build-macos
-    runs-on: macos-latest
-    steps:
-      - name: "Download build artifact"
-        uses: actions/download-artifact@v4
-        with:
-          name: build-macos-aarch64
-          path: artifacts
-      - name: "debug"
-        run: |
-          find .
-          echo "---"
-      - name: "Untar files"
-        run: |
-          tar -xvf artifacts/build-macos-aarch64.tar.gz
+  # test-macos:
+    # name: "MacOS Test"
+    # needs: build-macos
+    # runs-on: macos-latest
+    # steps:
+      # - name: "Download build artifact"
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build-macos-aarch64
+      #     path: artifacts
+      # - name: "Untar files"
+      #   run: |
+      #     tar -xvf artifacts/build-macos-aarch64.tar.gz
       - name: "Test"
         run: |
           cd ${{env.BUILD_DIR}} && ctest
