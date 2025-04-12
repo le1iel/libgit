@@ -45,10 +45,14 @@ jobs:
         with:
           name: build-macos-aarch64
           path: build-macos-aarch64.tar.gz
+      - name: "debug"
+        run: |
+          realpath build-macos-aarch64.tar.gz
+          echo "---"
+          ls -la build-macos-aarch64.tar.gz
+          echo "---"
       - name: "Untar files"
         run: |
-          realpath build-macos-aarch64.tar.gz;
-          echo "";
           tar -xvf build-macos-aarch64.tar.gz
       - name: "Test"
         run: |
