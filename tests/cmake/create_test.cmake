@@ -9,75 +9,77 @@ function(create_test)
       ${ARGN}
   )
 
-    set(target ${ARG_DEPENDENCY}-${ARG_NAME})
+  set(target ${ARG_DEPENDENCY}-${ARG_NAME})
 
-    if(NOT ARG_NAME)
-        message(FATAL_ERROR "You must provide a name")
-    endif()
+  if(NOT ARG_NAME)
+    message(FATAL_ERROR "You must provide a name")
+  endif()
 
 
-    # TODO coverage
-    # set_source_files_properties(
-    #         ${ARG_SRC}
-    #     PROPERTIES
-    #         COMPILE_FLAGS "-g -fprofile-arcs -ftest-coverage"
-    # )
+  # TODO coverage
+  # set_source_files_properties(
+  #         ${ARG_SRC}
+  #     PROPERTIES
+  #         COMPILE_FLAGS "-g -fprofile-arcs -ftest-coverage"
+  # )
 
-    # set_source_files_properties(
-    #         ${ARG_SRC}
-    #     PROPERTIES
-    #         LINK_FLAGS "-fprofile-arcs -ftest-coverage -lgcov -lcoverage")
+  # set_source_files_properties(
+  #         ${ARG_SRC}
+  #     PROPERTIES
+  #         LINK_FLAGS "-fprofile-arcs -ftest-coverage -lgcov -lcoverage")
 
-    add_executable(
-        ${target}
-        "${ARG_SRC}"
-    )
-    add_dependencies(${ARG_DEPENDENCY} ${target})
+  add_executable(
+    ${target}
+    "${ARG_SRC}"
+  )
+  add_dependencies(${ARG_DEPENDENCY} ${target})
 
-    target_link_libraries(
-        ${target}
-        PUBLIC
-        "${ARG_LINKS}"
-        GTest::gtest_main
-        # libgit
-    )
+  target_link_libraries(
+    ${target}
+    PUBLIC
+    "${ARG_LINKS}"
+    GTest::gtest_main
+    # libgit
+  )
 
-    target_include_directories(
-        ${target}
-        PUBLIC
-        "${ARG_INCLUDES}"
-    )
+  target_include_directories(
+    ${target}
+    PUBLIC
+    "${ARG_INCLUDES}"
+  )
 
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 23)
+  set_property(TARGET ${target} PROPERTY CXX_STANDARD 23)
 
-    set_target_properties(${target} PROPERTIES OUTPUT_NAME "${ARG_NAME}")
+  set_target_properties(${target} PROPERTIES OUTPUT_NAME "${ARG_NAME}")
+  target_compile_options(${target} PRIVATE -fsanitize=address)
+  target_link_options(${target} PRIVATE -fsanitize=address)
 
-    add_test(
-        NAME ${ARG_NAME}
-        COMMAND ${target}
-    )
+  add_test(
+    NAME ${ARG_NAME}
+    COMMAND ${target}
+  )
 endfunction()
 
 function(create_binary_test)
-    cmake_parse_arguments(
-        ARG
-        ""
-        "NAME;SRC"
-        "LINKS;INCLUDES"
-        ${ARGN}
-    )
+  cmake_parse_arguments(
+    ARG
+    ""
+    "NAME;SRC"
+    "LINKS;INCLUDES"
+    ${ARGN}
+  )
 
-    create_test(
-        NAME
-            "${ARG_NAME}"
-        SRC
-            "${ARG_SRC}"
-        DEPENDENCY
-            "${target_test}-binary"
-        LINKS
-            "${ARG_LINKS}"
-            libgit
-    )
+  create_test(
+    NAME
+      "${ARG_NAME}"
+    SRC
+      "${ARG_SRC}"
+    DEPENDENCY
+      "${target_test}-binary"
+    LINKS
+      "${ARG_LINKS}"
+      libgit
+  )
 endfunction()
 
 function(create_unit_test)

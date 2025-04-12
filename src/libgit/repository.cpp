@@ -1,12 +1,14 @@
-#include <git2/repository.h>
-#include <git2/errors.h>
-#include <libgit/repository.h>
 #include <expected>
 #include <memory>
 #include <optional>
 #include <iostream>
-#include "libgit/error.h"
-#include <libgit/status.h>
+
+#include <git2/repository.h>
+#include <git2/errors.h>
+
+#include <libgit/repository.hpp>
+#include <libgit/error.hpp>
+#include <libgit/status.hpp>
 
 namespace git {
 

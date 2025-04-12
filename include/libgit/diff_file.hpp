@@ -1,7 +1,7 @@
 #ifndef INCLUDE_LIBGIT_DIFF_FILE_H_
 #define INCLUDE_LIBGIT_DIFF_FILE_H_
 
-#include "object_id.h"
+#include <libgit/object_id.hpp>
 #include <cstdint>
 #include <string>
 

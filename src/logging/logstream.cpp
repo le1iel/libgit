@@ -1,5 +1,6 @@
-#include <log/logstream.h>
 #include <unistd.h>
+
+#include <log/logstream.hpp>
 
 namespace libgit {
 

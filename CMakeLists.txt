@@ -40,26 +40,7 @@ target_include_directories(
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-
-# TODO remove this later ;)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
-
-
-# TODO do the export headers
-# set_target_properties(libgit PROPERTIES CXX_VISIBILITY_PRESET "hidden"
-#                                          VISIBILITY_INLINES_HIDDEN TRUE)
-# include(GenerateExportHeader)
-# generate_export_header(
-#   libgit
-#   EXPORT_FILE_NAME
-#   export/libgit/_export.h
-# )
-# target_include_directories(
-#   libgit
-#   PUBLIC
-#     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/export>"
-
-# )
+target_compile_options(libgit PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
 add_subdirectory(src)
 add_subdirectory(include)
