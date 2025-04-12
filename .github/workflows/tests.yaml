@@ -51,7 +51,7 @@ jobs:
           echo "---"
       - name: "Untar files"
         run: |
-          tar -xvf build-macos-aarch64.tar.gz
+          tar -xvf artifacts/build-macos-aarch64.tar.gz
       - name: "Test"
         run: |
           cd ${{env.BUILD_DIR}} && ctest
