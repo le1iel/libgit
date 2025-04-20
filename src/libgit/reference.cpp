@@ -1,7 +1,9 @@
+#include <memory>
+
 #include <git2/refs.h>
 #include <git2/types.h>
-#include <libgit/reference.h>
-#include <memory>
+
+#include <libgit/reference.hpp>
 
 namespace git {
 

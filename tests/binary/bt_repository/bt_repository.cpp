@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
-#include <libgit/repository.h>
-#include <libgit/init.h>
 #include <filesystem>
+
+#include <libgit/init.hpp>
+#include <libgit/repository.hpp>
 
 #include "../../common/git_commands.h"
 

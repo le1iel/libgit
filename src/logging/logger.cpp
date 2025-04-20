@@ -1,5 +1,6 @@
-#include <log/logger.h>
 #include <unistd.h>
+
+#include <log/logger.hpp>
 
 namespace libgit {
 

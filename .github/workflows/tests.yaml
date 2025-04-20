@@ -1,4 +1,5 @@
-name: Tests
+---
+name: "Tests"
 
 on:
   - push
@@ -6,25 +7,53 @@ on:
 
 env:
   BUILD_DIR: build
-  LIBGIT_CMAKE: /opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake
+  LIBGIT_CMAKE: "/opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake"
 
 jobs:
-  build:
+  build-macos:
+    name: "MacOS Build"
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies
-      run: |
-        brew install libgit2 googletest
-    - name: Make libgit2 work
-      run: |
-        sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
-    - name: CMake Configure
-      run: |
-        cmake -S . -B ${{env.BUILD_DIR}}
-    - name: CMake Build
-      run: |
-        cmake --build ${{env.BUILD_DIR}}
-    - name: Test
-      run: |
-        cd ${{env.BUILD_DIR}} && ctest
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: "Install dependencies"
+        run: |
+          brew install libgit2 googletest
+      - name: "Make libgit2 work"
+        run: |
+          sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
+      - name: "CMake configure"
+        run: |
+          cmake -S . -B ${{env.BUILD_DIR}}
+      - name: "CMake build"
+        run: |
+          cmake --build ${{env.BUILD_DIR}}
+      - name: "Tar files"
+        run: tar -czf build-macos-aarch64.tar.gz "${{env.BUILD_DIR}}"
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-macos-aarch64
+          path: build-macos-aarch64.tar.gz
+  # test-macos:
+    # name: "MacOS Test"
+    # needs: build-macos
+    # runs-on: macos-latest
+    # steps:
+      # - name: "Download build artifact"
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build-macos-aarch64
+      #     path: artifacts
+      # - name: "Untar files"
+      #   run: |
+      #     tar -xvf artifacts/build-macos-aarch64.tar.gz
+      - name: "Test"
+        run: |
+          cd ${{env.BUILD_DIR}} && ctest
+      - name: "Upload results"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-aarch64-test-results
+          path: "${{env.BUILD_DIR}}/Testing"

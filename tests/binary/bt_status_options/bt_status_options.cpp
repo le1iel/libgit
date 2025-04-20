@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
-#include <libgit/repository.h>
-#include <libgit/status_options.h>
-#include <libgit/init.h>
-#include <libgit/status.h>
 #include <filesystem>
+
+#include <libgit/repository.hpp>
+#include <libgit/status_options.hpp>
+#include <libgit/init.hpp>
+#include <libgit/status.hpp>
 
 #include "../../common/git_commands.h"
 

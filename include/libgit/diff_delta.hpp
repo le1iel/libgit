@@ -2,7 +2,7 @@
 #define INCLUDE_LIBGIT_DIFF_DELTA_H_
 
 #include <cstdint>
-#include "diff_file.h"
+#include <libgit/diff_file.hpp>
 
 namespace git {
 
