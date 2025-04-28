@@ -3,8 +3,7 @@
 
 #include <cstdint>
 #include <string>
-
-#include "flagfield.h"
+#include <flagfield.hpp>
 
 namespace git {
 

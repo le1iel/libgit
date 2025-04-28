@@ -1,4 +1,4 @@
-#include <libgit/error.h>
+#include <libgit/error.hpp>
 
 const char* GitErrcCategory::name() const noexcept
 {
@@ -7,7 +7,11 @@ const char* GitErrcCategory::name() const noexcept
 
 std::string GitErrcCategory::message(int ev) const
 {
-    return "Git error code";
+    switch (ev)
+    {
+        default:
+            return "Git error code";
+    }
 }
 
 

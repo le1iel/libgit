@@ -3,10 +3,9 @@
 
 #include <expected>
 #include <optional>
-
-#include "libgit/error.h"
-#include "reference.h"
-#include "status_options.h"
+#include <libgit/error.hpp>
+#include <libgit/reference.hpp>
+#include <libgit/status_options.hpp>
 
 // forward declaration to hide libgit2 headers
 struct git_repository;

@@ -1,12 +1,10 @@
 #ifndef INCLUDE_LIBGIT_STATUS_H_
 #define INCLUDE_LIBGIT_STATUS_H_
 
-#include <iterator>
-
-#include "diff_delta.h"
-#include "flagfield.h"
-#include "repository.h"
-#include "status_options.h"
+#include <libgit/diff_delta.hpp>
+#include <flagfield.hpp>
+#include <libgit/repository.hpp>
+#include <libgit/status_options.hpp>
 
 // forward declaration to hide libgit2 headers
 struct git_status_list;

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <libgit/error.h>
+#include <libgit/error.hpp>
 
 
 TEST(jeff, jeff)

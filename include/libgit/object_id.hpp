@@ -4,6 +4,7 @@
 #include <array>
 #include <optional>
 #include <string_view>
+#include <optional>
 
 namespace git {
 
