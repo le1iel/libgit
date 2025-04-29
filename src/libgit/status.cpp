@@ -98,16 +98,6 @@ void StatusIterator::updateStatusEntry() noexcept {
     return;
   }
 
-<<<<<<< HEAD
-    libgit::log::Log::debug("hello");
-    const git_status_entry *entry = git_status_byindex(m_statusList.get(), m_index);
-    if(entry == nullptr) {
-        libgit::log::Log::error("Entry is nullptr");
-        // std::cout << "Entry is nullptr" << std::endl;
-        return;
-    }
-    m_statusEntry.status = std::move(git::FlagField<git::FileStatus> {entry->status});
-=======
   const git_status_entry *entry =
       git_status_byindex(m_statusList.get(), m_index);
   if (entry == nullptr) {
@@ -115,13 +105,10 @@ void StatusIterator::updateStatusEntry() noexcept {
     return;
   }
   m_statusEntry.status = git::FlagField<git::FileStatus>{entry->status};
->>>>>>> develop
-
   m_statusEntry.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
   m_statusEntry.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
 }
 
-<<<<<<< HEAD
 StatusIterator::operator bool() const noexcept
 {
     if(not m_statusList)
@@ -142,10 +129,6 @@ StatusIterator::operator bool() const noexcept
 StatusIterator::ReferenceType
 StatusIterator::operator*() const noexcept {
     return m_statusEntry;
-=======
-StatusIterator::ReferenceType StatusIterator::operator*() const noexcept {
-  return m_statusEntry;
->>>>>>> develop
 }
 
 }  // namespace git
