@@ -80,10 +80,10 @@ class Status {
   StatusEntry file(std::string_view file) const noexcept;
 
   friend class Repository;
-
+  friend class StatusIterator;
  private:
   /// @brief Private constructor.
-  Status(const Repository* repo, StatusOptions options);
+  Status(const Repository* repo, const StatusOptions& options);
 
   /// @brief Custom git_status_list deletor.
   struct GitStatusListDeletor {
@@ -150,15 +150,16 @@ class StatusIterator {
                                   StatusIterator rhs) noexcept;
 
   /// @brief Dereference operator.
-  ReferenceType operator*() const noexcept;
+  ReferenceType operator*() noexcept;
 
   /// @brief Spaceship operator.
   friend auto operator<=>(const StatusIterator& lhs,
                           const StatusIterator& rhs) noexcept;
 
+  friend class Status;
  private:
   /// @brief Private constructor.
-  StatusIterator(const Repository* repo, StatusOptions options);
+  StatusIterator(const Status& status);
 
   /// @brief Updates the status entry.
   void updateStatusEntry() noexcept;

@@ -30,12 +30,12 @@ TEST_F(status_ut, new_file_tracked) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status(git::StatusOptions {
+  auto status = repo.status(git::StatusOptions {
     .show = git::StatusShow::IndexAndWorkdir,
     .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
   });
 
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtNew]);
+  EXPECT_TRUE(status.begin().operator*().status[git::FileStatus::WtNew]);
 }
 
 TEST_F(status_ut, new_file_untracked) {
@@ -48,9 +48,9 @@ TEST_F(status_ut, new_file_untracked) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status();
+  auto status = repo.status();
 
-  EXPECT_TRUE(it.operator*().status.none());
+  EXPECT_TRUE(status.begin().operator*().status.none());
 }
 
 TEST_F(status_ut, 2_new_file_untracked) {
@@ -63,11 +63,12 @@ TEST_F(status_ut, 2_new_file_untracked) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status(git::StatusOptions {
+  auto status = repo.status(git::StatusOptions {
     .show = git::StatusShow::IndexAndWorkdir,
     .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
   });
 
+  auto it = status.begin();
   EXPECT_TRUE(it.operator*().status.any());
   ++it;
   EXPECT_TRUE(it.operator*().status.any());
@@ -87,9 +88,9 @@ TEST_F(status_ut, modified_file) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status();
+  auto status = repo.status();
 
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtModified]);
+  EXPECT_TRUE(status.begin().operator*().status[git::FileStatus::WtModified]);
 }
 
 TEST_F(status_ut, deleted_file) {
@@ -104,9 +105,9 @@ TEST_F(status_ut, deleted_file) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status();
+  auto status = repo.status();
 
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtDeleted]);
+  EXPECT_TRUE(status.begin().operator*().status[git::FileStatus::WtDeleted]);
 }
 
 int main(int argc, char **argv) {

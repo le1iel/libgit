@@ -1,32 +1,24 @@
-#include <iostream>
-#include <stdexcept>
-
 #include <git2/errors.h>
 #include <git2/status.h>
 
 #include <flagfield.hpp>
+#include <iostream>
 #include <libgit/diff_delta.hpp>
 #include <libgit/repository.hpp>
 #include <libgit/status.hpp>
+#include <libgit/status_options.hpp>
 
 namespace {
 
 git_status_options convertOptions(const git::StatusOptions &options) {
-  git_status_options opts{
-      .version = 1U,
-      .show = GIT_STATUS_SHOW_INDEX_AND_WORKDIR,
-      .flags = 0U,
-      .pathspec = {nullptr, 0U},
-      .baseline = nullptr,
-      .rename_threshold = 50
-  };
-  // opts.show = static_cast<git_status_show_t>(options.show);
-  std::cerr << "Flags: " << options.flags.value() << std::endl;
-  opts.flags = options.flags.value();
-  // opts.pathspec = options.pathspec.c_str();
-  opts.rename_threshold = options.rename_threshold;
-  return opts;
+  return {.version = 1U,
+          .show = GIT_STATUS_SHOW_INDEX_AND_WORKDIR,
+          .flags = options.flags.value(),
+          .pathspec = {nullptr, 0U},
+          .baseline = nullptr,
+          .rename_threshold = options.rename_threshold};
 }
+
 git::DiffFile DiffFileFromGit2(const git_diff_file &file) {
   return git::DiffFile{
       .old_id{},
@@ -52,39 +44,33 @@ std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
       .new_file = DiffFileFromGit2(delta->new_file),
   };
 }
+
 }  // namespace
 
 namespace git {
-
-void StatusIterator::GitStatusListDeletor::operator()(
-    git_status_list *ptr) const noexcept {
-  if (ptr == nullptr) {
-    return;
-  }
-  git_status_list_free(ptr);
+Status::Status(const Repository *repo, const StatusOptions &options) {
+  git_status_list *status_list = nullptr;
+  git_status_options opts = convertOptions(options);
+  auto res = git_status_list_new(&status_list, repo->m_repo.get(), &opts);
+  std::ignore = res;
 }
 
-StatusIterator::StatusIterator(const Repository *repo, StatusOptions options) {
-  if (repo == nullptr) {
-    throw std::runtime_error("Repository is nullptr");
-  }
+StatusIterator Status::begin() const noexcept { return StatusIterator(*this); }
 
-  m_index = 0;
-  git_status_options temp = convertOptions(options);
+StatusIterator Status::end() const noexcept {
+    StatusIterator end{*this};
+    end.m_index = end.m_statusCount;
+    return end;
+}
 
-  git_status_list *statusList = nullptr;
+}  // namespace git
 
-  int res = git_status_list_new(&statusList, repo->m_repo.get(), &temp);
-  if (res != 0) {
-    // ToDo Errors
-    throw std::runtime_error("Failed to create status list");
-  }
+namespace git {
 
-  m_statusList =
-      std::unique_ptr<git_status_list, GitStatusListDeletor>(statusList);
-
+StatusIterator::StatusIterator(const Status &status) {
+  m_statusList = status.m_statusList;
   m_statusCount = git_status_list_entrycount(m_statusList.get());
-  updateStatusEntry();
+  m_index = 0U;
 }
 
 StatusIterator &StatusIterator::operator++() noexcept {
@@ -109,26 +95,8 @@ void StatusIterator::updateStatusEntry() noexcept {
   m_statusEntry.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
 }
 
-StatusIterator::operator bool() const noexcept
-{
-    if(not m_statusList)
-    {
-        return false;
-    }
-
-    if (m_index >= m_statusCount)
-    {
-        return false;
-    }
-
-    return true;
-
-}
-
-
-StatusIterator::ReferenceType
-StatusIterator::operator*() const noexcept {
-    return m_statusEntry;
+StatusIterator::ReferenceType StatusIterator::operator*() noexcept {
+  return m_statusEntry;
 }
 
 }  // namespace git

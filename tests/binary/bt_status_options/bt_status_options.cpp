@@ -29,9 +29,9 @@ TEST_F(status_ut, new_file) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status();
+  auto status = repo.status();
 
-  EXPECT_TRUE(it.operator*().status.none());
+  EXPECT_TRUE(status.begin().operator*().status.none());
 }
 
 TEST_F(status_ut, modified_file) {
@@ -48,9 +48,9 @@ TEST_F(status_ut, modified_file) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status();
+  auto status = repo.status();
 
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtModified]);
+  EXPECT_TRUE(status.begin().operator*().status[git::FileStatus::WtModified]);
 }
 
 TEST_F(status_ut, deleted_file) {
@@ -65,9 +65,9 @@ TEST_F(status_ut, deleted_file) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto it = repo.status();
+  auto status = repo.status();
 
-  EXPECT_TRUE(it.operator*().status[git::FileStatus::WtDeleted]);
+  EXPECT_TRUE(status.begin().operator*().status[git::FileStatus::WtDeleted]);
 }
 
 int main(int argc, char **argv) {

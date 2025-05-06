@@ -12,7 +12,7 @@ struct git_repository;
 
 namespace git {
 
-class StatusIterator;
+class Status;
 
 class Repository {
  public:
@@ -43,12 +43,12 @@ class Repository {
   std::optional<Reference> head() const noexcept;
 
   /// @brief returns the status of the repo.
-  StatusIterator status() const noexcept;
+  Status status() const noexcept;
 
   /// @brief returns the status of the repo.
-  StatusIterator status(StatusOptions options) const noexcept;
+  Status status(StatusOptions options) const noexcept;
 
-  friend class StatusIterator;
+  friend class Status;
 
  private:
   /// @brief Private constructor so that error handling can be done.
