@@ -2,10 +2,10 @@
 #define INCLUDE_LIBGIT_REPOSITORY_H_
 
 #include <expected>
-#include <optional>
 #include <libgit/error.hpp>
 #include <libgit/reference.hpp>
 #include <libgit/status_options.hpp>
+#include <optional>
 
 // forward declaration to hide libgit2 headers
 struct git_repository;
@@ -43,10 +43,10 @@ class Repository {
   std::optional<Reference> head() const noexcept;
 
   /// @brief returns the status of the repo.
-  Status status() const noexcept;
+  std::expected<Status, GitErrc> status() const noexcept;
 
   /// @brief returns the status of the repo.
-  Status status(StatusOptions options) const noexcept;
+  std::expected<Status, GitErrc> status(StatusOptions options) const noexcept;
 
   friend class Status;
 

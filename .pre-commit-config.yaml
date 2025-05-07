@@ -1,16 +1,15 @@
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0  # Use the ref you want to point at
-  hooks:
-  - id: trailing-whitespace
-  - id: mixed-line-ending
-- repo: https://github.com/codespell-project/codespell
-  rev: v2.4.1
-  hooks:
-  - id: codespell
-- repo: https://github.com/pocc/pre-commit-hooks
-  rev: master
-  hooks:
-  # - id: clang-format
-  #       args: [--style=Google]
-  - id: clang-tidy
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0 # Use the ref you want to point at
+    hooks:
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+# - repo: https://github.com/pocc/pre-commit-hooks
+#   rev: master
+#   hooks:
+#   - id: clang-format
+#         args: [--style=Google]

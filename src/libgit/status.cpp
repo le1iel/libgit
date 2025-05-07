@@ -2,7 +2,6 @@
 #include <git2/status.h>
 
 #include <flagfield.hpp>
-#include <iostream>
 #include <libgit/diff_delta.hpp>
 #include <libgit/repository.hpp>
 #include <libgit/status.hpp>
@@ -10,6 +9,7 @@
 
 namespace {
 
+/// @brief Converts internal options struct to libgit2s struct
 git_status_options convertOptions(const git::StatusOptions &options) {
   return {.version = 1U,
           .show = GIT_STATUS_SHOW_INDEX_AND_WORKDIR,
@@ -48,19 +48,29 @@ std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
 }  // namespace
 
 namespace git {
-Status::Status(const Repository *repo, const StatusOptions &options) {
+
+Status::Status(const Repository *repo, const StatusOptions &options, int *res) {
   git_status_list *status_list = nullptr;
   git_status_options opts = convertOptions(options);
-  auto res = git_status_list_new(&status_list, repo->m_repo.get(), &opts);
-  std::ignore = res;
+
+  auto resOut = git_status_list_new(&status_list, repo->m_repo.get(), &opts);
+
+  if (resOut != 0) {
+    *res = -1;
+    return;
+  }
+  m_statusList =
+      std::shared_ptr<git_status_list>(status_list, git_status_list_free);
 }
+
+Status::Status(Status &&other) : m_statusList(other.m_statusList) {}
 
 StatusIterator Status::begin() const noexcept { return StatusIterator(*this); }
 
 StatusIterator Status::end() const noexcept {
-    StatusIterator end{*this};
-    end.m_index = end.m_statusCount;
-    return end;
+  StatusIterator end{*this};
+  end.m_index = end.m_statusCount;
+  return end;
 }
 
 }  // namespace git
@@ -71,6 +81,7 @@ StatusIterator::StatusIterator(const Status &status) {
   m_statusList = status.m_statusList;
   m_statusCount = git_status_list_entrycount(m_statusList.get());
   m_index = 0U;
+  updateStatusEntry();
 }
 
 StatusIterator &StatusIterator::operator++() noexcept {
@@ -87,7 +98,6 @@ void StatusIterator::updateStatusEntry() noexcept {
   const git_status_entry *entry =
       git_status_byindex(m_statusList.get(), m_index);
   if (entry == nullptr) {
-    std::cout << "Entry is nullptr" << std::endl;
     return;
   }
   m_statusEntry.status = git::FlagField<git::FileStatus>{entry->status};

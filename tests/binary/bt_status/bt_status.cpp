@@ -30,12 +30,17 @@ TEST_F(status_ut, new_file_tracked) {
   ASSERT_TRUE(repoRes.has_value());
   git::Repository repo = std::move(repoRes.value());
 
-  auto status = repo.status(git::StatusOptions {
+  auto statusRes = repo.status(git::StatusOptions {
     .show = git::StatusShow::IndexAndWorkdir,
     .flags = git::FlagField<git::StatusFlags> {static_cast<std::uint32_t>(git::StatusFlags::IncludeUntracked)+1},
   });
 
-  EXPECT_TRUE(status.begin().operator*().status[git::FileStatus::WtNew]);
+  ASSERT_TRUE(statusRes.has_value());
+
+  auto status = std::move(statusRes).value();
+  auto it = status.begin();
+
+  EXPECT_TRUE((*it).status[git::FileStatus::WtNew]) << (*it).status.to_string();
 }
 
 TEST_F(status_ut, new_file_untracked) {

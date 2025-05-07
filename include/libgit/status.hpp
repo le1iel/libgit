@@ -83,7 +83,7 @@ class Status {
   friend class StatusIterator;
  private:
   /// @brief Private constructor.
-  Status(const Repository* repo, const StatusOptions& options);
+  Status(const Repository* repo, const StatusOptions& options, int * res);
 
   /// @brief Custom git_status_list deletor.
   struct GitStatusListDeletor {

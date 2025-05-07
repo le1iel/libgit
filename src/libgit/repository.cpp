@@ -1,28 +1,28 @@
+#include <git2/errors.h>
+#include <git2/repository.h>
+
 #include <expected>
+#include <iostream>
+#include <libgit/error.hpp>
+#include <libgit/repository.hpp>
+#include <libgit/status.hpp>
 #include <memory>
 #include <optional>
-#include <iostream>
 
-#include <git2/repository.h>
-#include <git2/errors.h>
-
-#include <libgit/repository.hpp>
-#include <libgit/error.hpp>
-#include <libgit/status.hpp>
+#include "log/logger.hpp"
 
 namespace git {
 
-void
-Repository::GitRepositoryDeletor::operator()(git_repository *ptr) const noexcept {
-      if (ptr == nullptr) {
-        return;
-      }
-      git_repository_free(ptr);
+void Repository::GitRepositoryDeletor::operator()(
+    git_repository *ptr) const noexcept {
+  if (ptr == nullptr) {
+    return;
+  }
+  git_repository_free(ptr);
 }
 
-std::expected<git::Repository, GitErrc>
-Repository::Open(std::string_view path) noexcept
-{
+std::expected<git::Repository, GitErrc> Repository::Open(
+    std::string_view path) noexcept {
   int res = 0;
   Repository repo{path, &res};
   if (res != 0) {
@@ -64,13 +64,13 @@ std::string Repository::path() const noexcept {
 }
 
 std::optional<Reference> Repository::head() const noexcept {
-
   git_reference *ref = nullptr;
 
   int res = git_repository_head(&ref, m_repo.get());
   if (res != 0) {
     std::cerr << "Error getting head: " << res << std::endl;
-    std::cerr << "Error getting head: " << git_error_last()->message << std::endl;
+    std::cerr << "Error getting head: " << git_error_last()->message
+              << std::endl;
     std::cerr << "Error getting head: " << git_error_last()->klass << std::endl;
     std::cerr << "Error getting head: " << GIT_EUNBORNBRANCH << std::endl;
 
@@ -80,14 +80,20 @@ std::optional<Reference> Repository::head() const noexcept {
   return Reference{ref};
 }
 
-Status
-Repository::status() const noexcept {
+std::expected<Status, GitErrc> Repository::status() const noexcept {
   return status(StatusOptions{});
 }
 
-Status
-Repository::status(StatusOptions options) const noexcept {
-  return Status{this, options};
+std::expected<Status, GitErrc> Repository::status(
+    StatusOptions options) const noexcept {
+  int res{0};
+  auto status = Status{this, options, &res};
+
+  if (res == 0) {
+    return status;
+  } else {
+    return std::unexpected(GitErrc::example);
+  }
 }
 
-}; // namespace git
+};  // namespace git

@@ -2,6 +2,8 @@
 #define LIBGIT_INCLUDE_FLAGFIELD_H_
 
 #include <cstdint>
+#include <string>
+#include <bitset>
 
 namespace git {
 
@@ -44,6 +46,10 @@ class FlagField {
         /// @brief Get the value of the flag field.
         std::uint32_t value() const {
             return m_value;
+        }
+
+        std::string to_string() {
+            return std::bitset<sizeof(m_value)*8>(m_value).to_string();
         }
 
     private:
