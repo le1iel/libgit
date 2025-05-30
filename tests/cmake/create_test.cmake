@@ -100,6 +100,7 @@ function(create_unit_test)
             ${target_test}-unit
         LINKS
             "${ARG_LINKS}"
-            ${target_test}-mock
+            GTest::gmock_main
+            ${target_test}-mocks
     )
 endfunction()

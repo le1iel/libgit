@@ -1,8 +1,14 @@
-add_custom_target(${target_test}-mock-libgit2)
-add_dependencies(${target_test}-mock ${target_test}-mock-libgit2)
+# Get include directories from libgit2 target
+get_target_property(LIBGIT2_INCLUDE_DIRS libgit2::libgit2package INTERFACE_INCLUDE_DIRECTORIES)
 
-target_sources(${target_test}-mock-libgit2
+# Add mock sources to the parent mocks object library
+target_sources(${target_test}-mocks
     PRIVATE
-    ${LIBGIT_INCLUDE_DIRS}
         mock_repository.h
+)
+
+# Add libgit2 include directories to mocks
+target_include_directories(${target_test}-mocks
+    PRIVATE
+        ${LIBGIT2_INCLUDE_DIRS}
 )

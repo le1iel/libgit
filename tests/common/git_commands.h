@@ -61,6 +61,32 @@ class GitCommands {
     return 0;
   }
 
+  int renameFile(std::string_view oldName, std::string_view newName) {
+    return runCommand("git mv " + std::string(oldName) + " " + std::string(newName));
+  }
+
+  int changeFileType(std::string_view filename, std::string_view mode) {
+    std::string filePath = m_path + "/" + std::string(filename);
+    std::filesystem::permissions(filePath, std::filesystem::perms::owner_all, std::filesystem::perm_options::replace);
+    return 0;
+  }
+
+  int createBranchAndCheckout(std::string_view branchName) {
+    return runCommand("git checkout -b " + std::string(branchName));
+  }
+
+  int checkoutBranch(std::string_view branchName) {
+    return runCommand("git checkout " + std::string(branchName));
+  }
+
+  int mergeBranch(std::string_view branchName, bool allowConflicts = false) {
+    std::string command = "git merge " + std::string(branchName);
+    if (allowConflicts) {
+      command.append(" || true");
+    }
+    return runCommand(command);
+  }
+
 private:
 
   int runCommand(std::string_view command) {

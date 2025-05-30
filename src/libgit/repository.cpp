@@ -6,10 +6,11 @@
 #include <libgit/error.hpp>
 #include <libgit/repository.hpp>
 #include <libgit/status.hpp>
+#include <log/logger.hpp>
 #include <memory>
 #include <optional>
 
-#include "log/logger.hpp"
+using libgit::log::Log;
 
 namespace git {
 
@@ -23,9 +24,12 @@ void Repository::GitRepositoryDeletor::operator()(
 
 std::expected<git::Repository, GitErrc> Repository::Open(
     std::string_view path) noexcept {
+
   int res = 0;
   Repository repo{path, &res};
   if (res != 0) {
+    Log::error("Error opening repository");
+
     return std::unexpected(GitErrc::example);
   }
   return repo;
@@ -36,6 +40,8 @@ Repository::Repository(std::string_view path, int *resOut) noexcept {
   int openRes = git_repository_open(&repo, path.cbegin());
 
   if (openRes != 0) {
+
+    Log::error(git_error_last()->message);
     *resOut = -1;
     return;
   }
