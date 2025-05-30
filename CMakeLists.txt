@@ -33,7 +33,7 @@ set_target_properties(
 target_include_directories(
   libgit
   PRIVATE
-    src/include
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/include>"
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
@@ -47,7 +47,7 @@ add_subdirectory(include)
 
 include(cmake/deps.cmake)
 
-target_link_libraries(libgit PUBLIC libgit2::libgit2package)
+target_link_libraries(libgit PUBLIC libgit2::libgit2_static)
 
 set_property(TARGET libgit PROPERTY CXX_STANDARD 23)
 
@@ -55,4 +55,3 @@ if(LIBGIT_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
 endif()
-

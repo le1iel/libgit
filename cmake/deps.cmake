@@ -2,6 +2,21 @@
 include(FetchContent)
 
 find_package(libgit2)
+
+add_library(libgit2::libgit2_static STATIC IMPORTED)
+
+get_target_property(LIBGIT2_SHARED_LOCATION libgit2::libgit2package LOCATION)
+cmake_path(GET LIBGIT2_SHARED_LOCATION PARENT_PATH LIBGIT2_LIB_PATH)
+
+get_target_property(LIBGIT2_INCLUDE_DIRS libgit2::libgit2package INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(LIBGIT2_LINK_LIBS libgit2::libgit2package INTERFACE_LINK_LIBRARIES)
+
+set_target_properties(libgit2::libgit2_static PROPERTIES
+    IMPORTED_LOCATION "${LIBGIT2_LIB_PATH}/libgit2.a"
+    INTERFACE_INCLUDE_DIRECTORIES "${LIBGIT2_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES "${LIBGIT2_LINK_LIBS}"
+)
+
 if(NOT libgit2_FOUND)
 
   function (cache var value type)

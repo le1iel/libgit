@@ -8,8 +8,7 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-# - repo: https://github.com/pocc/pre-commit-hooks
-#   rev: master
-#   hooks:
-#   - id: clang-format
-#         args: [--style=Google]
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: master
+    hooks:
+      - id: clang-format
