@@ -1,8 +1,10 @@
 #ifndef INCLUDE_LIBGIT_INIT_H_
 #define INCLUDE_LIBGIT_INIT_H_
 
-void init_libgit();
+/// @brief Initialize the library.
+int init_libgit();
 
+/// @brief Shutdown the library.
 void deinit_libgit();
 
-#endif // INCLUDE_LIBGIT_INIT_H_
+#endif  // INCLUDE_LIBGIT_INIT_H_
