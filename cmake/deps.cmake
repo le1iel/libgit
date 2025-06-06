@@ -1,4 +1,3 @@
-
 include(FetchContent)
 
 find_package(libgit2)
@@ -39,7 +38,7 @@ if(NOT libgit2_FOUND)
   FetchContent_MakeAvailable(libgit2)
 endif()
 
-if(LIBGIT_BUILD_TESTS)
+if(LIBGIT_BUILD_TESTING)
   find_package(GTest)
   if( NOT GTest_FOUND)
     FetchContent_Declare(
