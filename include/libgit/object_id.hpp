@@ -2,9 +2,9 @@
 #define INCLUDE_LIBGIT_OBJECT_ID_H_
 
 #include <array>
-#include <optional>
+#include <cstdint>
+#include <span>
 #include <string_view>
-#include <optional>
 
 namespace git {
 
@@ -12,15 +12,15 @@ class ObjectId {
  public:
   ObjectId() = default;
 
-  static std::optional<ObjectId> FromString(std::string_view id) noexcept;
+  ObjectId(std::span<const std::uint8_t, 20> id) noexcept;
 
   std::string_view id() const noexcept;
 
-  std::string_view shortId(std::size_t length) const noexcept;
+  /// @brief Spaceship operator.
+  friend bool operator==(const ObjectId& lhs, const ObjectId& rhs) noexcept;
 
-  int compare(std::string_view other) const noexcept;
-
-  int compare(ObjectId other) const noexcept;
+  friend std::ostream& operator<<(std::ostream& stream,
+                                  const ObjectId& id) noexcept;
 
  private:
   ObjectId(std::string_view id) noexcept;

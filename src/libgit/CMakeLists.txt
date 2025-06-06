@@ -2,6 +2,7 @@ target_sources(${PROJECT_NAME}
   PRIVATE
     error.cpp
     object.cpp
+    object_id.cpp
     reference.cpp
     repository.cpp
     status.cpp
