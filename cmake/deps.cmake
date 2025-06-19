@@ -2,41 +2,50 @@ include(FetchContent)
 
 find_package(libgit2)
 
+# so this is a bit of gymnastics but libgit2 doesn't export a target
+# for the static library, but the brew package does actually have it
 add_library(libgit2::libgit2_static STATIC IMPORTED)
 
+# get the location of the shared library
 get_target_property(LIBGIT2_SHARED_LOCATION libgit2::libgit2package LOCATION)
+# get the path where the shared library is
 cmake_path(GET LIBGIT2_SHARED_LOCATION PARENT_PATH LIBGIT2_LIB_PATH)
 
-get_target_property(LIBGIT2_INCLUDE_DIRS libgit2::libgit2package INTERFACE_INCLUDE_DIRECTORIES)
-get_target_property(LIBGIT2_LINK_LIBS libgit2::libgit2package INTERFACE_LINK_LIBRARIES)
+# the static library is next to the shared one
+set(LIBGIT2_STATIC_LOCATION "${LIBGIT2_LIB_PATH}/libgit2.a")
 
+# set the properties on the new target
 set_target_properties(libgit2::libgit2_static PROPERTIES
-    IMPORTED_LOCATION "${LIBGIT2_LIB_PATH}/libgit2.a"
-    INTERFACE_INCLUDE_DIRECTORIES "${LIBGIT2_INCLUDE_DIRS}"
-    INTERFACE_LINK_LIBRARIES "${LIBGIT2_LINK_LIBS}"
+    IMPORTED_LOCATION "${LIBGIT2_STATIC_LOCATION}"
+    INTERFACE_INCLUDE_DIRECTORIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_INCLUDE_DIRECTORIES>"
+    INTERFACE_LINK_LIBRARIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_LINK_LIBRARIES>"
 )
 
-if(NOT libgit2_FOUND)
 
-  function (cache var value type)
-    set(${var} ${value} CACHE ${type} "" FORCE)
-  endfunction()
+# I don't even know what is going on with the FetchContent version of this
+# library
 
-  FetchContent_Declare(
-      libgit2
-    GIT_REPOSITORY
-      "https://github.com/libgit2/libgit2.git"
-    GIT_TAG
-      "v1.9.0"
-    EXCLUDE_FROM_ALL
-  )
+# if(NOT libgit2_FOUND)
 
-  cache(BUILD_SHARED_LIBS OFF BOOL)
-  cache(BUILD_TESTS OFF BOOL)
-  cache(BUILD_CLI OFF BOOL)
+#   function (cache var value type)
+#     set(${var} ${value} CACHE ${type} "" FORCE)
+#   endfunction()
 
-  FetchContent_MakeAvailable(libgit2)
-endif()
+#   FetchContent_Declare(
+#       libgit2
+#     GIT_REPOSITORY
+#       "https://github.com/libgit2/libgit2.git"
+#     GIT_TAG
+#       "v1.9.0"
+#     EXCLUDE_FROM_ALL
+#   )
+
+#   cache(BUILD_SHARED_LIBS OFF BOOL)
+#   cache(BUILD_TESTS OFF BOOL)
+#   cache(BUILD_CLI OFF BOOL)
+
+#   FetchContent_MakeAvailable(libgit2)
+# endif()
 
 if(LIBGIT_BUILD_TESTING)
   find_package(GTest)

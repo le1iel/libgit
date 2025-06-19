@@ -1,4 +1,4 @@
-target_sources(${PROJECT_NAME}
+target_sources(gitxx-lib
   PRIVATE
     error.hpp
     diff_delta.hpp

@@ -5,6 +5,6 @@ namespace git {
 
 class Object {};
 
-} // namespace git
+}  // namespace git
 
-#endif // INCLUDE_LIBGIT_OBJECT_H_
+#endif  // INCLUDE_LIBGIT_OBJECT_H_

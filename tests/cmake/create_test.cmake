@@ -35,11 +35,11 @@ function(create_test)
   add_dependencies(${ARG_DEPENDENCY} ${target})
 
   target_link_libraries(
-    ${target}
+        ${target}
     PUBLIC
-    "${ARG_LINKS}"
-    GTest::gtest_main
-    # libgit
+        "${ARG_LINKS}"
+        GTest::gtest_main
+        gitxx-test-common
   )
 
   target_include_directories(
@@ -53,6 +53,8 @@ function(create_test)
   set_target_properties(${target} PROPERTIES OUTPUT_NAME "${ARG_NAME}")
   target_compile_options(${target} PRIVATE -fsanitize=address)
   target_link_options(${target} PRIVATE -fsanitize=address)
+
+  target_compile_definitions(${target} PRIVATE TEST_GIT_HOME="${TEST_GIT_HOME}")
 
   add_test(
     NAME ${ARG_NAME}
@@ -78,7 +80,7 @@ function(create_binary_test)
       "${target_test}-binary"
     LINKS
       "${ARG_LINKS}"
-      libgit
+      gitxx-lib
   )
 endfunction()
 

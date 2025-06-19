@@ -1,12 +1,12 @@
 #ifndef INCLUDE_LIBGIT_STATUS_H_
 #define INCLUDE_LIBGIT_STATUS_H_
 
-#include <optional>
-#include <memory>
 #include <flagfield.hpp>
-#include <libgit/diff_delta.hpp>
-#include <libgit/repository.hpp>
-#include <libgit/status_options.hpp>
+#include <gitxx/diff_delta.hpp>
+#include <gitxx/repository.hpp>
+#include <gitxx/status_options.hpp>
+#include <memory>
+#include <optional>
 
 // forward declaration to hide libgit2 headers
 struct git_status_list;
@@ -18,15 +18,15 @@ enum class FileStatus {
   /// @brief No changes.
   Current = 0,
   /// @brief New in index.
-  IndexNew = 1,
+  IndexNew = 0,
   /// @brief Modified in index.
-  IndexModified = 2,
+  IndexModified = 1,
   /// @brief Deleted in index.
-  IndexDeleted = 3,
+  IndexDeleted = 2,
   /// @brief Renamed in index.
-  IndexRenamed = 4,
+  IndexRenamed = 3,
   /// @brief Type changed in index.
-  IndexTypeChanged = 5,
+  IndexTypeChanged = 4,
   /// @brief New in workdir.
   WtNew = 7,
   /// @brief Modified in workdir.
@@ -40,9 +40,9 @@ enum class FileStatus {
   /// @brief Unreadable in workdir.
   WtUnreadable = 12,
   /// @brief File in ignored.
-  Ignored = 13,
+  Ignored = 14,
   /// @brief File is conflicted.
-  Conflicted = 14
+  Conflicted = 15
 };
 
 struct StatusEntry {
@@ -58,17 +58,20 @@ class Status {
   using IteratorType = StatusIterator;
 
  public:
+  /// @brief Destructor.
+  ~Status() = default;
+
   /// @brief Move constructor.
-  Status(Status&&);
+  Status(Status&& other) = default;
 
   /// @brief Copy constructor.
-  Status(const Status&);
+  Status(const Status& other) = default;
 
   /// @brief Move assignment operator.
-  Status& operator=(Status&&);
+  Status& operator=(Status&& other) = default;
 
   /// @brief Copy assignment operator.
-  Status operator=(Status&);
+  Status& operator=(const Status& other) = default;
 
   /// @brief Beginning iterator.
   IteratorType begin() const noexcept;
@@ -81,9 +84,10 @@ class Status {
 
   friend class Repository;
   friend class StatusIterator;
+
  private:
   /// @brief Private constructor.
-  Status(const Repository* repo, const StatusOptions& options, int * res);
+  Status(const Repository* repo, const StatusOptions& options, int* res);
 
   /// @brief Custom git_status_list deletor.
   struct GitStatusListDeletor {
@@ -112,7 +116,7 @@ class StatusIterator {
   StatusIterator& operator=(StatusIterator&&) noexcept;
 
   /// @brief Copy assignment operator.
-  StatusIterator operator=(StatusIterator&) noexcept;
+  StatusIterator& operator=(const StatusIterator&) noexcept;
 
   /// @brief Pre-increment operator.
   StatusIterator& operator++() noexcept;
@@ -130,24 +134,24 @@ class StatusIterator {
   ReferenceType operator[](DifferenceType n) const noexcept;
 
   /// @brief Addition operator.
-  StatusIterator operator+(DifferenceType n) const noexcept;
+  StatusIterator operator+(DifferenceType n) noexcept;
 
   /// @brief Assignment addition operator.
-  StatusIterator& operator+=(DifferenceType n) const noexcept;
+  StatusIterator& operator+=(DifferenceType n) noexcept;
 
   /// @brief Subtraction operator.
-  StatusIterator operator-(DifferenceType n) const noexcept;
+  StatusIterator operator-(DifferenceType n) noexcept;
 
   /// @brief Assignment subtraction operator.
-  StatusIterator& operator-=(DifferenceType n) const noexcept;
+  StatusIterator& operator-=(DifferenceType n) noexcept;
 
   /// @brief Addition operator.
   friend DifferenceType operator+(StatusIterator lhs,
                                   StatusIterator rhs) noexcept;
 
   /// @brief Subtraction operator.
-  friend DifferenceType operator-(StatusIterator lhs,
-                                  StatusIterator rhs) noexcept;
+  friend DifferenceType operator-(const StatusIterator lhs,
+                                  const StatusIterator rhs) noexcept;
 
   /// @brief Dereference operator.
   ReferenceType operator*() noexcept;
@@ -156,7 +160,11 @@ class StatusIterator {
   friend auto operator<=>(const StatusIterator& lhs,
                           const StatusIterator& rhs) noexcept;
 
+  friend bool operator==(const StatusIterator& lhs,
+                         const StatusIterator& rhs) noexcept;
+
   friend class Status;
+
  private:
   /// @brief Private constructor.
   StatusIterator(const Status& status);

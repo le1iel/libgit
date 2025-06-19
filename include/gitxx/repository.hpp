@@ -2,9 +2,10 @@
 #define INCLUDE_LIBGIT_REPOSITORY_H_
 
 #include <expected>
-#include <libgit/error.hpp>
-#include <libgit/reference.hpp>
-#include <libgit/status_options.hpp>
+#include <filesystem>
+#include <gitxx/error.hpp>
+#include <gitxx/reference.hpp>
+#include <gitxx/status_options.hpp>
 #include <optional>
 
 // forward declaration to hide libgit2 headers
@@ -14,27 +15,27 @@ namespace git {
 
 class Status;
 
+// template<typename Allocator = std::allocator<void>>
 class Repository {
  public:
   /// @brief Open from a path.
-  /// @warning The path shall be null-terminated.
   static std::expected<Repository, GitErrc> Open(
-      std::string_view path) noexcept;
+      const std::filesystem::path path) noexcept;
 
   /// @brief Destructor.
-  ~Repository();
+  ~Repository() = default;
 
   /// @brief Move constructable.
-  Repository(Repository &&other);
+  Repository(Repository &&other) = default;
 
   /// @brief Move assignable.
-  Repository &operator=(Repository &&other);
+  Repository &operator=(Repository &&other) = default;
 
-  /// @brief Not copy constructable.
-  Repository(const Repository &other) = delete;
+  /// @brief Copy constructable.
+  Repository(const Repository &other) = default;
 
   /// @brief Not copy assignable.
-  Repository &operator=(const Repository &other) = delete;
+  Repository &operator=(const Repository &other) = default;
 
   /// @brief returns the path of the repo.
   std::string path() const noexcept;
@@ -51,6 +52,10 @@ class Repository {
   friend class Status;
 
  private:
+  // using AllocTraits = std::allocator_traits<Allocator>;
+
+  // Allocator m_alloc;
+
   /// @brief Private constructor so that error handling can be done.
   /// @warning The path shall be null-terminated.
   /// @param path The path to the repository.
@@ -63,7 +68,7 @@ class Repository {
   };
 
   /// @brief The libgit2 repository object.
-  std::unique_ptr<git_repository, GitRepositoryDeletor> m_repo{nullptr};
+  std::shared_ptr<git_repository> m_repo{nullptr};
 };
 
 }  // namespace git

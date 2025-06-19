@@ -2,8 +2,8 @@
 #define INCLUDE_LIBGIT_STATUS_OPTIONS_H_
 
 #include <cstdint>
-#include <string>
 #include <flagfield.hpp>
+#include <string>
 
 namespace git {
 

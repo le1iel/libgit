@@ -1,16 +1,17 @@
+#include <git_commands.h>
 #include <gtest/gtest.h>
+
 #include <filesystem>
-
-#include <libgit/repository.hpp>
-#include <libgit/status_options.hpp>
-#include <libgit/init.hpp>
-#include <libgit/status.hpp>
-
-#include "../../common/git_commands.h"
+#include <gitxx/init.hpp>
+#include <gitxx/repository.hpp>
+#include <gitxx/status.hpp>
+#include <gitxx/status_options.hpp>
 
 class status_ut : public ::testing::Test {
  public:
-  const std::string repo_path { std::filesystem::absolute(std::filesystem::path("/tmp/bt_status")).string() };
+  const std::string repo_path{
+      std::filesystem::absolute(std::filesystem::path("/tmp/bt_status"))
+          .string()};
 
   static void SetUpTestSuite() { init_libgit(); }
 
@@ -21,9 +22,8 @@ class status_ut : public ::testing::Test {
 /// @note The status will not show new files it the option is not set.
 TEST_F(status_ut, new_file) {
   git::GitCommands internalRepo{repo_path};
-  internalRepo.makeEmptyCommit("one");
-  internalRepo.createFile("test.txt", "content");
-  internalRepo.printStatus();
+  ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
+  ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
 
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
@@ -40,10 +40,10 @@ TEST_F(status_ut, modified_file) {
 
   std::string modified_file = "test.txt";
 
-  internalRepo.createFile(modified_file, "content");
-  internalRepo.add(modified_file);
-  internalRepo.commit("Initial commit");
-  internalRepo.modifyFile(modified_file, "new content");
+  ASSERT_TRUE(internalRepo.createFile(modified_file, "content"));
+  ASSERT_TRUE(internalRepo.add(modified_file));
+  ASSERT_TRUE(internalRepo.commit("Initial commit"));
+  ASSERT_TRUE(internalRepo.modifyFile(modified_file, "new content"));
 
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());
@@ -57,11 +57,10 @@ TEST_F(status_ut, modified_file) {
 
 TEST_F(status_ut, deleted_file) {
   git::GitCommands internalRepo{repo_path};
-  internalRepo.createFile("test.txt", "content");
-  internalRepo.add("test.txt");
-  internalRepo.commit("Initial commit");
-
-  internalRepo.deleteFile("test.txt");
+  ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
+  ASSERT_TRUE(internalRepo.add("test.txt"));
+  ASSERT_TRUE(internalRepo.commit("Initial commit"));
+  ASSERT_TRUE(internalRepo.deleteFile("test.txt"));
 
   auto repoRes = git::Repository::Open(repo_path);
   ASSERT_TRUE(repoRes.has_value());

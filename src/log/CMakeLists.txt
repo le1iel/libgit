@@ -1,4 +1,4 @@
-target_sources(${PROJECT_NAME}
+target_sources(gitxx-lib
   PRIVATE
     logger.cpp
 )

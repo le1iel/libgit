@@ -14,7 +14,6 @@ enum class LogLevel { Error, Warning, Info, Debug };
 
 class Log {
  public:
-
   static void error(const std::string_view message);
 
   static void warning(const std::string_view message);

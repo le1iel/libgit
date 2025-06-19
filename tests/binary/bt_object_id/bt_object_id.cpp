@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <libgit/object_id.hpp>
+#include <gitxx/object_id.hpp>
 #include <sstream>
 
 TEST(stream, string) {

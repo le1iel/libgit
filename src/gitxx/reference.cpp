@@ -1,14 +1,13 @@
-#include <memory>
-
 #include <git2/refs.h>
 #include <git2/types.h>
 
-#include <libgit/reference.hpp>
+#include <gitxx/reference.hpp>
+#include <memory>
 
 namespace git {
 
-void
-Reference::GitReferenceDeletor::operator()(git_reference *ref) const noexcept {
+void Reference::GitReferenceDeletor::operator()(
+    git_reference *ref) const noexcept {
   if (ref == nullptr) {
     return;
   }
@@ -71,4 +70,4 @@ int Reference::resolve() noexcept {
   return 0;
 }
 
-} // namespace git
+}  // namespace git

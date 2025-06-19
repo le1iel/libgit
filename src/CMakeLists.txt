@@ -1,2 +1,2 @@
-add_subdirectory(libgit)
+add_subdirectory(gitxx)
 add_subdirectory(log)

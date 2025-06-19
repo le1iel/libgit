@@ -1,6 +1,6 @@
 #include <git2.h>
 
-#include <libgit/init.hpp>
+#include <gitxx/init.hpp>
 
 int init_libgit() {
   // ToDo: can this be moved to repo? should be the only entry points?
