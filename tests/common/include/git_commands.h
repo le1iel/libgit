@@ -10,22 +10,6 @@
 
 #include "gtest/gtest.h"
 
-/// @brief Gives the current googletest test case name.
-constexpr std::string_view gtest_func_name(std::string_view func) {
-  size_t start_pos = func.rfind(' ');
-  size_t end_pos = func.rfind("_Test::");
-
-  if (start_pos == std::string_view::npos ||
-      end_pos == std::string_view::npos) {
-    throw std::runtime_error("Cannot parse test name");
-  };
-
-  start_pos++;
-  end_pos -= start_pos;
-
-  return func.substr(start_pos, end_pos);
-}
-
 namespace git {
 
 class GitCommands {
@@ -37,8 +21,8 @@ class GitCommands {
 
   GitCommands(
       const std::source_location location = std::source_location::current())
-      : m_home(TEST_GIT_HOME), m_path(std::filesystem::temp_directory_path()) {
-    m_path /= gtest_func_name(location.function_name());
+      : m_home(TEST_GIT_HOME),
+        m_path(std::filesystem::temp_directory_path() / "gitxx_test") {
     std::filesystem::create_directories(m_path);
 
     std::ignore = runCommand("git init -q");
