@@ -18,7 +18,7 @@ include(cmake/options.cmake)
 add_library(gitxx-lib SHARED)
 
 set_target_properties(
-  gitxx-lib
+    gitxx-lib
   PROPERTIES VERSION ${PROJECT_VERSION}
              SOVERSION ${PROJECT_VERSION_MAJOR}
 )
@@ -26,9 +26,9 @@ set_target_properties(
 target_include_directories(
     gitxx-lib
   PUBLIC
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
   PRIVATE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/include>"
 )
@@ -41,8 +41,8 @@ add_subdirectory(include)
 include(cmake/deps.cmake)
 
 target_link_libraries(gitxx-lib
-    PUBLIC
-        libgit2::libgit2_static
+  PUBLIC
+    libgit2::libgit2_static
 )
 
 set_property(TARGET gitxx-lib PROPERTY CXX_STANDARD 23)

@@ -16,9 +16,9 @@ set(LIBGIT2_STATIC_LOCATION "${LIBGIT2_LIB_PATH}/libgit2.a")
 
 # set the properties on the new target
 set_target_properties(libgit2::libgit2_static PROPERTIES
-    IMPORTED_LOCATION "${LIBGIT2_STATIC_LOCATION}"
-    INTERFACE_INCLUDE_DIRECTORIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_INCLUDE_DIRECTORIES>"
-    INTERFACE_LINK_LIBRARIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_LINK_LIBRARIES>"
+  IMPORTED_LOCATION "${LIBGIT2_STATIC_LOCATION}"
+  INTERFACE_INCLUDE_DIRECTORIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_INCLUDE_DIRECTORIES>"
+  INTERFACE_LINK_LIBRARIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_LINK_LIBRARIES>"
 )
 
 
@@ -49,7 +49,7 @@ set_target_properties(libgit2::libgit2_static PROPERTIES
 
 if(LIBGIT_BUILD_TESTING)
   find_package(GTest)
-  if( NOT GTest_FOUND)
+  if(NOT GTest_FOUND)
     FetchContent_Declare(
         GTest
       GIT_REPOSITORY
