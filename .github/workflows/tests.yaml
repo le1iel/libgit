@@ -19,9 +19,6 @@ jobs:
       - name: "Install dependencies"
         run: |
           brew install libgit2 googletest
-      - name: "Make libgit2 work"
-        run: |
-          sed -i '' 's/.\/include\/git2/include/' ${{env.LIBGIT_CMAKE}}
       - name: "CMake configure"
         run: |
           cmake -S . -B ${{env.BUILD_DIR}}

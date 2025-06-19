@@ -4,6 +4,7 @@ add_dependencies(${target_test} ${target_test_binary})
 
 add_subdirectory(bt_error)
 add_subdirectory(bt_flagfield)
+add_subdirectory(bt_object_id)
 add_subdirectory(bt_repository)
-add_subdirectory(bt_status)
 add_subdirectory(bt_status_options)
+add_subdirectory(bt_status)

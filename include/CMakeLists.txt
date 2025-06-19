@@ -1,6 +1,6 @@
-add_subdirectory(libgit)
+add_subdirectory(gitxx)
 
-target_sources(${PROJECT_NAME}
+target_sources(gitxx-lib
   PRIVATE
     flagfield.hpp
 )

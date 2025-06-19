@@ -9,7 +9,7 @@ else()
   message("ccache not found")
 endif()
 
-project(libgit
+project(gitxx
   VERSION
     0.0.1
   DESCRIPTION
@@ -22,37 +22,39 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(cmake/options.cmake)
 
-add_library(libgit SHARED)
+add_library(gitxx-lib SHARED)
 
 set_target_properties(
-  libgit
+  gitxx-lib
   PROPERTIES VERSION ${PROJECT_VERSION}
-               SOVERSION ${PROJECT_VERSION_MAJOR}
+             SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 target_include_directories(
-  libgit
-  PRIVATE
-    src/include
+    gitxx-lib
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+  PRIVATE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/include>"
 )
 
-target_compile_options(libgit PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(gitxx-lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
 add_subdirectory(src)
 add_subdirectory(include)
 
 include(cmake/deps.cmake)
 
-target_link_libraries(libgit PUBLIC libgit2::libgit2package)
+target_link_libraries(gitxx-lib
+    PUBLIC
+        libgit2::libgit2_static
+)
 
-set_property(TARGET libgit PROPERTY CXX_STANDARD 23)
+set_property(TARGET gitxx-lib PROPERTY CXX_STANDARD 23)
 
-if(LIBGIT_BUILD_TESTS)
+if(LIBGIT_BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()
-

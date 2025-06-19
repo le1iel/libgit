@@ -1,0 +1,11 @@
+target_sources(gitxx-lib
+  PRIVATE
+    error.cpp
+    object.cpp
+    object_id.cpp
+    reference.cpp
+    repository.cpp
+    status.cpp
+    status_iterator.cpp
+    init.cpp
+)

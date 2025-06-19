@@ -1,56 +1,83 @@
-#ifndef INCLUDE_FLAGFIELD_H_
-#define INCLUDE_FLAGFIELD_H_
+#ifndef LIBGIT_INCLUDE_FLAGFIELD_H_
+#define LIBGIT_INCLUDE_FLAGFIELD_H_
 
+#include <bitset>
 #include <cstdint>
+#include <iostream>
+#include <numeric>
+#include <ostream>
+#include <string>
+#include <type_traits>
 
 namespace git {
 
-template <typename T>
+template <typename T, std::size_t Size = 32,
+          typename = std::enable_if_t<std::is_enum_v<T>>>
 class FlagField {
-    public:
-        using ValueType = T;
+ public:
+  using ValueType = T;
 
-        /// @brief Constructor from a value.
-        FlagField(std::uint32_t value) : m_value(value) { }
+  /// @brief Constructor from a value.
+  constexpr FlagField(std::uint32_t value) : m_value(value) {}
 
-        /// @brief Constructor from a value.
-        FlagField() = default;
+  /// @brief Constructor from a initializer list.
+  constexpr FlagField(std::initializer_list<T> enum_list)
+      : m_value(std::accumulate(
+            enum_list.begin(), enum_list.end(), 0,
+            [](std::uint32_t value, T flag) {
+              return (value | 1 << static_cast<std::uint32_t>(flag));
+            })) {}
 
-        /// @brief Check if the given enum is set.
-        bool test(ValueType flag) const {
-            return !!(m_value & (1 << static_cast<std::uint32_t>(flag)));
-        }
+  /// @brief Constructor from a value.
+  constexpr FlagField(ValueType value) : m_value(0) { set(value); }
 
-        /// @brief Check if the given enum is set.
-        bool operator[](ValueType flag) const {
-            return test(flag);
-        }
+  /// @brief Constructor from a value.
+  constexpr FlagField() = default;
 
-        /// @brief Set a flag.
-        void set(ValueType flag) {
-            m_value |= (1 << static_cast<std::uint32_t>(flag));
-        }
+  /// @brief Check if the given enum is set.
+  constexpr bool test(ValueType flag) const {
+    return m_value.test(static_cast<std::size_t>(flag));
+  }
 
-        /// @brief Check if no flag is set.
-        bool none() const {
-            return m_value == 0;
-        }
+  /// @brief Check if the given enum is set.
+  constexpr bool operator[](ValueType flag) const { return test(flag); }
 
-        /// @brief Check if any flag is set.
-        bool any() const {
-            return m_value != 0;
-        }
+  /// @brief Returns a reference to the bit at the given index which you
+  /// can mutate.
+  constexpr std::bitset<Size>::reference operator[](ValueType flag) {
+    return m_value[static_cast<uint32_t>(flag)];
+  }
 
-        /// @brief Get the value of the flag field.
-        std::uint32_t value() const {
-            return m_value;
-        }
+  /// @brief Set a flag.
+  constexpr void set(ValueType flag) {
+    m_value.set(static_cast<std::size_t>(flag));
+  }
 
-    private:
-        /// @brief The value of the flag field.
-        std::uint32_t m_value { 0U };
+  /// @brief Check if no flag is set.
+  constexpr bool none() const { return m_value.none(); }
+
+  /// @brief Check if any flag is set.
+  constexpr bool any() const { return m_value.any(); }
+
+  /// @brief Get the value of the flag field.
+  constexpr std::uint32_t value() const {
+    return static_cast<std::uint32_t>(m_value.to_ulong());
+  }
+
+  /// @brief Get string representation of the bitset.
+  std::string to_string() const { return m_value.to_string(); }
+
+ private:
+  /// @brief The value of the flag field.
+  std::bitset<Size> m_value{0U};
 };
+
+/// @brief Stream insertion operator for FlagField.
+template <typename T, std::size_t Size, typename E>
+std::ostream& operator<<(std::ostream& os, const FlagField<T, Size, E>& flags) {
+  return os << flags.to_string();
+}
 
 }  // namespace git
 
-#endif  // INCLUDE_FLAGFIELD_H_
+#endif  // LIBGIT_INCLUDE_FLAGFIELD_H_

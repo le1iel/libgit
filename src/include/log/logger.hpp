@@ -1,37 +1,40 @@
 #ifndef SRC_INCLUDE_LOG_LOGGING_H
 #define SRC_INCLUDE_LOG_LOGGING_H
 
-#include <memory>
+// #include <array>
+// #include <memory>
 #include <string_view>
-#include <array>
 
 namespace libgit {
 
 namespace log {
 
+/// @brief Log levels
 enum class LogLevel { Error, Warning, Info, Debug };
 
 class Log {
  public:
-  static Log& getLogger();
   static void error(const std::string_view message);
+
   static void warning(const std::string_view message);
-  // static void info(const std::string& message);
-  // static void debug(const std::string& message);
 
- private:
-  void writeToBuffer(std::string_view message);
+  static void info(const std::string_view message);
 
-  Log(int fd);
+  static void debug(const std::string_view message);
 
   ~Log() = default;
+  Log();
 
-  std::array<char, 256> m_buffer {};
+ private:
+  // /// @brief writes
+  // void writeToBuffer(std::string_view message);
 
-  std::size_t m_pos;
+  // /// @brief buffer for logs
+  // std::array<char, 256> m_buffer{};
 
-  static std::unique_ptr<Log> m_instance;
-  int m_fd;
+  // std::size_t m_pos{0U};
+
+  // int m_fd{-1};
 };
 
 }  // namespace log

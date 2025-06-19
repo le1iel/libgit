@@ -1,0 +1,13 @@
+target_sources(gitxx-lib
+  PRIVATE
+    error.hpp
+    diff_delta.hpp
+    diff_file.hpp
+    object.hpp
+    object_id.hpp
+    reference.hpp
+    repository.hpp
+    status.hpp
+    status_options.hpp
+    init.hpp
+)
