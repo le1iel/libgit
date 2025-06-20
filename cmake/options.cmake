@@ -6,6 +6,4 @@ option(BUILD_TESTING "Build test programs" ON)
 
 option(GITXX_BUILD_TESTING "Build test programs" ${BUILD_TESTING})
 
-option(GITXX_BUILD_TESTING "Build test programs" ${BUILD_TESTING})
-
 option(GITXX_COVERAGE "Build test programs" ON)
