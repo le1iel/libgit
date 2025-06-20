@@ -1,6 +1,9 @@
 set(TEST_COVERAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/coverage")
 file(MAKE_DIRECTORY ${CMAKE_TEST_COVERAGE_DIR})
 
+target_compile_options(gitxx-lib PRIVATE  -g -O0 -fprofile-instr-generate -fcoverage-mapping)
+target_link_libraries(gitxx-lib PRIVATE -fprofile-instr-generate)
+
 add_custom_target(coverage
     COMMAND llvm-profdata merge -sparse
         ${TEST_COVERAGE_DIR}/coverage_*.profraw 
@@ -14,4 +17,3 @@ add_custom_target(coverage
 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
-add_dependencies(coverage test)

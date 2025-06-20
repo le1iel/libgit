@@ -15,19 +15,6 @@ function(create_test)
     message(FATAL_ERROR "You must provide a name")
   endif()
 
-
-  # TODO coverage
-  # set_source_files_properties(
-  #         ${ARG_SRC}
-  #     PROPERTIES
-  #         COMPILE_FLAGS "-g -fprofile-arcs -ftest-coverage"
-  # )
-
-  # set_source_files_properties(
-  #         ${ARG_SRC}
-  #     PROPERTIES
-  #         LINK_FLAGS "-fprofile-arcs -ftest-coverage -lgcov -lcoverage")
-
   add_executable(
     ${target}
     "${ARG_SRC}"
@@ -56,10 +43,21 @@ function(create_test)
 
   target_compile_definitions(${target} PRIVATE TEST_GIT_HOME="${TEST_GIT_HOME}")
 
+
   add_test(
     NAME ${ARG_NAME}
     COMMAND ${target}
   )
+
+  if(GITXX_COVERAGE)
+    target_compile_options(${target} PRIVATE -g -O0 -fprofile-instr-generate -fcoverage-mapping)
+    target_link_libraries(${target} PRIVATE -fprofile-instr-generate)
+
+    set_tests_properties(${ARG_NAME} PROPERTIES
+        ENVIRONMENT "LLVM_PROFILE_FILE=${TEST_COVERAGE_DIR}/coverage_%p_%m.profraw"
+    )
+  endif()
+
 endfunction()
 
 function(create_binary_test)
