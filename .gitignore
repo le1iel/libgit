@@ -31,7 +31,15 @@
 *.out
 *.app
 
+# Build folders
 .cache/
 build/
 
+# clangd
 compile_commands.json
+
+# python venv
+bin/
+lib/
+pyvenv.cfg
+
