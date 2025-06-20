@@ -1,15 +1,7 @@
-function(write_git_config)
-  cmake_parse_arguments(
-    ARG
-    ""
-    "LOCATION"
-    ""
-    ${ARGN}
-  )
+set(TEST_GIT_HOME "${CMAKE_CURRENT_BINARY_DIR}/git_home")
 
-  configure_file(
-      "${CMAKE_CURRENT_LIST_DIR}/cmake/in/.gitconfig"
-      "${ARG_LOCATION}/.gitconfig"
-      COPYONLY
-  )
-endfunction()
+configure_file(
+  "${CMAKE_CURRENT_LIST_DIR}/in/.gitconfig"
+  "${TEST_GIT_HOME}/.gitconfig"
+  COPYONLY
+)
