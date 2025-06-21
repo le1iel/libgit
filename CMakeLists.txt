@@ -47,7 +47,7 @@ target_link_libraries(gitxx-lib
 
 set_property(TARGET gitxx-lib PROPERTY CXX_STANDARD 23)
 
-if(LIBGIT_BUILD_TESTING)
+if(GITXX_BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()

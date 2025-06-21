@@ -47,7 +47,7 @@ set_target_properties(libgit2::libgit2_static PROPERTIES
 #   FetchContent_MakeAvailable(libgit2)
 # endif()
 
-if(LIBGIT_BUILD_TESTING)
+if(GITXX_BUILD_TESTING)
   find_package(GTest)
   if(NOT GTest_FOUND)
     FetchContent_Declare(
