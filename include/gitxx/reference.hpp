@@ -6,7 +6,7 @@
 // forward declaration to hide libgit2 headers
 struct git_reference;
 
-namespace git {
+namespace gitxx {
 
 enum class ReferenceType {
   Invalid = 0,
@@ -57,5 +57,5 @@ class Reference {
   std::unique_ptr<git_reference, GitReferenceDeletor> m_ref;
 };
 
-}  // namespace git
+}  // namespace gitxx
 #endif  // INCLUDE_GITXX_REFERENCE_HPP_

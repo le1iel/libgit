@@ -3,7 +3,7 @@
 #include <iostream>
 #include <log/logger.hpp>
 
-namespace libgit {
+namespace gitxx {
 
 namespace log {
 
@@ -21,4 +21,4 @@ void Log::debug(const std::string_view message) {
 
 }  // namespace log
 
-}  // namespace libgit
+}  // namespace gitxx

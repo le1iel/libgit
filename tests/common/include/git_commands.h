@@ -10,7 +10,7 @@
 
 #include "gtest/gtest.h"
 
-namespace git {
+namespace gitxx {
 
 class GitCommands {
  public:
@@ -136,4 +136,4 @@ class GitCommands {
   std::filesystem::path m_home{};
 };
 
-}  // namespace git
+}  // namespace gitxx

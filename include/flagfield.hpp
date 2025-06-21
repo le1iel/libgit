@@ -9,7 +9,7 @@
 #include <string>
 #include <type_traits>
 
-namespace git {
+namespace gitxx {
 
 template <typename T, std::size_t Size = 32,
           typename = std::enable_if_t<std::is_enum_v<T>>>
@@ -78,6 +78,6 @@ std::ostream& operator<<(std::ostream& os, const FlagField<T, Size, E>& flags) {
   return os << flags.to_string();
 }
 
-}  // namespace git
+}  // namespace gitxx
 
 #endif  // INCLUDE_FLAGFIELD_HPP_

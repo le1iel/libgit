@@ -4,7 +4,7 @@
 #include <gitxx/reference.hpp>
 #include <memory>
 
-namespace git {
+namespace gitxx {
 
 void Reference::GitReferenceDeletor::operator()(
     git_reference *ref) const noexcept {
@@ -70,4 +70,4 @@ int Reference::resolve() noexcept {
   return 0;
 }
 
-}  // namespace git
+}  // namespace gitxx
