@@ -2,7 +2,7 @@
 
 #include <flagfield.hpp>
 
-using git::FlagField;
+using gitxx::FlagField;
 
 /// @brief Test enum
 enum class TestFlags { Flag1 = 0, Flag2 = 1, Flag3 = 2 };

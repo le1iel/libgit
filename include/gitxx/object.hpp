@@ -1,10 +1,10 @@
 #ifndef INCLUDE_GITXX_OBJECT_HPP_
 #define INCLUDE_GITXX_OBJECT_HPP_
 
-namespace git {
+namespace gitxx {
 
 class Object {};
 
-}  // namespace git
+}  // namespace gitxx
 
 #endif  // INCLUDE_GITXX_OBJECT_HPP_

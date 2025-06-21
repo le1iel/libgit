@@ -11,12 +11,12 @@
 #include <memory>
 #include <optional>
 
-using libgit::log::Log;
+using gitxx::log::Log;
 
-namespace git {
+namespace gitxx {
 
 // template<typename Allocator = std::allocator<void>>
-std::expected<git::Repository, GitErrc> Repository::Open(
+std::expected<gitxx::Repository, GitErrc> Repository::Open(
     const std::filesystem::path path) noexcept {
   const auto path_str = path.string();
   int resOut = 0U;
@@ -84,4 +84,4 @@ std::expected<Status, GitErrc> Repository::status(
   }
 }
 
-};  // namespace git
+};  // namespace gitxx

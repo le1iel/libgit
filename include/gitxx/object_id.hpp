@@ -6,7 +6,7 @@
 #include <span>
 #include <string_view>
 
-namespace git {
+namespace gitxx {
 
 class ObjectId {
  public:
@@ -28,5 +28,5 @@ class ObjectId {
   std::array<std::uint8_t, 20> m_id{};
 };
 
-}  // namespace git
+}  // namespace gitxx
 #endif  // INCLUDE_GITXX_OBJECT_ID_HPP_

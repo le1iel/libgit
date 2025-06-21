@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <gitxx/object_id.hpp>
 
-namespace git {
+namespace gitxx {
 
 struct DiffFile {
   ObjectId old_id;
@@ -16,6 +16,6 @@ struct DiffFile {
   std::uint16_t id_abbrev;
 };
 
-}  // namespace git
+}  // namespace gitxx
 
 #endif  // INCLUDE_GITXX_DIFF_FILE_HPP_

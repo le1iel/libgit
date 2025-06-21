@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <gitxx/object_id.hpp>
-namespace git {
+namespace gitxx {
 
 ObjectId::ObjectId(std::span<const std::uint8_t, 20> id) noexcept {
   std::copy(id.begin(), id.end(), m_id.begin());
@@ -19,4 +19,4 @@ bool operator==(const ObjectId& lhs, const ObjectId& rhs) noexcept {
   return lhs.m_id == rhs.m_id;
 }
 
-}  // namespace git
+}  // namespace gitxx

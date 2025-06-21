@@ -2,7 +2,7 @@
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/error.hpp>
 
-namespace git {
+namespace gitxx {
 
 namespace internal {
 
@@ -16,4 +16,4 @@ constexpr GitErrc Error(int internal_error) noexcept {
 
 }  // namespace internal
 
-}  // namespace git
+}  // namespace gitxx

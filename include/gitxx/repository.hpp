@@ -11,7 +11,7 @@
 // forward declaration to hide libgit2 headers
 struct git_repository;
 
-namespace git {
+namespace gitxx {
 
 class Status;
 
@@ -71,6 +71,6 @@ class Repository {
   std::shared_ptr<git_repository> m_repo{nullptr};
 };
 
-}  // namespace git
+}  // namespace gitxx
 
 #endif  // INCLUDE_GITXX_REPOSITORY_HPP_

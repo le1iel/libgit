@@ -3,8 +3,9 @@
 
 #include <cstdint>
 #include <gitxx/diff_file.hpp>
+#include "flagfield.hpp"
 
-namespace git {
+namespace gitxx {
 
 /// @brief The status of a diff delta.
 enum class DiffDeltaStatus {
@@ -32,9 +33,25 @@ enum class DiffDeltaStatus {
   Conflicted = 21,
 };
 
+/// @brief Flags for the delta object and the file objects on each side.
+enum class DiffFlag {
+  /// @brief File(s) treated as binary data.
+  Binary = 0,
+  /// @brief File(s) treated as text data.
+  NotBinary = 1,
+  /// @brief id value is known correct.
+  ValidId = 2,
+  /// @brief File exists at this side of the delta.
+  Exists = 3,
+  /// @brief File size value is known correct.
+  Valid_size = 4,
+};
+
 struct DiffDelta {
+  /// @brief Status of the delta.
   DiffDeltaStatus status;
-  std::uint32_t flags;
+  /// @brief
+  FlagField<DiffFlag> flags;
   /// @brief How similar the file is 0-100.
   std::uint16_t similarity;
   /// @brief The number of files in the delta.
@@ -45,6 +62,6 @@ struct DiffDelta {
   DiffFile new_file;
 };
 
-}  // namespace git
+}  // namespace gitxx
 
 #endif  // INCLUDE_GITXX_DIFF_DELTA_HPP_
