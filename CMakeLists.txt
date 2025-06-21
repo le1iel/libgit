@@ -51,6 +51,6 @@ target_compile_features(gitxx-lib PUBLIC cxx_std_23
                                   PRIVATE cxx_std_23)
 
 if(GITXX_BUILD_TESTING)
-  enable_testing()
-  add_subdirectory(tests)
+    enable_testing()
+    add_subdirectory(tests)
 endif()

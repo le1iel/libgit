@@ -1,0 +1,4 @@
+
+[tool.towncrier]
+name = "gitxx"
+directory = "docs/releases/current"
