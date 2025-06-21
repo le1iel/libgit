@@ -33,6 +33,8 @@ target_include_directories(
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/include>"
 )
 
+include(cmake/install.cmake)
+
 target_compile_options(gitxx-lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
 add_subdirectory(src)
@@ -41,11 +43,12 @@ add_subdirectory(include)
 include(cmake/deps.cmake)
 
 target_link_libraries(gitxx-lib
-  PUBLIC
+  PRIVATE
     libgit2::libgit2_static
 )
 
-set_property(TARGET gitxx-lib PROPERTY CXX_STANDARD 23)
+target_compile_features(gitxx-lib PUBLIC cxx_std_23
+                                  PRIVATE cxx_std_23)
 
 if(GITXX_BUILD_TESTING)
   enable_testing()

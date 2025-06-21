@@ -1,7 +1,7 @@
 include(FetchContent)
 
 find_package(libgit2)
-
+if (libgit2_FOUND)
 # so this is a bit of gymnastics but libgit2 doesn't export a target
 # for the static library, but the brew package does actually have it
 add_library(libgit2::libgit2_static STATIC IMPORTED)
@@ -21,31 +21,31 @@ set_target_properties(libgit2::libgit2_static PROPERTIES
   INTERFACE_LINK_LIBRARIES "$<TARGET_PROPERTY:libgit2::libgit2package,INTERFACE_LINK_LIBRARIES>"
 )
 
+else()
+  # I don't even know what is going on with the FetchContent version of this
+  # library
 
-# I don't even know what is going on with the FetchContent version of this
-# library
+  message(FATAL_ERROR "Fetching library not currently supported")
 
-# if(NOT libgit2_FOUND)
+  function (cache var value type)
+    set(${var} ${value} CACHE ${type} "" FORCE)
+  endfunction()
 
-#   function (cache var value type)
-#     set(${var} ${value} CACHE ${type} "" FORCE)
-#   endfunction()
+  FetchContent_Declare(
+      libgit2
+    GIT_REPOSITORY
+      "https://github.com/libgit2/libgit2.git"
+    GIT_TAG
+      "v1.9.1"
+    EXCLUDE_FROM_ALL
+  )
 
-#   FetchContent_Declare(
-#       libgit2
-#     GIT_REPOSITORY
-#       "https://github.com/libgit2/libgit2.git"
-#     GIT_TAG
-#       "v1.9.0"
-#     EXCLUDE_FROM_ALL
-#   )
+  cache(BUILD_SHARED_LIBS OFF BOOL)
+  cache(BUILD_TESTS OFF BOOL)
+  cache(BUILD_CLI OFF BOOL)
 
-#   cache(BUILD_SHARED_LIBS OFF BOOL)
-#   cache(BUILD_TESTS OFF BOOL)
-#   cache(BUILD_CLI OFF BOOL)
-
-#   FetchContent_MakeAvailable(libgit2)
-# endif()
+  FetchContent_MakeAvailable(libgit2)
+endif()
 
 if(GITXX_BUILD_TESTING)
   find_package(GTest)
