@@ -2,3 +2,8 @@
 [tool.towncrier]
 name = "gitxx"
 directory = "docs/releases/current"
+filename="release_notes.md"
+start_string = "<!-- towncrier release notes start -->\n"
+underlines = ["", "", ""]
+title_format = "## [{version}](https://github.com/le1iel/gitxx/tree/{version}) - {project_date}"
+issue_format = "[#{issue}](https://github.com/le1iel/gitxx/issues/{issue})"
