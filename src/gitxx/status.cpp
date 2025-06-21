@@ -50,7 +50,9 @@ std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
 
 namespace git {
 
-Status::Status(const Repository *repo, const StatusOptions &options, int *res) {
+
+template<typename Allocator>
+Status::Status(const BasicRepository<Allocator> *repo, const StatusOptions &options, int *res) {
   git_status_list *status_list = nullptr;
   git_status_options opts = convertOptions(options);
 
@@ -112,4 +114,7 @@ auto operator<=>(const std::shared_ptr<git_status_list> lhs,
   return std::strong_ordering::greater;
 }
 
-}  // namespace git
+// Explicit template instantiation for the Status constructor with the BasicRepository type used in tests
+template Status::Status(const BasicRepository<std::allocator<std::byte>>* repo, const StatusOptions& options, int* res);
+
+}  // namespace gitxx

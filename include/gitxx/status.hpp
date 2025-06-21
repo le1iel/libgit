@@ -82,12 +82,14 @@ class Status {
   /// @brief Get the status for the given file.
   StatusEntry file(std::string_view file) const noexcept;
 
-  friend class Repository;
+  template <typename Allocator>
+  friend class BasicRepository;
   friend class StatusIterator;
 
  private:
   /// @brief Private constructor.
-  Status(const Repository* repo, const StatusOptions& options, int* res);
+  template <typename Allocator>
+  Status(const BasicRepository<Allocator>* repo, const StatusOptions& options, int* res);
 
   /// @brief Custom git_status_list deletor.
   struct GitStatusListDeletor {
