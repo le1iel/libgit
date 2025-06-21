@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-# see if we can use ccache
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
-  message("Using ccache")
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-else()
-  message("ccache not found")
-endif()
+include(cmake/ccache.cmake)
 
 project(gitxx
   VERSION
@@ -25,7 +18,7 @@ include(cmake/options.cmake)
 add_library(gitxx-lib SHARED)
 
 set_target_properties(
-  gitxx-lib
+    gitxx-lib
   PROPERTIES VERSION ${PROJECT_VERSION}
              SOVERSION ${PROJECT_VERSION_MAJOR}
 )
@@ -33,12 +26,14 @@ set_target_properties(
 target_include_directories(
     gitxx-lib
   PUBLIC
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
   PRIVATE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/include>"
 )
+
+include(cmake/install.cmake)
 
 target_compile_options(gitxx-lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
@@ -48,13 +43,14 @@ add_subdirectory(include)
 include(cmake/deps.cmake)
 
 target_link_libraries(gitxx-lib
-    PUBLIC
-        libgit2::libgit2_static
+  PRIVATE
+    libgit2::libgit2_static
 )
 
-set_property(TARGET gitxx-lib PROPERTY CXX_STANDARD 23)
+target_compile_features(gitxx-lib PUBLIC cxx_std_23
+                                  PRIVATE cxx_std_23)
 
 if(GITXX_BUILD_TESTING)
-  enable_testing()
-  add_subdirectory(tests)
+    enable_testing()
+    add_subdirectory(tests)
 endif()

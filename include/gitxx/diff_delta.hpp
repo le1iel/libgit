@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGIT_DIFF_DELTA_H_
-#define INCLUDE_LIBGIT_DIFF_DELTA_H_
+#ifndef INCLUDE_GITXX_DIFF_DELTA_HPP_
+#define INCLUDE_GITXX_DIFF_DELTA_HPP_
 
 #include <cstdint>
 #include <gitxx/diff_file.hpp>
@@ -47,4 +47,4 @@ struct DiffDelta {
 
 }  // namespace git
 
-#endif  // INCLUDE_LIBGIT_DIFF_DELTA_H_
+#endif  // INCLUDE_GITXX_DIFF_DELTA_HPP_

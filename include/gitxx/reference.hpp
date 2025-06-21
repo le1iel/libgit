@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGIT_REFERENCE_H_
-#define INCLUDE_LIBGIT_REFERENCE_H_
+#ifndef INCLUDE_GITXX_REFERENCE_HPP_
+#define INCLUDE_GITXX_REFERENCE_HPP_
 #include <memory>
 #include <string>
 
@@ -58,4 +58,4 @@ class Reference {
 };
 
 }  // namespace git
-#endif  // INCLUDE_LIBGIT_REFERENCE_H_
+#endif  // INCLUDE_GITXX_REFERENCE_HPP_

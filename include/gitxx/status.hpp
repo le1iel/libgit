@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGIT_STATUS_H_
-#define INCLUDE_LIBGIT_STATUS_H_
+#ifndef INCLUDE_GITXX_STATUS_HPP_
+#define INCLUDE_GITXX_STATUS_HPP_
 
 #include <flagfield.hpp>
 #include <gitxx/diff_delta.hpp>
@@ -186,4 +186,4 @@ class StatusIterator {
 };
 
 }  // namespace git
-#endif  // INCLUDE_LIBGIT_STATUS_H_
+#endif  // INCLUDE_GITXX_STATUS_HPP_

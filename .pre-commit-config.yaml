@@ -12,3 +12,4 @@ repos:
     rev: master
     hooks:
       - id: clang-format
+        args: [-i]

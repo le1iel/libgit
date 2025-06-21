@@ -34,6 +34,7 @@
 # Build folders
 .cache/
 build/
+bin/
 
 # clangd
 compile_commands.json

@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGIT_OBJECT_ID_H_
-#define INCLUDE_LIBGIT_OBJECT_ID_H_
+#ifndef INCLUDE_GITXX_OBJECT_ID_HPP_
+#define INCLUDE_GITXX_OBJECT_ID_HPP_
 
 #include <array>
 #include <cstdint>
@@ -29,4 +29,4 @@ class ObjectId {
 };
 
 }  // namespace git
-#endif  // INCLUDE_LIBGIT_OBJECT_ID_H_
+#endif  // INCLUDE_GITXX_OBJECT_ID_HPP_

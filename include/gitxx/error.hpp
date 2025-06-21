@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGIT_ERROR_H_
-#define INCLUDE_LIBGIT_ERROR_H_
+#ifndef INCLUDE_GITXX_ERROR_HPP_
+#define INCLUDE_GITXX_ERROR_HPP_
 
 #include <system_error>
 
@@ -91,4 +91,4 @@ std::error_code make_error_code(GitErrc);
 
 const GitErrcCategory gitErrcCategory{};
 
-#endif  // INCLUDE_LIBGIT_ERROR_H_
+#endif  // INCLUDE_GITXX_ERROR_HPP_

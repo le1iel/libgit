@@ -1,6 +1,6 @@
-#ifndef INCLUDE_LIBGIT_TREE_H_
-#define INCLUDE_LIBGIT_TREE_H_
+#ifndef INCLUDE_GITXX_TREE_HPP_
+#define INCLUDE_GITXX_TREE_HPP_
 
 class Tree {};
 
-#endif  // INCLUDE_LIBGIT_TREE_H_
+#endif  // INCLUDE_GITXX_TREE_HPP_

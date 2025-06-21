@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGIT_DIFF_FILE_H_
-#define INCLUDE_LIBGIT_DIFF_FILE_H_
+#ifndef INCLUDE_GITXX_DIFF_FILE_HPP_
+#define INCLUDE_GITXX_DIFF_FILE_HPP_
 
 #include <cstdint>
 #include <filesystem>
@@ -18,4 +18,4 @@ struct DiffFile {
 
 }  // namespace git
 
-#endif  // INCLUDE_LIBGIT_DIFF_FILE_H_
+#endif  // INCLUDE_GITXX_DIFF_FILE_HPP_

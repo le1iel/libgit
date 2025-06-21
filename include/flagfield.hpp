@@ -1,5 +1,5 @@
-#ifndef LIBGIT_INCLUDE_FLAGFIELD_H_
-#define LIBGIT_INCLUDE_FLAGFIELD_H_
+#ifndef INCLUDE_FLAGFIELD_HPP_
+#define INCLUDE_FLAGFIELD_HPP_
 
 #include <bitset>
 #include <cstdint>
@@ -80,4 +80,4 @@ std::ostream& operator<<(std::ostream& os, const FlagField<T, Size, E>& flags) {
 
 }  // namespace git
 
-#endif  // LIBGIT_INCLUDE_FLAGFIELD_H_
+#endif  // INCLUDE_FLAGFIELD_HPP_
