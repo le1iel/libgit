@@ -11,7 +11,7 @@
 // forward declaration to hide libgit2 headers
 struct git_status_list;
 
-namespace git {
+namespace gitxx {
 
 /// @brief Enum representing the status of a file in the repository.
 enum class FileStatus {
@@ -46,7 +46,7 @@ enum class FileStatus {
 };
 
 struct StatusEntry {
-  git::FlagField<git::FileStatus> status{0};
+  gitxx::FlagField<gitxx::FileStatus> status{0};
   std::optional<DiffDelta> head_to_index;
   std::optional<DiffDelta> index_to_workdir;
 };
@@ -187,5 +187,5 @@ class StatusIterator {
   std::shared_ptr<git_status_list> m_statusList;
 };
 
-}  // namespace git
+}  // namespace gitxx
 #endif  // INCLUDE_GITXX_STATUS_HPP_

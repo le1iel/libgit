@@ -5,7 +5,7 @@
 #include <flagfield.hpp>
 #include <string>
 
-namespace git {
+namespace gitxx {
 
 enum class StatusShow {
   IndexAndWorkdir = 0,
@@ -35,12 +35,12 @@ enum class StatusFlags {
 struct StatusOptions {
   std::uint16_t version;
   StatusShow show;
-  git::FlagField<StatusFlags> flags;
+  gitxx::FlagField<StatusFlags> flags;
   std::string pathspec;
   // Tree* tree; TODO
   std::uint16_t rename_threshold;
 };
 
-}  // namespace git
+}  // namespace gitxx
 
 #endif  // INCLUDE_GITXX_STATUS_OPTIONS_HPP_

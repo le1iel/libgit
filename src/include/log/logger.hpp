@@ -1,11 +1,9 @@
 #ifndef SRC_INCLUDE_LOG_LOGGING_H
 #define SRC_INCLUDE_LOG_LOGGING_H
 
-// #include <array>
-// #include <memory>
 #include <string_view>
 
-namespace libgit {
+namespace gitxx {
 
 namespace log {
 
@@ -25,20 +23,10 @@ class Log {
   ~Log() = default;
   Log();
 
- private:
-  // /// @brief writes
-  // void writeToBuffer(std::string_view message);
-
-  // /// @brief buffer for logs
-  // std::array<char, 256> m_buffer{};
-
-  // std::size_t m_pos{0U};
-
-  // int m_fd{-1};
 };
 
 }  // namespace log
 
-}  // namespace libgit
+}  // namespace gitxx
 
 #endif  // SRC_INCLUDE_LOG_LOGGING_H

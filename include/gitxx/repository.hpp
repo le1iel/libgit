@@ -11,7 +11,7 @@
 // forward declaration to hide libgit2 headers
 struct git_repository;
 
-namespace git {
+namespace gitxx {
 
 class Status;
 

@@ -11,7 +11,7 @@
 namespace {
 
 /// @brief Converts internal options struct to libgit2s struct
-git_status_options convertOptions(const git::StatusOptions &options) {
+git_status_options convertOptions(const gitxx::StatusOptions &options) {
   return {.version = 1U,
           .show = static_cast<git_status_show_t>(options.show),
           .flags = options.flags.value(),
@@ -20,8 +20,8 @@ git_status_options convertOptions(const git::StatusOptions &options) {
           .rename_threshold = options.rename_threshold};
 }
 
-git::DiffFile DiffFileFromGit2(const git_diff_file &file) {
-  return git::DiffFile{
+gitxx::DiffFile DiffFileFromGit2(const git_diff_file &file) {
+  return gitxx::DiffFile{
       .old_id{},
       .path{std::string(file.path)},
       .size = file.size,
@@ -31,13 +31,13 @@ git::DiffFile DiffFileFromGit2(const git_diff_file &file) {
   };
 }
 
-std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
+std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
   if (delta == nullptr) {
     return std::nullopt;
   }
 
-  return git::DiffDelta{
-      .status = git::DiffDeltaStatus::Unmodified,
+  return gitxx::DiffDelta{
+      .status = gitxx::DiffDeltaStatus::Unmodified,
       .flags = delta->flags,
       .similarity = delta->similarity,
       .nfiles = delta->nfiles,
@@ -48,7 +48,7 @@ std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
 
 }  // namespace
 
-namespace git {
+namespace gitxx {
 
 
 template<typename Allocator>
@@ -87,7 +87,7 @@ StatusEntry Status::file(std::string_view file) const noexcept {
             ? entry->head_to_index
             : (entry->index_to_workdir ? entry->index_to_workdir : nullptr);
     if (delta && delta->new_file.path && file == delta->new_file.path) {
-      result.status = git::FlagField<git::FileStatus>{entry->status};
+      result.status = gitxx::FlagField<gitxx::FileStatus>{entry->status};
       result.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
       result.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
       return result;

@@ -5,8 +5,8 @@
 
 namespace {
 
-git::DiffFile DiffFileFromGit2(const git_diff_file& file) {
-  return git::DiffFile{
+gitxx::DiffFile DiffFileFromGit2(const git_diff_file& file) {
+  return gitxx::DiffFile{
       .old_id{},
       .path{std::string(file.path)},
       .size = file.size,
@@ -16,13 +16,13 @@ git::DiffFile DiffFileFromGit2(const git_diff_file& file) {
   };
 }
 
-std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta* delta) {
+std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta* delta) {
   if (delta == nullptr) {
     return std::nullopt;
   }
 
-  return git::DiffDelta{
-      .status = git::DiffDeltaStatus::Unmodified,
+  return gitxx::DiffDelta{
+      .status = gitxx::DiffDeltaStatus::Unmodified,
       .flags = delta->flags,
       .similarity = delta->similarity,
       .nfiles = delta->nfiles,
@@ -33,7 +33,7 @@ std::optional<git::DiffDelta> DiffDeltaFromGit2(const git_diff_delta* delta) {
 
 }  // namespace
 
-namespace git {
+namespace gitxx {
 
 StatusIterator::StatusIterator(const Status& status) {
   m_statusList = status.m_statusList;
@@ -176,7 +176,7 @@ void StatusIterator::updateStatusEntry() noexcept {
   if (entry == nullptr) {
     return;
   }
-  m_statusEntry.status = git::FlagField<git::FileStatus>{entry->status};
+  m_statusEntry.status = gitxx::FlagField<gitxx::FileStatus>{entry->status};
   m_statusEntry.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
   m_statusEntry.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
 }
@@ -199,4 +199,4 @@ bool operator==(const StatusIterator& lhs, const StatusIterator& rhs) noexcept {
   return lhs.m_statusList == rhs.m_statusList;
 }
 
-}  // namespace git
+}  // namespace gitxx

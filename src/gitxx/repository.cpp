@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-using libgit::log::Log;
+using gitxx::log::Log;
 
-namespace git {
+namespace gitxx {
 
 template <typename Allocator>
 std::expected<BasicRepository<Allocator>, GitErrc>
