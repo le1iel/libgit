@@ -17,6 +17,8 @@ include(cmake/options.cmake)
 
 add_library(gitxx-lib SHARED)
 
+include(cmake/install.cmake)
+
 set_target_properties(
     gitxx-lib
   PROPERTIES VERSION ${PROJECT_VERSION}
