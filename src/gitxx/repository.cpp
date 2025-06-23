@@ -50,12 +50,7 @@ BasicRepository<Allocator>::BasicRepository(std::string_view path,
     return;
   }
 
-  m_repo = std::shared_ptr<git_repository>(repo, [](git_repository *ptr) {
-    if (ptr == nullptr) {
-      return;
-    }
-    git_repository_free(ptr);
-  });
+  m_repo = std::shared_ptr<git_repository>(repo, git_repository_free);
 }
 
 template <typename Allocator>

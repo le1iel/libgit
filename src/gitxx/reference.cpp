@@ -6,22 +6,8 @@
 
 namespace gitxx {
 
-void Reference::GitReferenceDeletor::operator()(
-    git_reference *ref) const noexcept {
-  if (ref == nullptr) {
-    return;
-  }
-  git_reference_free(ref);
-}
-
 Reference::Reference(git_reference *ptr)
-    : m_ref(std::unique_ptr<git_reference, GitReferenceDeletor>(ptr)) {};
-
-Reference::Reference(const Reference &other) {
-  git_reference *ref = nullptr;
-  git_reference_dup(&ref, other.m_ref.get());
-  m_ref = std::unique_ptr<git_reference, GitReferenceDeletor>(ref);
-}
+    : m_ref(std::shared_ptr<git_reference>(ptr, git_reference_free)) {};
 
 std::string Reference::name() const noexcept {
   std::string name{};
@@ -66,7 +52,7 @@ int Reference::resolve() noexcept {
     return -1;
   }
 
-  m_ref.reset(ref);
+  m_ref.reset(ref, git_reference_free);
   return 0;
 }
 

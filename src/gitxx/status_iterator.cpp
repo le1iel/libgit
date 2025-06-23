@@ -12,7 +12,6 @@ gitxx::DiffFile DiffFileFromGit2(const git_diff_file& file) {
       .size = file.size,
       .flags = 0U,
       .mode = file.mode,
-      .id_abbrev = 0U,
   };
 }
 
@@ -42,39 +41,6 @@ StatusIterator::StatusIterator(const Status& status) {
   std::cout << "Count: " << m_statusCount << std::endl;
   m_index = 0U;
   updateStatusEntry();
-}
-
-StatusIterator::StatusIterator(StatusIterator&& other) noexcept
-    : m_index(other.m_index),
-      m_statusCount(other.m_statusCount),
-      m_statusEntry(std::move(other.m_statusEntry)),
-      m_statusList(std::move(other.m_statusList)) {}
-
-StatusIterator::StatusIterator(const StatusIterator& other) noexcept
-    : m_index(other.m_index),
-      m_statusCount(other.m_statusCount),
-      m_statusEntry(other.m_statusEntry),
-      m_statusList(other.m_statusList) {}
-
-StatusIterator& StatusIterator::operator=(StatusIterator&& other) noexcept {
-  if (this != &other) {
-    m_index = other.m_index;
-    m_statusCount = other.m_statusCount;
-    m_statusEntry = std::move(other.m_statusEntry);
-    m_statusList = std::move(other.m_statusList);
-  }
-  return *this;
-}
-
-StatusIterator& StatusIterator::operator=(
-    const StatusIterator& other) noexcept {
-  if (this != &other) {
-    m_index = other.m_index;
-    m_statusCount = other.m_statusCount;
-    m_statusEntry = other.m_statusEntry;
-    m_statusList = other.m_statusList;
-  }
-  return *this;
 }
 
 StatusIterator& StatusIterator::operator++() noexcept {

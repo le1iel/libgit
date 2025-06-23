@@ -61,26 +61,26 @@ class Status {
   /// @brief Destructor.
   ~Status() = default;
 
-  /// @brief Move constructor.
+  /// @brief Move constructable.
   Status(Status&& other) = default;
 
-  /// @brief Copy constructor.
+  /// @brief Copy constructable.
   Status(const Status& other) = default;
 
-  /// @brief Move assignment operator.
+  /// @brief Move assignable.
   Status& operator=(Status&& other) = default;
 
-  /// @brief Copy assignment operator.
+  /// @brief Copy assignable.
   Status& operator=(const Status& other) = default;
 
   /// @brief Beginning iterator.
-  IteratorType begin() const noexcept;
+  [[nodiscard]] IteratorType begin() const noexcept;
 
   /// @brief End iterator.
-  IteratorType end() const noexcept;
+  [[nodiscard]] IteratorType end() const noexcept;
 
   /// @brief Get the status for the given file.
-  StatusEntry file(std::string_view file) const noexcept;
+  [[nodiscard]] StatusEntry file(std::string_view file) const noexcept;
 
   template <typename Allocator>
   friend class BasicRepository;
@@ -89,12 +89,8 @@ class Status {
  private:
   /// @brief Private constructor.
   template <typename Allocator>
-  Status(const BasicRepository<Allocator>* repo, const StatusOptions& options, int* res);
-
-  /// @brief Custom git_status_list deletor.
-  struct GitStatusListDeletor {
-    void operator()(git_status_list* list) const noexcept;
-  };
+  Status(const BasicRepository<Allocator>* repo, const StatusOptions& options,
+         int* res);
 
   /// @brief The status list.
   std::shared_ptr<git_status_list> m_statusList;
@@ -109,16 +105,16 @@ class StatusIterator {
   using ReferenceType = ValueType&;
 
   /// @brief Move constructor.
-  StatusIterator(StatusIterator&&) noexcept;
+  StatusIterator(StatusIterator&&) noexcept = default;
 
   /// @brief Copy constructor.
-  StatusIterator(const StatusIterator&) noexcept;
+  StatusIterator(const StatusIterator&) noexcept = default;
 
   /// @brief Move assignment operator.
-  StatusIterator& operator=(StatusIterator&&) noexcept;
+  StatusIterator& operator=(StatusIterator&&) noexcept = default;
 
   /// @brief Copy assignment operator.
-  StatusIterator& operator=(const StatusIterator&) noexcept;
+  StatusIterator& operator=(const StatusIterator&) noexcept = default;
 
   /// @brief Pre-increment operator.
   StatusIterator& operator++() noexcept;
@@ -147,6 +143,9 @@ class StatusIterator {
   /// @brief Assignment subtraction operator.
   StatusIterator& operator-=(DifferenceType n) noexcept;
 
+  /// @brief Dereference operator.
+  ReferenceType operator*() noexcept;
+
   /// @brief Addition operator.
   friend DifferenceType operator+(StatusIterator lhs,
                                   StatusIterator rhs) noexcept;
@@ -155,13 +154,12 @@ class StatusIterator {
   friend DifferenceType operator-(const StatusIterator lhs,
                                   const StatusIterator rhs) noexcept;
 
-  /// @brief Dereference operator.
-  ReferenceType operator*() noexcept;
-
   /// @brief Spaceship operator.
   friend auto operator<=>(const StatusIterator& lhs,
                           const StatusIterator& rhs) noexcept;
 
+  /// @brief Equality operator.
+  // shouldn't the spaceship define this???
   friend bool operator==(const StatusIterator& lhs,
                          const StatusIterator& rhs) noexcept;
 
@@ -186,6 +184,19 @@ class StatusIterator {
   /// @brief The status list.
   std::shared_ptr<git_status_list> m_statusList;
 };
+
+/// @brief Subtraction operator.
+[[nodiscard]] StatusIterator::DifferenceType operator-(
+    const StatusIterator lhs, const StatusIterator rhs) noexcept;
+
+/// @brief Spaceship operator.
+[[nodiscard]] auto operator<=>(const StatusIterator& lhs,
+                               const StatusIterator& rhs) noexcept;
+
+/// @brief Equality operator.
+// shouldn't the spaceship define this???
+[[nodiscard]] bool operator==(const StatusIterator& lhs,
+                              const StatusIterator& rhs) noexcept;
 
 }  // namespace gitxx
 #endif  // INCLUDE_GITXX_STATUS_HPP_

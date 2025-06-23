@@ -27,7 +27,6 @@ gitxx::DiffFile DiffFileFromGit2(const git_diff_file &file) {
       .size = file.size,
       .flags = 0U,
       .mode = file.mode,
-      .id_abbrev = 0U,
   };
 }
 
@@ -64,11 +63,6 @@ Status::Status(const BasicRepository<Allocator> *repo, const StatusOptions &opti
   }
   m_statusList =
       std::shared_ptr<git_status_list>(status_list, git_status_list_free);
-}
-
-void Status::GitStatusListDeletor::operator()(
-    git_status_list *list) const noexcept {
-  if (list) git_status_list_free(list);
 }
 
 StatusEntry Status::file(std::string_view file) const noexcept {
