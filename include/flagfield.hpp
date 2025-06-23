@@ -35,12 +35,12 @@ class FlagField {
   constexpr FlagField() = default;
 
   /// @brief Check if the given enum is set.
-  constexpr bool test(ValueType flag) const {
+  [[nodiscard]] constexpr bool test(ValueType flag) const {
     return m_value.test(static_cast<std::size_t>(flag));
   }
 
   /// @brief Check if the given enum is set.
-  constexpr bool operator[](ValueType flag) const { return test(flag); }
+  [[nodiscard]] constexpr bool operator[](ValueType flag) const { return test(flag); }
 
   /// @brief Returns a reference to the bit at the given index which you
   /// can mutate.
@@ -54,18 +54,18 @@ class FlagField {
   }
 
   /// @brief Check if no flag is set.
-  constexpr bool none() const { return m_value.none(); }
+  [[nodiscard]] constexpr bool none() const { return m_value.none(); }
 
   /// @brief Check if any flag is set.
-  constexpr bool any() const { return m_value.any(); }
+  [[nodiscard]] constexpr bool any() const { return m_value.any(); }
 
   /// @brief Get the value of the flag field.
-  constexpr std::uint32_t value() const {
+  [[nodiscard]] constexpr std::uint32_t value() const {
     return static_cast<std::uint32_t>(m_value.to_ulong());
   }
 
   /// @brief Get string representation of the bitset.
-  std::string to_string() const { return m_value.to_string(); }
+  [[nodiscard]] std::string to_string() const { return m_value.to_string(); }
 
  private:
   /// @brief The value of the flag field.
@@ -74,7 +74,7 @@ class FlagField {
 
 /// @brief Stream insertion operator for FlagField.
 template <typename T, std::size_t Size, typename E>
-std::ostream& operator<<(std::ostream& os, const FlagField<T, Size, E>& flags) {
+[[nodiscard]] std::ostream& operator<<(std::ostream& os, const FlagField<T, Size, E>& flags) {
   return os << flags.to_string();
 }
 

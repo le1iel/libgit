@@ -16,45 +16,52 @@ enum class ReferenceType {
 
 class Reference {
  public:
+  // will probably make this private later
   Reference(git_reference *ptr);
 
-  /// @brief Returns the name of the reference.
-  std::string name() const noexcept;
+  /// @brief Move constructable. 
+  Reference(Reference &&other) = default;
 
-  /// @brief Copy constructor.
-  Reference(const Reference &other);
+  /// @brief Move assignable. 
+  Reference &operator=(Reference &&other) = default;
+
+  /// @brief Copy constructable. 
+  Reference(const Reference &other) = default;
+
+  /// @brief Copy assignable. 
+  Reference &operator=(const Reference &other) = default;
 
   /// @brief Destructor.
   ~Reference() = default;
 
+  /// @brief Returns the name of the reference.
+  [[nodiscard]] std::string name() const noexcept;
+
   /// @brief Returns true if the reference is a branch.
-  bool isBranch() const noexcept;
+  [[nodiscard]] bool isBranch() const noexcept;
 
   /// @brief Returns true if the reference is a tag.
-  bool isTag() const noexcept;
+  [[nodiscard]] bool isTag() const noexcept;
 
   /// @brief Returns true if the reference is a note.
-  bool isNote() const noexcept;
+  [[nodiscard]] bool isNote() const noexcept;
 
   /// @brief Returns true if the reference is a remote.
-  bool isRemote() const noexcept;
+  [[nodiscard]] bool isRemote() const noexcept;
 
   /// @brief Returns the shorthand of the reference.
-  std::string shorthand() const noexcept;
+  [[nodiscard]] std::string shorthand() const noexcept;
 
   /// @brief Resolves the reference.
-  int resolve() noexcept;
+  [[nodiscard]] int resolve() noexcept;
 
   /// @brief Returns the type of the reference.
-  ReferenceType type() const noexcept;
+  [[nodiscard]] ReferenceType type() const noexcept;
 
  private:
-  /// @brief Deleter for the reference.
-  struct GitReferenceDeletor {
-    void operator()(git_reference *ref) const noexcept;
-  };
 
-  std::unique_ptr<git_reference, GitReferenceDeletor> m_ref;
+  /// @brief The libgit2 reference object.
+  std::shared_ptr<git_reference> m_ref;
 };
 
 }  // namespace gitxx
