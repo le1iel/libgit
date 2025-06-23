@@ -15,11 +15,17 @@ namespace gitxx {
 
 class Status;
 
-template<typename Allocator = std::allocator<std::byte>>
+/// @brief Represents a git repository.
+template <typename Allocator = std::allocator<std::byte>>
 class BasicRepository {
  public:
-     using char_allocator = typename std::allocator_traits<Allocator>::template rebind_alloc<char>;
-     using string_type = std::basic_string<char, std::char_traits<char>, char_allocator>;
+  /// @brief Char allocator from the given allocator.
+  using char_allocator =
+      typename std::allocator_traits<Allocator>::template rebind_alloc<char>;
+
+  /// @brief String type using the given allocator.
+  using string_type =
+      std::basic_string<char, std::char_traits<char>, char_allocator>;
 
   /// @brief Open from a path.
   [[nodiscard]] static std::expected<BasicRepository, GitErrc> Open(
@@ -41,8 +47,8 @@ class BasicRepository {
   BasicRepository &operator=(const BasicRepository &other) = default;
 
   /// @brief returns the path of the repo.
-  /// @detail std::filesystem::path does not support custom allocators, so
-  ///     path is not supported.
+  /// @details std::filesystem::path does not support custom allocators, so
+  ///          path is not supported.
   [[nodiscard]] string_type path() const noexcept;
 
   /// @brief returns the head of the repo.
@@ -52,7 +58,8 @@ class BasicRepository {
   [[nodiscard]] std::expected<Status, GitErrc> status() const noexcept;
 
   /// @brief returns the status of the repo.
-  [[nodiscard]] std::expected<Status, GitErrc> status(StatusOptions options) const noexcept;
+  [[nodiscard]] std::expected<Status, GitErrc> status(
+      StatusOptions options) const noexcept;
 
   friend class Status;
 

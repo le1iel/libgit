@@ -74,9 +74,12 @@ enum class GitErrc {
   readonly = 40,
 };
 
+/// @brief gitxx error category.
 struct GitErrcCategory : std::error_category {
+  /// @brief Gives the name of the error.
   const char* name() const noexcept override;
 
+  /// @brief Gives the description of the error.
   std::string message(int ev) const override;
 };
 

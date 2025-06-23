@@ -11,10 +11,12 @@
 
 namespace gitxx {
 
+/// @brief std::bitset that can be typed using an enum.
 template <typename T, std::size_t Size = 32,
           typename = std::enable_if_t<std::is_enum_v<T>>>
 class FlagField {
  public:
+  /// @brief The internal value type.
   using ValueType = T;
 
   /// @brief Constructor from a value.
