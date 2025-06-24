@@ -18,8 +18,6 @@ class status_ut : public ::testing::Test {
   static void TearDownTestSuite() { deinit_libgit(); }
 };
 
-/// @brief Test that a new file is not in the status list.
-/// @note The status will not show new files it the option is not set.
 TEST_F(status_ut, new_file) {
   gitxx::GitCommands internalRepo{repo_path};
   ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
@@ -32,7 +30,7 @@ TEST_F(status_ut, new_file) {
   auto statusRes = repo.status();
   auto status = std::move(statusRes).value();
 
-  EXPECT_TRUE(status.begin().operator*().status.none());
+  EXPECT_TRUE(status.begin().operator*().status.any());
 }
 
 TEST_F(status_ut, modified_file) {

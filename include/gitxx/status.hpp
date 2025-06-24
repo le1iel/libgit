@@ -45,15 +45,25 @@ enum class FileStatus {
   Conflicted = 15
 };
 
+/// @brief A status entry, providing the differences between the file as it
+///        exists in HEAD and the index, and providing the differences between
+///        the index and the working directory.
 struct StatusEntry {
+  /// @brief status flags for this file.
   gitxx::FlagField<gitxx::FileStatus> status{0};
+  /// @brief Detailed information about the differences between the file in HEAD
+  ///        and the file in the index.
   std::optional<DiffDelta> head_to_index;
+  /// @brief Detailed information about the differences between the file in the
+  ///        index and the file in the working directory.
   std::optional<DiffDelta> index_to_workdir;
 };
 
 // forward declaration
 class StatusIterator;
 
+/// @brief Status indicates how a user has changed the working directory and
+///        index.
 class Status {
   using IteratorType = StatusIterator;
 
@@ -96,12 +106,22 @@ class Status {
   std::shared_ptr<git_status_list> m_statusList;
 };
 
+/// @brief A random-access iterator for navigating git status entries.
 class StatusIterator {
  public:
+  /// @brief The iterator category. Required by the C++ standard library.
   using iterator_category = std::random_access_iterator_tag;
+
+  /// @brief The type of the object that the iterator points to.
   using ValueType = StatusEntry;
+
+  /// @brief A type that can represent the distance between two iterators.
   using DifferenceType = std::size_t;
+
+  /// @brief The type of a pointer to the value type (`StatusEntry*`).
   using Pointer = ValueType*;
+
+  /// @brief The type of a reference to the value type (`StatusEntry&`).
   using ReferenceType = ValueType&;
 
   /// @brief Move constructor.

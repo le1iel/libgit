@@ -8,27 +8,35 @@ struct git_reference;
 
 namespace gitxx {
 
+/// @brief Basic type of any Git reference.
 enum class ReferenceType {
+  /// @brief Invalid reference.
   Invalid = 0,
+  /// @brief A reference that points at an object id.
   Direct,
+  /// @brief A reference that points at another reference.
   Symbolic,
+  /// @brief Both direct and symbolic.
+  All,
 };
 
+/// @brief References point to a commit; generally these are branches and tags.
 class Reference {
  public:
+  /// @brief Constructorable from the libgit2 object.
   // will probably make this private later
   Reference(git_reference *ptr);
 
-  /// @brief Move constructable. 
+  /// @brief Move constructable.
   Reference(Reference &&other) = default;
 
-  /// @brief Move assignable. 
+  /// @brief Move assignable.
   Reference &operator=(Reference &&other) = default;
 
-  /// @brief Copy constructable. 
+  /// @brief Copy constructable.
   Reference(const Reference &other) = default;
 
-  /// @brief Copy assignable. 
+  /// @brief Copy assignable.
   Reference &operator=(const Reference &other) = default;
 
   /// @brief Destructor.
@@ -59,7 +67,6 @@ class Reference {
   [[nodiscard]] ReferenceType type() const noexcept;
 
  private:
-
   /// @brief The libgit2 reference object.
   std::shared_ptr<git_reference> m_ref;
 };

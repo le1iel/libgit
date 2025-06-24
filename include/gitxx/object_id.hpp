@@ -8,6 +8,7 @@
 
 namespace gitxx {
 
+/// @brief Unique identity of any object (commit, tree, blob, tag).
 class ObjectId {
  public:
   /// @brief Default constructable.
