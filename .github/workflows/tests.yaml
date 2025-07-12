@@ -7,18 +7,8 @@ on:
 
 env:
   BUILD_DIR: build
-  LIBGIT_CMAKE: "/opt/homebrew/Cellar/libgit2/1.9.0/lib/cmake/libgit2/libgit2Targets.cmake"
 
 jobs:
-  clang:
-    name: "Clang-tidy"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Process clang-tidy warnings"
-        uses: asarium/clang-tidy-action@v1
-        with:
-          fixesFile: clang-fixes.yaml
-
   build-macos:
     name: "MacOS Build"
     runs-on: macos-latest
@@ -34,6 +24,15 @@ jobs:
       - name: "CMake build"
         run: |
           cmake --build ${{env.BUILD_DIR}}
+      - name: Run clang-tidy
+        uses: HorstBaerbel/action-clang-tidy@1.2
+        # These are optional (defaults displayed)
+        with:
+          scandir: '.'
+          builddir: ${{env.BUILD_DIR}}
+          excludedirs: ''
+          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
+          cmakeoptions: ''
       - name: "Tar files"
         run: tar -czf build-macos-aarch64.tar.gz "${{env.BUILD_DIR}}"
       - name: "Upload artifact"
