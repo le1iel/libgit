@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <gitxx/object_id.hpp>
+#include <ostream>
+
 namespace gitxx {
 
 ObjectId::ObjectId(std::span<const std::uint8_t, 20> id) noexcept {

@@ -81,7 +81,7 @@ TEST_F(status_ut, 2_new_file_untracked) {
       gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
   ASSERT_TRUE(repoRes.has_value());
 
-  gitxx::Repository repo = std::move(repoRes.value());
+  gitxx::Repository repo = repoRes.value();
 
   auto statusRes = repo.status(gitxx::StatusOptions{
       .flags =
@@ -90,6 +90,7 @@ TEST_F(status_ut, 2_new_file_untracked) {
   ASSERT_TRUE(statusRes.has_value());
 
   auto status = statusRes.value();
+  auto otherStatus {status};
 
   EXPECT_EQ(status.end() - status.begin(), 2);
 }
