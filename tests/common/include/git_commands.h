@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <fstream>
 #include <source_location>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -34,11 +33,18 @@ class GitCommands {
     return runCommand("git commit -m \"" + std::string(message) + "\"");
   }
 
+  ::testing::AssertionResult initRepo() {
+    std::string cmd{"git init -q"};
+    return runCommand(cmd) ? testing::AssertionSuccess()
+                           : testing::AssertionFailure()
+                                 << "Error initilizing repo (" << cmd << ")";
+  }
+
   ::testing::AssertionResult makeEmptyCommit(std::string_view message) {
-    std::string command{"git commit --allow-empty -m \""};
-    command.append(message);
-    command.append("\"");
-    return runCommand(command);
+    std::string cmd{"git commit --allow-empty -m \""};
+    cmd.append(message);
+    cmd.append("\"");
+    return runCommand(cmd);
   };
 
   ::testing::AssertionResult add(std::string_view filename) {
@@ -114,22 +120,28 @@ class GitCommands {
   std::filesystem::path path() const { return m_path; }
 
  private:
-  ::testing::AssertionResult runCommand(std::string_view command) {
-    if (command.empty()) {
-      return testing::AssertionFailure() << "Command is empty";
-    }
-
-    std::string cmd{"cd "};
+  void cd(std::string& cmd) {
+    cmd.append("cd ");
     cmd.append(m_path);
     cmd.append(" && ");
     cmd.append("HOME=\"");
     cmd.append(m_home.string());
     cmd.append("\" ");
+  }
+
+  ::testing::AssertionResult runCommand(std::string_view command) {
+    if (command.empty()) {
+      return testing::AssertionFailure() << "Command is empty";
+    }
+
+    std::string cmd{};
+    cd(cmd);
     cmd.append(command);
 
     if (system(cmd.c_str()) == 0) return testing::AssertionSuccess();
 
-    return testing::AssertionFailure();
+    return testing::AssertionFailure() << "Got error return code from ("
+        << cmd << ")";
   }
 
   std::filesystem::path m_path{};
