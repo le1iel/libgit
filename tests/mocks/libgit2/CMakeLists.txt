@@ -1,5 +1,5 @@
 # Get include directories from libgit2 target
-get_target_property(LIBGIT2_INCLUDE_DIRS libgit2::libgit2package INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(LIBGIT2_INCLUDE_DIRS libgit2::libgit2_static INTERFACE_INCLUDE_DIRECTORIES)
 
 # Add mock sources to the parent mocks object library
 target_sources(${target_test}-mocks

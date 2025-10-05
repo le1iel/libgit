@@ -7,7 +7,7 @@ target_link_libraries(${target_test}-mocks
     PUBLIC
         GTest::gmock
         GTest::gtest
-        libgit2::libgit2package
+        libgit2::libgit2_static
 )
 
 # Include directories
