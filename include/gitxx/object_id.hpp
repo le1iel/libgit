@@ -6,28 +6,21 @@
 #include <span>
 #include <string_view>
 
+#define TAG_LENGTH 20
+
 namespace gitxx {
 
 /// @brief Unique identity of any object (commit, tree, blob, tag).
 class ObjectId {
+    using Tag = std::span<std::uint8_t, TAG_LENGTH>;
+    using TagView = std::span<const std::uint8_t, TAG_LENGTH>;
+
  public:
   /// @brief Default constructable.
   ObjectId() = default;
 
   /// @brief Constructor from hexadecimal.
-  ObjectId(std::span<const std::uint8_t, 20> id) noexcept;
-
-  /// @brief Copy constructable.
-  ObjectId(const ObjectId&) = default;
-
-  /// @brief Copy assignable.
-  ObjectId &operator=(const ObjectId&) = default;
-
-  /// @brief Move constructable.
-  ObjectId(ObjectId&&) = default;
-
-  /// @brief Move assignable.
-  ObjectId &operator=(ObjectId&&) = default;
+  explicit ObjectId(TagView tag) noexcept;
 
   /// @brief Id of the object.
   [[nodiscard]] std::string_view id() const noexcept;
@@ -37,14 +30,14 @@ class ObjectId {
 
   /// @brief Writes the ObjectId to an output stream as a hexadecimal string.
   friend std::ostream& operator<<(std::ostream& stream,
-                                  const ObjectId& id) noexcept;
+                                  const ObjectId& objectId) noexcept;
 
  private:
   /// @brief Constructor from string_view.
-  ObjectId(std::string_view id) noexcept;
+  explicit ObjectId(std::string_view tag) noexcept;
 
   /// @brief Internal representaion of the id.
-  std::array<std::uint8_t, 20> m_id{};
+  std::array<std::uint8_t, TAG_LENGTH> m_id{};
 };
 
   /// @brief Equality operator.

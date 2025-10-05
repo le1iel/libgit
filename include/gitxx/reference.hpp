@@ -9,7 +9,7 @@ struct git_reference;
 namespace gitxx {
 
 /// @brief Basic type of any Git reference.
-enum class ReferenceType {
+enum class ReferenceType: std::uint8_t {
   /// @brief Invalid reference.
   Invalid = 0,
   /// @brief A reference that points at an object id.
@@ -25,7 +25,7 @@ class Reference {
  public:
   /// @brief Constructorable from the libgit2 object.
   // will probably make this private later
-  Reference(git_reference *ptr);
+  explicit Reference(git_reference *ptr);
 
   /// @brief Move constructable.
   Reference(Reference &&other) = default;

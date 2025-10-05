@@ -14,7 +14,7 @@ struct git_status_list;
 namespace gitxx {
 
 /// @brief Enum representing the status of a file in the repository.
-enum class FileStatus {
+enum class FileStatus: std::uint8_t {
   /// @brief No changes.
   Current = 0,
   /// @brief New in index.
@@ -124,18 +124,6 @@ class StatusIterator {
   /// @brief The type of a reference to the value type (`StatusEntry&`).
   using ReferenceType = ValueType&;
 
-  /// @brief Move constructor.
-  StatusIterator(StatusIterator&&) noexcept = default;
-
-  /// @brief Copy constructor.
-  StatusIterator(const StatusIterator&) noexcept = default;
-
-  /// @brief Move assignment operator.
-  StatusIterator& operator=(StatusIterator&&) noexcept = default;
-
-  /// @brief Copy assignment operator.
-  StatusIterator& operator=(const StatusIterator&) noexcept = default;
-
   /// @brief Pre-increment operator.
   StatusIterator& operator++() noexcept;
 
@@ -167,12 +155,12 @@ class StatusIterator {
   ReferenceType operator*() noexcept;
 
   /// @brief Addition operator.
-  friend DifferenceType operator+(StatusIterator lhs,
-                                  StatusIterator rhs) noexcept;
+  friend DifferenceType operator+(const StatusIterator& lhs,
+                                  const StatusIterator& rhs) noexcept;
 
   /// @brief Subtraction operator.
-  friend DifferenceType operator-(const StatusIterator lhs,
-                                  const StatusIterator rhs) noexcept;
+  friend DifferenceType operator-(const StatusIterator& lhs,
+                                  const StatusIterator& rhs) noexcept;
 
   /// @brief Spaceship operator.
   friend auto operator<=>(const StatusIterator& lhs,
@@ -187,7 +175,7 @@ class StatusIterator {
 
  private:
   /// @brief Private constructor.
-  StatusIterator(const Status& status);
+  explicit StatusIterator(const Status& status);
 
   /// @brief Updates the status entry.
   void updateStatusEntry() noexcept;
@@ -195,19 +183,19 @@ class StatusIterator {
   /// @brief The index of the current status entry.
   std::size_t m_index;
 
-  /// @brief The number of status entries.
-  std::size_t m_statusCount;
+  /// @brief The status list.
+  std::shared_ptr<git_status_list> m_statusList;
 
   /// @brief The current status entry.
   StatusEntry m_statusEntry;
 
-  /// @brief The status list.
-  std::shared_ptr<git_status_list> m_statusList;
+  /// @brief The number of status entries.
+  std::size_t m_statusCount;
 };
 
 /// @brief Subtraction operator.
 [[nodiscard]] StatusIterator::DifferenceType operator-(
-    const StatusIterator lhs, const StatusIterator rhs) noexcept;
+    const StatusIterator& lhs, const StatusIterator& rhs) noexcept;
 
 /// @brief Spaceship operator.
 [[nodiscard]] auto operator<=>(const StatusIterator& lhs,

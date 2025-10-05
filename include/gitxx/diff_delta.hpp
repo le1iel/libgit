@@ -9,7 +9,7 @@
 namespace gitxx {
 
 /// @brief The status of a diff delta.
-enum class DiffDeltaStatus {
+enum class DiffDeltaStatus : std::uint8_t {
   /// @brief No changes.
   Unmodified = 1,
   /// @brief Entry does not exist in old version
@@ -37,13 +37,13 @@ enum class DiffDeltaStatus {
 /// @brief Description of changes to one entry.
 struct DiffDelta {
   /// @brief Status of the delta.
-  DiffDeltaStatus status;
+  DiffDeltaStatus status{};
   /// @brief Flags for the delta object and the file objects on each side.
   FlagField<DiffFlag> flags;
   /// @brief How similar the file is 0-100.
-  std::uint16_t similarity;
+  std::uint16_t similarity{};
   /// @brief The number of files in the delta.
-  std::uint16_t nfiles;
+  std::uint16_t nfiles{};
   /// @brief The old file.
   DiffFile old_file;
   /// @brief The new file.

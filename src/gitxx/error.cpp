@@ -1,9 +1,10 @@
 #include <gitxx/error.hpp>
+#include <string>
 
 const char* GitErrcCategory::name() const noexcept { return "Git error code"; }
 
-std::string GitErrcCategory::message(int ev) const {
-  switch (ev) {
+std::string GitErrcCategory::message(int error_code) const {
+  switch (error_code) {
     default:
       return "Git error code";
     case static_cast<int>(GitErrc::not_found):
@@ -78,6 +79,6 @@ std::string GitErrcCategory::message(int ev) const {
   }
 }
 
-std::error_code make_error_code(GitErrc e) {
-  return {static_cast<int>(e), gitErrcCategory};
+std::error_code make_error_code(GitErrc error) {
+  return {static_cast<int>(error), gitErrcCategory};
 }

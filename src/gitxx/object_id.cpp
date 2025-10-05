@@ -4,8 +4,9 @@
 
 namespace gitxx {
 
-ObjectId::ObjectId(std::span<const std::uint8_t, 20> id) noexcept {
-  std::copy(id.begin(), id.end(), m_id.begin());
+ObjectId::ObjectId(ObjectId::TagView tag) noexcept {
+
+  std::ranges::copy(tag, m_id.begin());
 }
 
 std::string_view ObjectId::id() const noexcept {
@@ -13,8 +14,8 @@ std::string_view ObjectId::id() const noexcept {
                           m_id.size()};
 }
 
-std::ostream& operator<<(std::ostream& stream, const ObjectId& id) noexcept {
-  return stream << id.id();
+std::ostream& operator<<(std::ostream& stream, const ObjectId& objectId) noexcept {
+  return stream << objectId.id();
 }
 
 bool operator==(const ObjectId& lhs, const ObjectId& rhs) noexcept {
