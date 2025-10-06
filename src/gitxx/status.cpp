@@ -1,7 +1,6 @@
 #include <git2/errors.h>
 #include <git2/status.h>
 
-#include <compare>
 #include <flagfield.hpp>
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/repository.hpp>
@@ -25,7 +24,7 @@ gitxx::DiffFile DiffFileFromGit2(const git_diff_file &file) {
       .old_id{},
       .path{std::string(file.path)},
       .size = file.size,
-      .flags = 0U,
+      .flags = gitxx::FlagField<gitxx::DiffFlag>{0U},
       .mode = file.mode,
   };
 }
@@ -37,7 +36,7 @@ std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
 
   return gitxx::DiffDelta{
       .status = gitxx::DiffDeltaStatus::Unmodified,
-      .flags = delta->flags,
+      .flags = gitxx::FlagField<gitxx::DiffFlag>{delta->flags},
       .similarity = delta->similarity,
       .nfiles = delta->nfiles,
       .old_file = DiffFileFromGit2(delta->old_file),
@@ -49,9 +48,9 @@ std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
 
 namespace gitxx {
 
-
-template<typename Allocator>
-Status::Status(const BasicRepository<Allocator> *repo, const StatusOptions &options, int *res) {
+template <typename Allocator>
+Status::Status(const BasicRepository<Allocator> *repo,
+               const StatusOptions &options, int *res) {
   git_status_list *status_list = nullptr;
   git_status_options opts = convertOptions(options);
 
@@ -68,19 +67,26 @@ Status::Status(const BasicRepository<Allocator> *repo, const StatusOptions &opti
 StatusEntry Status::file(std::string_view file) const noexcept {
   StatusEntry result;
 
-  if (!m_statusList) return result;
+  if (!m_statusList) {
+    return result;
+  }
 
   size_t count = git_status_list_entrycount(m_statusList.get());
 
   for (size_t i = 0; i < count; ++i) {
     const git_status_entry *entry = git_status_byindex(m_statusList.get(), i);
-    if (!entry) continue;
+    if (entry == nullptr) {
+      continue;
+    }
 
     const git_diff_delta *delta =
-        entry->head_to_index
+        (entry->head_to_index != nullptr)
             ? entry->head_to_index
-            : (entry->index_to_workdir ? entry->index_to_workdir : nullptr);
-    if (delta && delta->new_file.path && file == delta->new_file.path) {
+            : ((entry->index_to_workdir != nullptr) ? entry->index_to_workdir
+                                                    : nullptr);
+
+    if ((delta != nullptr) && (delta->new_file.path != nullptr) &&
+        file == delta->new_file.path) {
       result.status = gitxx::FlagField<gitxx::FileStatus>{entry->status};
       result.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
       result.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
@@ -98,17 +104,9 @@ StatusIterator Status::end() const noexcept {
   return end;
 }
 
-// Custom deleter for git_status_list
-
-auto operator<=>(const std::shared_ptr<git_status_list> lhs,
-                 const std::shared_ptr<git_status_list> rhs) {
-  if (!lhs && !rhs) return std::strong_ordering::equivalent;
-  if (!lhs) return std::strong_ordering::less;
-  // if (!rhs)
-  return std::strong_ordering::greater;
-}
-
-// Explicit template instantiation for the Status constructor with the BasicRepository type used in tests
-template Status::Status(const BasicRepository<std::allocator<std::byte>>* repo, const StatusOptions& options, int* res);
+// Explicit template instantiation for the Status constructor with the
+// BasicRepository type used in tests
+template Status::Status(const BasicRepository<std::allocator<std::byte>> *repo,
+                        const StatusOptions &options, int *res);
 
 }  // namespace gitxx

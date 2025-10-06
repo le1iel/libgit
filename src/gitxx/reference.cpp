@@ -16,22 +16,22 @@ std::string Reference::name() const noexcept {
 }
 
 bool Reference::isBranch() const noexcept {
-  return git_reference_is_branch(m_ref.get());
+  return git_reference_is_branch(m_ref.get()) != 0;
   return false;
 }
 
 bool Reference::isNote() const noexcept {
-  return git_reference_is_note(m_ref.get());
+  return git_reference_is_note(m_ref.get()) != 0;
   return false;
 }
 
 bool Reference::isTag() const noexcept {
-  return git_reference_is_tag(m_ref.get());
+  return git_reference_is_tag(m_ref.get()) != 0;
   return false;
 }
 
 bool Reference::isRemote() const noexcept {
-  return git_reference_is_remote(m_ref.get());
+  return git_reference_is_remote(m_ref.get()) != 0;
   return false;
 }
 
@@ -40,10 +40,6 @@ std::string Reference::shorthand() const noexcept {
   out = git_reference_shorthand(m_ref.get());
   return out;
 }
-
-// ReferenceType Reference::type() const noexcept {
-// return git_reference_type(m_ref.get());
-// }
 
 int Reference::resolve() noexcept {
   git_reference *ref = nullptr;

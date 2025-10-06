@@ -1,7 +1,9 @@
 #include <git2/status.h>
 
+#include <algorithm>
 #include <gitxx/status.hpp>
-#include <iostream>
+
+#include "flagfield.hpp"
 
 namespace {
 
@@ -10,7 +12,7 @@ gitxx::DiffFile DiffFileFromGit2(const git_diff_file& file) {
       .old_id{},
       .path{std::string(file.path)},
       .size = file.size,
-      .flags = 0U,
+      .flags = gitxx::FlagField<gitxx::DiffFlag>{0U},
       .mode = file.mode,
   };
 }
@@ -22,7 +24,7 @@ std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta* delta) {
 
   return gitxx::DiffDelta{
       .status = gitxx::DiffDeltaStatus::Unmodified,
-      .flags = delta->flags,
+      .flags = gitxx::FlagField<gitxx::DiffFlag>{delta->flags},
       .similarity = delta->similarity,
       .nfiles = delta->nfiles,
       .old_file = DiffFileFromGit2(delta->old_file),
@@ -34,12 +36,11 @@ std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta* delta) {
 
 namespace gitxx {
 
-StatusIterator::StatusIterator(const Status& status) {
-  m_statusList = status.m_statusList;
-  m_statusCount =
-      m_statusList ? git_status_list_entrycount(m_statusList.get()) : 0U;
-  std::cout << "Count: " << m_statusCount << std::endl;
-  m_index = 0U;
+StatusIterator::StatusIterator(const Status& status)
+    : m_index(0U),
+      m_statusList(status.m_statusList),
+      m_statusCount(
+          m_statusList ? git_status_list_entrycount(m_statusList.get()) : 0U) {
   updateStatusEntry();
 }
 
@@ -88,47 +89,49 @@ StatusIterator StatusIterator::operator--(int) noexcept {
 StatusIterator StatusIterator::operator+(DifferenceType n) noexcept {
   StatusIterator tmp = *this;
   tmp.m_index += n;
-  if (tmp.m_index > tmp.m_statusCount) tmp.m_index = tmp.m_statusCount;
+  tmp.m_index = std::min(tmp.m_index, tmp.m_statusCount);
   tmp.updateStatusEntry();
   return tmp;
 }
 
 StatusIterator& StatusIterator::operator+=(DifferenceType n) noexcept {
   m_index += n;
-  if (m_index > m_statusCount) m_index = m_statusCount;
+  m_index = std::min(m_index, m_statusCount);
   updateStatusEntry();
   return *this;
 }
 
 StatusIterator StatusIterator::operator-(DifferenceType n) noexcept {
   StatusIterator tmp = *this;
-  if (tmp.m_index < n)
+  if (tmp.m_index < n) {
     tmp.m_index = 0;
-  else
+  } else {
     tmp.m_index -= n;
+  }
   tmp.updateStatusEntry();
   return tmp;
 }
 
 StatusIterator& StatusIterator::operator-=(DifferenceType n) noexcept {
-  if (m_index < n)
+  if (m_index < n) {
     m_index = 0;
-  else
+  } else {
     m_index -= n;
+  }
   updateStatusEntry();
   return *this;
 }
 
-StatusIterator::DifferenceType operator+(StatusIterator lhs,
-                                         StatusIterator rhs) noexcept {
+StatusIterator::DifferenceType operator+(const StatusIterator& lhs,
+                                         const StatusIterator& rhs) noexcept {
   // This is not standard meaning for container iterators - difference makes
   // sense, sum does not. Here, for compliance, may sum their indices BUT this
   // is not standard, so return index sum.
   return lhs.m_index + rhs.m_index;
 }
 
-StatusIterator::DifferenceType operator-(StatusIterator lhs,
-                                         StatusIterator rhs) noexcept {
+StatusIterator::DifferenceType operator-(const StatusIterator& lhs,
+                                         const StatusIterator& rhs) noexcept {
   return lhs.m_index - rhs.m_index;
 }
 
@@ -154,8 +157,12 @@ StatusIterator::ReferenceType StatusIterator::operator*() noexcept {
 auto operator<=>(const StatusIterator& lhs,
                  const StatusIterator& rhs) noexcept {
   // Compare m_index first
-  if (lhs.m_index < rhs.m_index) return std::strong_ordering::less;
-  if (lhs.m_index > rhs.m_index) return std::strong_ordering::greater;
+  if (lhs.m_index < rhs.m_index) {
+    return std::strong_ordering::less;
+  }
+  if (lhs.m_index > rhs.m_index) {
+    return std::strong_ordering::greater;
+  }
 
   // If m_index is equal, compare m_statusList pointers
   return lhs.m_statusList <=> rhs.m_statusList;

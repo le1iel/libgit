@@ -9,10 +9,12 @@
 #include <string>
 #include <type_traits>
 
+#define FLAGFIELD_DEFAULT_SIZE 32
+
 namespace gitxx {
 
 /// @brief std::bitset that can be typed using an enum.
-template <typename T, std::size_t Size = 32,
+template <typename T, std::size_t Size = FLAGFIELD_DEFAULT_SIZE,
           typename = std::enable_if_t<std::is_enum_v<T>>>
 class FlagField {
  public:
@@ -20,18 +22,18 @@ class FlagField {
   using ValueType = T;
 
   /// @brief Constructor from a value.
-  constexpr FlagField(std::uint32_t value) : m_value(value) {}
+  constexpr explicit FlagField(std::uint32_t value) : m_value(value) {}
 
   /// @brief Constructor from a initializer list.
   constexpr FlagField(std::initializer_list<T> enum_list)
       : m_value(std::accumulate(
             enum_list.begin(), enum_list.end(), 0,
             [](std::uint32_t value, T flag) {
-              return (value | 1 << static_cast<std::uint32_t>(flag));
+              return (value | 1U << static_cast<std::uint32_t>(flag));
             })) {}
 
   /// @brief Constructor from a value.
-  constexpr FlagField(ValueType value) : m_value(0) { set(value); }
+  constexpr explicit FlagField(ValueType value) : m_value(0) { set(value); }
 
   /// @brief Constructor from a value.
   constexpr FlagField() = default;
@@ -76,8 +78,8 @@ class FlagField {
 
 /// @brief Stream insertion operator for FlagField.
 template <typename T, std::size_t Size, typename E>
-[[nodiscard]] std::ostream& operator<<(std::ostream& os, const FlagField<T, Size, E>& flags) {
-  return os << flags.to_string();
+[[nodiscard]] std::ostream& operator<<(std::ostream& outstream, const FlagField<T, Size, E>& flags) {
+  return outstream << flags.to_string();
 }
 
 }  // namespace gitxx

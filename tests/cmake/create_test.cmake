@@ -43,6 +43,11 @@ function(create_test)
 
   target_compile_definitions(${target} PRIVATE TEST_GIT_HOME="${TEST_GIT_HOME}")
 
+  set(TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Testing")
+  file(MAKE_DIRECTORY ${TEST_OUTPUT_DIR})
+
+  target_compile_definitions(${target} PRIVATE 
+      TEST_OUTPUT_DIR="${TEST_OUTPUT_DIR}")
 
   add_test(
     NAME ${ARG_NAME}

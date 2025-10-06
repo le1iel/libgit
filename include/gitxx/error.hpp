@@ -2,8 +2,9 @@
 #define INCLUDE_GITXX_ERROR_HPP_
 
 #include <system_error>
+#include <cstdint>
 
-enum class GitErrc {
+enum class GitErrc: std::uint8_t {
   /// @brief Requested object could not be found.
   not_found = 3,
   /// @brief Object exists preventing operation.
@@ -77,10 +78,10 @@ enum class GitErrc {
 /// @brief gitxx error category.
 struct GitErrcCategory : std::error_category {
   /// @brief Gives the name of the error.
-  const char* name() const noexcept override;
+  [[nodiscard]] const char* name() const noexcept override;
 
   /// @brief Gives the description of the error.
-  std::string message(int ev) const override;
+  [[nodiscard]] std::string message(int error_code) const override;
 };
 
 namespace std {

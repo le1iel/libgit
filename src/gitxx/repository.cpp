@@ -12,8 +12,6 @@
 #include <optional>
 #include <string>
 
-using gitxx::log::Log;
-
 namespace gitxx {
 
 template <typename Allocator>
@@ -45,7 +43,7 @@ BasicRepository<Allocator>::BasicRepository(std::string_view path,
   int openRes = git_repository_open(&repo, path.cbegin());
 
   if (openRes != 0) {
-    Log::error(git_error_last()->message);
+    ERROR() << git_error_last()->message;
     *resOut = -1;
     return;
   }

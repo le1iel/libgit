@@ -8,7 +8,7 @@
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
 
-class status_ut : public ::testing::Test {
+class status_options_ut : public ::testing::Test {
  public:
   static void SetUpTestSuite() { init_libgit(); }
 
@@ -16,7 +16,7 @@ class status_ut : public ::testing::Test {
 };
 
 // Updated new_file_untracked test case
-TEST_F(status_ut, new_file_untracked) {
+TEST_F(status_options_ut, new_file_untracked) {
   gitxx::GitCommands internalRepo{};
   ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
   ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
@@ -40,7 +40,7 @@ TEST_F(status_ut, new_file_untracked) {
 }
 
 // Updated new_file_untracked test case
-TEST_F(status_ut, new_file_untracked_index) {
+TEST_F(status_options_ut, new_file_untracked_index) {
   gitxx::GitCommands internalRepo{};
   ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
   ASSERT_TRUE(internalRepo.makeEmptyCommit("start"));
@@ -70,7 +70,7 @@ TEST_F(status_ut, new_file_untracked_index) {
       << it.status.to_string();
 }
 
-TEST_F(status_ut, 2_new_file_untracked) {
+TEST_F(status_options_ut, 2_new_file_untracked) {
   // setup
   gitxx::GitCommands internalRepo{};
   ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
@@ -81,7 +81,7 @@ TEST_F(status_ut, 2_new_file_untracked) {
       gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
   ASSERT_TRUE(repoRes.has_value());
 
-  gitxx::Repository repo = std::move(repoRes.value());
+  gitxx::Repository repo = repoRes.value();
 
   auto statusRes = repo.status(gitxx::StatusOptions{
       .flags =
@@ -90,12 +90,13 @@ TEST_F(status_ut, 2_new_file_untracked) {
   ASSERT_TRUE(statusRes.has_value());
 
   auto status = statusRes.value();
+  auto otherStatus {status};
 
   EXPECT_EQ(status.end() - status.begin(), 2);
 }
 
 // Updated modified_file test case
-TEST_F(status_ut, modified_file) {
+TEST_F(status_options_ut, modified_file) {
   gitxx::GitCommands internalRepo{};
 
   std::string modified_file = "test.txt";
@@ -121,7 +122,7 @@ TEST_F(status_ut, modified_file) {
 }
 
 // Updated deleted_file test case
-TEST_F(status_ut, deleted_file) {
+TEST_F(status_options_ut, deleted_file) {
   gitxx::GitCommands internalRepo{};
   ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
   ASSERT_TRUE(internalRepo.add("test.txt"));
@@ -144,7 +145,7 @@ TEST_F(status_ut, deleted_file) {
           .status[gitxx::FileStatus::WtDeleted]);  // Check for deleted status
 }
 
-TEST_F(status_ut, renamed_file) {
+TEST_F(status_options_ut, renamed_file) {
   gitxx::GitCommands internalRepo{};
 
   ASSERT_TRUE(internalRepo.createFile("old_name.txt", "content"));
@@ -203,7 +204,7 @@ TEST_F(status_ut, renamed_file) {
 //   // Check for type-changed status
 // }
 
-TEST_F(status_ut, ignored_file) {
+TEST_F(status_options_ut, ignored_file) {
   gitxx::GitCommands internalRepo{};
 
   ASSERT_TRUE(internalRepo.createFile(".gitignore", "*.log"));
@@ -230,7 +231,7 @@ TEST_F(status_ut, ignored_file) {
   // Check for ignored status
 }
 
-TEST_F(status_ut, conflicting_file) {
+TEST_F(status_options_ut, conflicting_file) {
   gitxx::GitCommands internalRepo{};
 
   ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));

@@ -3,10 +3,10 @@
 #include <filesystem>
 #include <fstream>
 #include <source_location>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <tuple>
+#include <iostream>
 
 #include "gtest/gtest.h"
 
@@ -22,23 +22,39 @@ class GitCommands {
   GitCommands(
       const std::source_location location = std::source_location::current())
       : m_home(TEST_GIT_HOME),
-        m_path(std::filesystem::temp_directory_path() / "gitxx_test") {
+        m_path(TEST_OUTPUT_DIR  "/gitxx_test") {
+
+    const std::string test_function = location.function_name();
+    const auto first = test_function.rfind(' ') + 1;
+    const auto end = test_function.rfind("_Test");
+    const auto len = test_function.size() - first - (test_function.size() - end );
+    const std::string_view test_name { test_function.c_str() + first, len };
+    m_path.append(test_name);
+    std::filesystem::remove_all(m_path);
+
     std::filesystem::create_directories(m_path);
 
     std::ignore = runCommand("git init -q");
   }
 
-  ~GitCommands() { std::filesystem::remove_all(m_path); }
+  // ~GitCommands() { std::filesystem::remove_all(m_path); }
 
   ::testing::AssertionResult commit(std::string_view message) {
     return runCommand("git commit -m \"" + std::string(message) + "\"");
   }
 
+  ::testing::AssertionResult initRepo() {
+    std::string cmd{"git init -q"};
+    return runCommand(cmd) ? testing::AssertionSuccess()
+                           : testing::AssertionFailure()
+                                 << "Error initilizing repo (" << cmd << ")";
+  }
+
   ::testing::AssertionResult makeEmptyCommit(std::string_view message) {
-    std::string command{"git commit --allow-empty -m \""};
-    command.append(message);
-    command.append("\"");
-    return runCommand(command);
+    std::string cmd{"git commit --allow-empty -m \""};
+    cmd.append(message);
+    cmd.append("\"");
+    return runCommand(cmd);
   };
 
   ::testing::AssertionResult add(std::string_view filename) {
@@ -114,22 +130,28 @@ class GitCommands {
   std::filesystem::path path() const { return m_path; }
 
  private:
-  ::testing::AssertionResult runCommand(std::string_view command) {
-    if (command.empty()) {
-      return testing::AssertionFailure() << "Command is empty";
-    }
-
-    std::string cmd{"cd "};
+  void cd(std::string& cmd) {
+    cmd.append("cd ");
     cmd.append(m_path);
     cmd.append(" && ");
     cmd.append("HOME=\"");
     cmd.append(m_home.string());
     cmd.append("\" ");
+  }
+
+  ::testing::AssertionResult runCommand(std::string_view command) {
+    if (command.empty()) {
+      return testing::AssertionFailure() << "Command is empty";
+    }
+
+    std::string cmd{};
+    cd(cmd);
     cmd.append(command);
 
     if (system(cmd.c_str()) == 0) return testing::AssertionSuccess();
 
-    return testing::AssertionFailure();
+    return testing::AssertionFailure() << "Got error return code from ("
+        << cmd << ")";
   }
 
   std::filesystem::path m_path{};

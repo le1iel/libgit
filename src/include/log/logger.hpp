@@ -1,32 +1,8 @@
-#ifndef SRC_INCLUDE_LOG_LOGGING_H
-#define SRC_INCLUDE_LOG_LOGGING_H
+#include <iostream>
 
-#include <string_view>
+#define ERROR_STREAM std::cerr
+#define OUT_STREAM std::cout
 
-namespace gitxx {
+// Macro that creates a temporary stream for cout-like syntax
+#define ERROR() ERROR_STREAM << "[ERROR] "
 
-namespace log {
-
-/// @brief Log levels
-enum class LogLevel { Error, Warning, Info, Debug };
-
-class Log {
- public:
-  static void error(const std::string_view message);
-
-  static void warning(const std::string_view message);
-
-  static void info(const std::string_view message);
-
-  static void debug(const std::string_view message);
-
-  ~Log() = default;
-  Log();
-
-};
-
-}  // namespace log
-
-}  // namespace gitxx
-
-#endif  // SRC_INCLUDE_LOG_LOGGING_H

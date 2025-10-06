@@ -10,7 +10,7 @@
 namespace gitxx {
 
 /// @brief Files on which to report status.
-enum class StatusShow {
+enum class StatusShow: std::uint8_t {
   /// @brief The default. This roughly matches `git status --porcelain`
   ///        regarding which files are included and in what order.
   IndexAndWorkdir = 0,
@@ -22,7 +22,7 @@ enum class StatusShow {
   Workdir,
 };
 
-enum class StatusFlags {
+enum class StatusFlags: std::uint8_t {
   IncludeUntracked = 0,
   IncludeIgnored,
   IncludeUnmodified,
@@ -56,7 +56,7 @@ struct StatusOptions {
   /// @brief The pathspec is an vector of path patterns to match (using
   ///        fnmatch-style matching), or just an vector of paths to match exactly
   ///        if `StatusFlags::DisablePathspecMatch` is specified in the flags.
-  std::vector<std::string> pathspec{};
+  std::vector<std::string> pathspec;
 
   /// @brief The baseline is the tree to be used for comparison to the working
   ///        directory and index; defaults to HEAD.

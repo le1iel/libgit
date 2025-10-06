@@ -1,0 +1,39 @@
+---
+name: "Documentation"
+
+on:
+  - pull_request
+
+jobs:
+  build-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+      - name: Generate Doxygen documentation
+        run: |
+          mkdir build
+          doxygen ./docs/Doxyfile
+
+      - name: Archive documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-docs
+          path: build/docs/html/ # Path based on OUTPUT_DIRECTORY and HTML_OUTPUT in Doxyfile
+          retention-days: 7
+
+      # # Optional: Deploy to GitHub Pages
+      # - name: Deploy to GitHub Pages
+      #   if: github.event_name != 'pull_request' # Only deploy on pushes, not PRs
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./build/docs/html # Path based on OUTPUT_DIRECTORY and HTML_OUTPUT in Doxyfile
+      #     force_orphan: true
+      #     user_name: "github-actions[bot]"
+      #     user_email: "github-actions[bot]@users.noreply.github.com"
+      #     commit_message: "docs: update doxygen documentation"
