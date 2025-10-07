@@ -2,7 +2,7 @@
 
 #include <gitxx/error.hpp>
 
-TEST(jeff, jeff) {
+TEST(bt_error, message) {
   std::error_code ec = GitErrc::eof;
   std::cout << ec << std::endl;
   std::cout << ec.message() << std::endl;
