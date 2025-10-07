@@ -6,6 +6,9 @@
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
+#include <ranges>
+#include <algorithm>
+#include <git2/diff.h>
 
 namespace {
 
@@ -71,28 +74,40 @@ StatusEntry Status::file(std::string_view file) const noexcept {
     return result;
   }
 
-  size_t count = git_status_list_entrycount(m_statusList.get());
+  auto entries =
+      std::views::iota(size_t{0},
+                       git_status_list_entrycount(m_statusList.get()))
+      | // for each index perform this transform
+      std::views::transform([this](size_t index) {
+        return git_status_byindex(m_statusList.get(), index);
+      })
+      // for each entry filter our null entries
+      | std::views::filter([](const git_status_entry *entry)
+            { return entry != nullptr; });
 
-  for (size_t i = 0; i < count; ++i) {
-    const git_status_entry *entry = git_status_byindex(m_statusList.get(), i);
-    if (entry == nullptr) {
-      continue;
-    }
+        auto entry_it = std::ranges::find_if(entries, [&file](const git_status_entry* entry){
+            const git_diff_delta* delta = nullptr;
+            if(entry->head_to_index != nullptr)
+            {
+                delta = entry->head_to_index;
+            }
+            if(entry->index_to_workdir != nullptr)
+            {
+                delta = entry->index_to_workdir;
+            }
+           
+            return (delta != nullptr && delta->new_file.path != nullptr && (file == delta->new_file.path));
+        });
 
-    const git_diff_delta *delta =
-        (entry->head_to_index != nullptr)
-            ? entry->head_to_index
-            : ((entry->index_to_workdir != nullptr) ? entry->index_to_workdir
-                                                    : nullptr);
+        if(entry_it != entries.end())
+        {
+            const auto* entry = *entry_it;
+            result.status = gitxx::FlagField<gitxx::FileStatus>(entry->status);
+            result.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
+            result.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
+            return result;
+        }
 
-    if ((delta != nullptr) && (delta->new_file.path != nullptr) &&
-        file == delta->new_file.path) {
-      result.status = gitxx::FlagField<gitxx::FileStatus>{entry->status};
-      result.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
-      result.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
-      return result;
-    }
-  }
   return result;
 }
 
