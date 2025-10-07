@@ -2,9 +2,7 @@
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/error.hpp>
 
-namespace gitxx {
-
-namespace internal {
+namespace gitxx::internal {
 
 constexpr GitErrc Error(int internal_error) noexcept {
   return static_cast<GitErrc>(std::abs(internal_error));
@@ -14,6 +12,4 @@ constexpr GitErrc Error(int internal_error) noexcept {
 //   return static_cast<GitErrc>(std::abs(internal_error));
 // }
 
-}  // namespace internal
-
-}  // namespace gitxx
+}  // namespace gitxx::internal

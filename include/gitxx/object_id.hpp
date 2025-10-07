@@ -12,10 +12,12 @@ namespace gitxx {
 
 /// @brief Unique identity of any object (commit, tree, blob, tag).
 class ObjectId {
-    using Tag = std::span<std::uint8_t, TAG_LENGTH>;
-    using TagView = std::span<const std::uint8_t, TAG_LENGTH>;
+    static constexpr std::uint8_t TagLength { 20 };
 
  public:
+    using Tag = std::array<std::byte, TagLength>;
+    using TagView = std::span<const std::byte, TagLength>;
+
   /// @brief Default constructable.
   ObjectId() = default;
 
@@ -37,7 +39,8 @@ class ObjectId {
   explicit ObjectId(std::string_view tag) noexcept;
 
   /// @brief Internal representaion of the id.
-  std::array<std::uint8_t, TAG_LENGTH> m_id{};
+  Tag m_id{};
+
 };
 
   /// @brief Equality operator.
