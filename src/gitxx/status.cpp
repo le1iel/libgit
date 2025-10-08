@@ -3,13 +3,14 @@
 #include <git2/status.h>
 
 #include <algorithm>
+#include <converters/diff_delta.hpp>
+#include <converters/status_options.hpp>
 #include <flagfield.hpp>
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
 #include <ranges>
-#include <converters.hpp>
 
 namespace gitxx {
 
@@ -67,8 +68,12 @@ StatusEntry Status::file(std::string_view file) const noexcept {
   if (entry_it != entries.end()) {
     const auto *entry = *entry_it;
     result.status = gitxx::FlagField<gitxx::FileStatus>(entry->status);
-    result.head_to_index = internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(entry->head_to_index);
-    result.index_to_workdir = internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(entry->index_to_workdir);
+    result.head_to_index =
+        internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(
+            entry->head_to_index);
+    result.index_to_workdir =
+        internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(
+            entry->index_to_workdir);
     return result;
   }
 

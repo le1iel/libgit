@@ -2,7 +2,8 @@
 #include <git2/errors.h>
 #include <git2/repository.h>
 
-#include <converters.hpp>
+#include <converters/diff_delta.hpp>
+#include <converters/error.hpp>
 #include <expected>
 #include <gitxx/error.hpp>
 #include <gitxx/repository.hpp>
@@ -29,7 +30,9 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 
   BasicRepository repo(path_str, &resOut);
   if (resOut != 0) {
-    return std::unexpected<GitErrc>(internal::conversion_traits<GitErrc, int>::from_c(git_error_last()->klass));
+    return std::unexpected<GitErrc>(
+        internal::conversion_traits<GitErrc, int>::from_c(
+            git_error_last()->klass));
   }
 
   return repo;
@@ -52,7 +55,8 @@ BasicRepository<Allocator>::BasicRepository(std::string_view path,
 }
 
 template <typename Allocator>
-BasicRepository<Allocator>::string_type BasicRepository<Allocator>::path() const noexcept {
+BasicRepository<Allocator>::string_type BasicRepository<Allocator>::path()
+    const noexcept {
   BasicRepository<Allocator>::string_type path;
   if (m_repo) {
     path = git_repository_path(m_repo.get());
@@ -88,7 +92,8 @@ std::expected<Status, GitErrc> BasicRepository<Allocator>::status(
   if (res == 0) {
     return status;
   } else {
-    return std::unexpected(internal::conversion_traits<GitErrc, int>::from_c(res));
+    return std::unexpected(
+        internal::conversion_traits<GitErrc, int>::from_c(res));
   }
 }
 
