@@ -6,6 +6,7 @@
 #include <converters/base.hpp>
 #include <converters/diff_file.hpp>
 #include <gitxx/diff_delta.hpp>
+#include <optional>
 
 namespace gitxx::internal {
 

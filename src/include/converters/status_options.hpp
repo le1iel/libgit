@@ -5,6 +5,7 @@
 
 #include <converters/base.hpp>
 #include <gitxx/status_options.hpp>
+#include <optional>
 
 namespace gitxx::internal {
 

@@ -3,6 +3,7 @@
 
 #include <converters/base.hpp>
 #include <gitxx/error.hpp>
+#include <cmath>
 
 namespace gitxx::internal {
 
