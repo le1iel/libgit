@@ -11,35 +11,6 @@
 #include <ranges>
 #include <converters.hpp>
 
-namespace {
-
-gitxx::DiffFile DiffFileFromGit2(const git_diff_file &file) {
-  return gitxx::DiffFile{
-      .old_id{},
-      .path{std::string(file.path)},
-      .size = file.size,
-      .flags = gitxx::FlagField<gitxx::DiffFlag>{0U},
-      .mode = file.mode,
-  };
-}
-
-std::optional<gitxx::DiffDelta> DiffDeltaFromGit2(const git_diff_delta *delta) {
-  if (delta == nullptr) {
-    return std::nullopt;
-  }
-
-  return gitxx::DiffDelta{
-      .status = gitxx::DiffDeltaStatus::Unmodified,
-      .flags = gitxx::FlagField<gitxx::DiffFlag>{delta->flags},
-      .similarity = delta->similarity,
-      .nfiles = delta->nfiles,
-      .old_file = DiffFileFromGit2(delta->old_file),
-      .new_file = DiffFileFromGit2(delta->new_file),
-  };
-}
-
-}  // namespace
-
 namespace gitxx {
 
 template <typename Allocator>
@@ -96,8 +67,8 @@ StatusEntry Status::file(std::string_view file) const noexcept {
   if (entry_it != entries.end()) {
     const auto *entry = *entry_it;
     result.status = gitxx::FlagField<gitxx::FileStatus>(entry->status);
-    result.head_to_index = DiffDeltaFromGit2(entry->head_to_index);
-    result.index_to_workdir = DiffDeltaFromGit2(entry->index_to_workdir);
+    result.head_to_index = internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(entry->head_to_index);
+    result.index_to_workdir = internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(entry->index_to_workdir);
     return result;
   }
 
