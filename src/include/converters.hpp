@@ -4,12 +4,18 @@
 
 namespace gitxx::internal {
 
-constexpr GitErrc Error(int internal_error) noexcept {
-  return static_cast<GitErrc>(std::abs(internal_error));
-}
+template <typename CppType, typename CType>
+struct conversion_traits;
 
-// constexpr DiffDelta diffDelta(int internal_error) noexcept {
-//   return static_cast<GitErrc>(std::abs(internal_error));
-// }
+// TODO How to move these to the cpp files
+template <>
+struct conversion_traits<GitErrc, int> {
+  static GitErrc from_c(const int& error) {
+    return static_cast<GitErrc>(std::abs(error));
+  }
+  static int from_cpp(const GitErrc& error){
+      return static_cast<int>(error);
+  }
+};
 
 }  // namespace gitxx::internal

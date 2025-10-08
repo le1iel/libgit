@@ -29,7 +29,7 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 
   BasicRepository repo(path_str, &resOut);
   if (resOut != 0) {
-    return std::unexpected<GitErrc>(internal::Error(git_error_last()->klass));
+    return std::unexpected<GitErrc>(internal::conversion_traits<GitErrc, int>::from_c(git_error_last()->klass));
   }
 
   return repo;
@@ -88,7 +88,7 @@ std::expected<Status, GitErrc> BasicRepository<Allocator>::status(
   if (res == 0) {
     return status;
   } else {
-    return std::unexpected(internal::Error(res));
+    return std::unexpected(internal::conversion_traits<GitErrc, int>::from_c(res));
   }
 }
 
