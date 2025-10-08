@@ -9,7 +9,7 @@ struct git_reference;
 namespace gitxx {
 
 /// @brief Basic type of any Git reference.
-enum class ReferenceType: std::uint8_t {
+enum class ReferenceType : std::uint8_t {
   /// @brief Invalid reference.
   Invalid = 0,
   /// @brief A reference that points at an object id.

@@ -44,7 +44,9 @@ class FlagField {
   }
 
   /// @brief Check if the given enum is set.
-  [[nodiscard]] constexpr bool operator[](ValueType flag) const { return test(flag); }
+  [[nodiscard]] constexpr bool operator[](ValueType flag) const {
+    return test(flag);
+  }
 
   /// @brief Returns a reference to the bit at the given index which you
   /// can mutate.
@@ -78,7 +80,8 @@ class FlagField {
 
 /// @brief Stream insertion operator for FlagField.
 template <typename T, std::size_t Size, typename E>
-[[nodiscard]] std::ostream& operator<<(std::ostream& outstream, const FlagField<T, Size, E>& flags) {
+[[nodiscard]] std::ostream& operator<<(std::ostream& outstream,
+                                       const FlagField<T, Size, E>& flags) {
   return outstream << flags.to_string();
 }
 

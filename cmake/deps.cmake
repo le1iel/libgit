@@ -44,7 +44,7 @@ else()
     FetchContent_MakeAvailable(libgit2)
 
     target_include_directories(libgit2package
-        INTERFACE 
+        INTERFACE
             $<BUILD_INTERFACE:${libgit2_SOURCE_DIR}/include>
     )
 

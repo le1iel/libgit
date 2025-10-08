@@ -2,11 +2,11 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <source_location>
 #include <string>
 #include <string_view>
 #include <tuple>
-#include <iostream>
 
 #include "gtest/gtest.h"
 
@@ -21,14 +21,13 @@ class GitCommands {
 
   GitCommands(
       const std::source_location location = std::source_location::current())
-      : m_home(TEST_GIT_HOME),
-        m_path(TEST_OUTPUT_DIR  "/gitxx_test") {
-
+      : m_home(TEST_GIT_HOME), m_path(TEST_OUTPUT_DIR "/gitxx_test") {
     const std::string test_function = location.function_name();
     const auto first = test_function.rfind(' ') + 1;
     const auto end = test_function.rfind("_Test");
-    const auto len = test_function.size() - first - (test_function.size() - end );
-    const std::string_view test_name { test_function.c_str() + first, len };
+    const auto len =
+        test_function.size() - first - (test_function.size() - end);
+    const std::string_view test_name{test_function.c_str() + first, len};
     m_path.append(test_name);
     std::filesystem::remove_all(m_path);
 
@@ -47,7 +46,7 @@ class GitCommands {
     std::string cmd{"git init -q"};
     return runCommand(cmd) ? testing::AssertionSuccess()
                            : testing::AssertionFailure()
-                                 << "Error initilizing repo (" << cmd << ")";
+                                 << "Error initializing repo (" << cmd << ")";
   }
 
   ::testing::AssertionResult makeEmptyCommit(std::string_view message) {
@@ -150,8 +149,8 @@ class GitCommands {
 
     if (system(cmd.c_str()) == 0) return testing::AssertionSuccess();
 
-    return testing::AssertionFailure() << "Got error return code from ("
-        << cmd << ")";
+    return testing::AssertionFailure()
+           << "Got error return code from (" << cmd << ")";
   }
 
   std::filesystem::path m_path{};

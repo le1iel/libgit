@@ -6,7 +6,7 @@ target_link_libraries(gitxx-lib PRIVATE -fprofile-instr-generate)
 
 add_custom_target(coverage
     COMMAND llvm-profdata merge -sparse
-        ${TEST_COVERAGE_DIR}/coverage_*.profraw 
+        ${TEST_COVERAGE_DIR}/coverage_*.profraw
         -o ${TEST_COVERAGE_DIR}/summary.profdata
 
     COMMAND llvm-cov show

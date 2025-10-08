@@ -17,26 +17,27 @@ class status_options_ut : public ::testing::Test {
 
 // Updated new_file_untracked test case
 TEST_F(status_options_ut, new_file_untracked) {
-  gitxx::GitCommands internalRepo{};
-  ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
-  ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
+  gitxx::GitCommands internal_repo{};
+  ASSERT_TRUE(internal_repo.makeEmptyCommit("one"));
+  ASSERT_TRUE(internal_repo.createFile("test.txt", "content"));
 
-  auto repoRes =
-      gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
-  ASSERT_TRUE(repoRes.has_value());
+  auto repo_res =
+      gitxx::Repository::Open(std::string_view(internal_repo.path().c_str()));
+  ASSERT_TRUE(repo_res.has_value());
 
-  gitxx::Repository repo = repoRes.value();
+  const gitxx::Repository& repo = repo_res.value();
   auto statusRes = repo.status(gitxx::StatusOptions{
       .flags =
-          gitxx::FlagField<gitxx::StatusFlags>{gitxx::StatusFlags::IncludeUntracked},
+          gitxx::FlagField<gitxx::StatusFlags>{
+              gitxx::StatusFlags::IncludeUntracked},
   });
   ASSERT_TRUE(statusRes.has_value());
-  auto status = statusRes.value();
+  const auto& status = statusRes.value();
 
   EXPECT_EQ(status.end() - status.begin(), 1);
 
-  auto it = *(status.begin());
-  EXPECT_TRUE(it.status.test(gitxx::FileStatus::WtNew));
+  auto status_it = *(status.begin());
+  EXPECT_TRUE(status_it.status.test(gitxx::FileStatus::WtNew));
 }
 
 // Updated new_file_untracked test case
@@ -48,72 +49,74 @@ TEST_F(status_options_ut, new_file_untracked_index) {
   ASSERT_TRUE(internalRepo.printStatus());
   ASSERT_TRUE(internalRepo.add("test.txt"));
 
-  auto repoRes =
+  auto repo_res =
       gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
-  ASSERT_TRUE(repoRes.has_value());
+  ASSERT_TRUE(repo_res.has_value());
 
-  gitxx::Repository repo = repoRes.value();
-  auto statusRes = repo.status(gitxx::StatusOptions{
+  const gitxx::Repository& repo = repo_res.value();
+  auto status_res = repo.status(gitxx::StatusOptions{
       .show = gitxx::StatusShow::Index,
       .flags =
           gitxx::FlagField<gitxx::StatusFlags>{
-              gitxx::StatusFlags::IncludeUntracked, gitxx::StatusFlags::UpdateIndex,
+              gitxx::StatusFlags::IncludeUntracked,
+              gitxx::StatusFlags::UpdateIndex,
               gitxx::StatusFlags::RenamesHeadToIndex},
   });
-  ASSERT_TRUE(statusRes.has_value());
-  auto status = statusRes.value();
+  ASSERT_TRUE(status_res.has_value());
+  const auto& status = status_res.value();
 
   EXPECT_EQ(status.end() - status.begin(), 1);
 
-  auto it = *(status.begin());
-  EXPECT_TRUE(it.status.test(gitxx::FileStatus::Current))
-      << it.status.to_string();
+  auto status_it = *(status.begin());
+  EXPECT_TRUE(status_it.status.test(gitxx::FileStatus::Current))
+      << status_it.status.to_string();
 }
 
 TEST_F(status_options_ut, 2_new_file_untracked) {
   // setup
-  gitxx::GitCommands internalRepo{};
-  ASSERT_TRUE(internalRepo.makeEmptyCommit("one"));
-  ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
-  ASSERT_TRUE(internalRepo.createFile("test2.txt", "content"));
+  gitxx::GitCommands internal_repo{};
+  ASSERT_TRUE(internal_repo.makeEmptyCommit("one"));
+  ASSERT_TRUE(internal_repo.createFile("test.txt", "content"));
+  ASSERT_TRUE(internal_repo.createFile("test2.txt", "content"));
 
-  auto repoRes =
-      gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
-  ASSERT_TRUE(repoRes.has_value());
+  auto repo_res =
+      gitxx::Repository::Open(std::string_view(internal_repo.path().c_str()));
+  ASSERT_TRUE(repo_res.has_value());
 
-  gitxx::Repository repo = repoRes.value();
+  const gitxx::Repository& repo = repo_res.value();
 
-  auto statusRes = repo.status(gitxx::StatusOptions{
+  auto status_res = repo.status(gitxx::StatusOptions{
       .flags =
-          gitxx::FlagField<gitxx::StatusFlags>{gitxx::StatusFlags::IncludeUntracked},
+          gitxx::FlagField<gitxx::StatusFlags>{
+              gitxx::StatusFlags::IncludeUntracked},
   });
-  ASSERT_TRUE(statusRes.has_value());
+  ASSERT_TRUE(status_res.has_value());
 
-  auto status = statusRes.value();
-  auto otherStatus {status};
+  const auto& status = status_res.value();
+  auto other_status{status};
 
   EXPECT_EQ(status.end() - status.begin(), 2);
 }
 
 // Updated modified_file test case
 TEST_F(status_options_ut, modified_file) {
-  gitxx::GitCommands internalRepo{};
+  gitxx::GitCommands internal_repo{};
 
   std::string modified_file = "test.txt";
 
-  ASSERT_TRUE(internalRepo.createFile(modified_file, "content"));
-  ASSERT_TRUE(internalRepo.add(modified_file));
-  ASSERT_TRUE(internalRepo.commit("Initial commit"));
-  ASSERT_TRUE(internalRepo.modifyFile(modified_file, "new content"));
+  ASSERT_TRUE(internal_repo.createFile(modified_file, "content"));
+  ASSERT_TRUE(internal_repo.add(modified_file));
+  ASSERT_TRUE(internal_repo.commit("Initial commit"));
+  ASSERT_TRUE(internal_repo.modifyFile(modified_file, "new content"));
 
-  auto repoRes =
-      gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
-  ASSERT_TRUE(repoRes.has_value());
+  auto repo_res =
+      gitxx::Repository::Open(std::string_view(internal_repo.path().c_str()));
+  ASSERT_TRUE(repo_res.has_value());
 
-  gitxx::Repository repo = std::move(repoRes.value());
+  gitxx::Repository repo = std::move(repo_res.value());
 
-  auto statusRes = repo.status();
-  auto status = std::move(statusRes).value();
+  auto status_res = repo.status();
+  auto status = std::move(status_res).value();
 
   EXPECT_TRUE(
       status.begin()
@@ -123,18 +126,18 @@ TEST_F(status_options_ut, modified_file) {
 
 // Updated deleted_file test case
 TEST_F(status_options_ut, deleted_file) {
-  gitxx::GitCommands internalRepo{};
-  ASSERT_TRUE(internalRepo.createFile("test.txt", "content"));
-  ASSERT_TRUE(internalRepo.add("test.txt"));
-  ASSERT_TRUE(internalRepo.commit("Initial commit"));
+  gitxx::GitCommands internal_repo{};
+  ASSERT_TRUE(internal_repo.createFile("test.txt", "content"));
+  ASSERT_TRUE(internal_repo.add("test.txt"));
+  ASSERT_TRUE(internal_repo.commit("Initial commit"));
 
-  ASSERT_TRUE(internalRepo.deleteFile("test.txt"));
+  ASSERT_TRUE(internal_repo.deleteFile("test.txt"));
 
-  auto repoRes =
-      gitxx::Repository::Open(std::string_view(internalRepo.path().c_str()));
-  ASSERT_TRUE(repoRes.has_value());
+  auto repo_res =
+      gitxx::Repository::Open(std::string_view(internal_repo.path().c_str()));
+  ASSERT_TRUE(repo_res.has_value());
 
-  gitxx::Repository repo = std::move(repoRes.value());
+  gitxx::Repository repo = std::move(repo_res.value());
 
   auto statusRes = repo.status();
   auto status = std::move(statusRes).value();
@@ -173,10 +176,9 @@ TEST_F(status_options_ut, renamed_file) {
 
   EXPECT_EQ(status.end() - status.begin(), 1);
 
-  auto it = status.begin();
-  EXPECT_TRUE((*it).status[gitxx::FileStatus::IndexRenamed])
-      << (*it).status.to_string();
-  // Check for renamed status
+  auto status_it = status.begin();
+  EXPECT_TRUE((*status_it).status[gitxx::FileStatus::IndexRenamed])
+      << (*status_it).status.to_string();
 }
 
 // TEST_F(status_ut, type_changed_file) {
@@ -221,13 +223,14 @@ TEST_F(status_options_ut, ignored_file) {
   auto statusRes = repo.status(gitxx::StatusOptions{
       .show = gitxx::StatusShow::IndexAndWorkdir,
       .flags =
-          gitxx::FlagField<gitxx::StatusFlags>{gitxx::StatusFlags::IncludeIgnored},
+          gitxx::FlagField<gitxx::StatusFlags>{
+              gitxx::StatusFlags::IncludeIgnored},
   });
   auto status = std::move(statusRes).value();
 
-  auto it = status.begin();
-  EXPECT_TRUE((*it).status[gitxx::FileStatus::Ignored])
-      << (*it).status.to_string();
+  auto status_it = status.begin();
+  EXPECT_TRUE((*status_it).status[gitxx::FileStatus::Ignored])
+      << (*status_it).status.to_string();
   // Check for ignored status
 }
 
@@ -259,13 +262,8 @@ TEST_F(status_options_ut, conflicting_file) {
   auto statusRes = repo.status();
   auto status = std::move(statusRes).value();
 
-  auto it = status.begin();
-  EXPECT_TRUE((*it).status[gitxx::FileStatus::Conflicted])
-      << (*it).status.to_string();
+  auto status_it = status.begin();
+  EXPECT_TRUE((*status_it).status[gitxx::FileStatus::Conflicted])
+      << (*status_it).status.to_string();
   // Check for conflicted status
-}
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

@@ -6,7 +6,7 @@
 namespace gitxx {
 
 /// @brief Flags for the delta object and the file objects on each side.
-enum class DiffFlag: std::uint8_t {
+enum class DiffFlag : std::uint8_t {
   /// @brief File(s) treated as binary data.
   Binary = 0,
   /// @brief File(s) treated as text data.

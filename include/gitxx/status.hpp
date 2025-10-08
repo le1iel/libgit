@@ -14,7 +14,7 @@ struct git_status_list;
 namespace gitxx {
 
 /// @brief Enum representing the status of a file in the repository.
-enum class FileStatus: std::uint8_t {
+enum class FileStatus : std::uint8_t {
   /// @brief No changes.
   Current = 0,
   /// @brief New in index.
