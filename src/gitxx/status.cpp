@@ -1,8 +1,13 @@
 #include <git2/diff.h>
-#include <git2/errors.h>
 #include <git2/status.h>
+#include <git2/types.h>
 
+#include <ranges>
+#include <memory>
+#include <string_view>
 #include <algorithm>
+#include <cstddef>
+
 #include <converters/diff_delta.hpp>
 #include <converters/status_options.hpp>
 #include <flagfield.hpp>
@@ -10,7 +15,6 @@
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
-#include <ranges>
 
 namespace gitxx {
 
@@ -18,7 +22,7 @@ template <typename Allocator>
 Status::Status(const BasicRepository<Allocator> *repo,
                const StatusOptions &options, int *res) {
   git_status_list *status_list = nullptr;
-  git_status_options opts =
+  const git_status_options opts =
       internal::conversion_traits<git_status_options,
                                   gitxx::StatusOptions>::from_cpp(options);
 
@@ -41,7 +45,7 @@ StatusEntry Status::file(std::string_view file) const noexcept {
 
   auto entries =
       std::views::iota(
-          size_t{0},
+          std::size_t{0},
           git_status_list_entrycount(
               m_statusList.get())) |  // for each index perform this transform
       std::views::transform([this](size_t index) {

@@ -1,16 +1,16 @@
 #include <algorithm>
 #include <gitxx/object_id.hpp>
 #include <ostream>
+#include <string_view>
 
 namespace gitxx {
 
-ObjectId::ObjectId(ObjectId::TagView tag) noexcept {
+ObjectId::ObjectId(const ObjectId::TagView tag) noexcept {
   std::ranges::copy(tag, m_id.begin());
 }
 
 std::string_view ObjectId::id() const noexcept {
-  return std::string_view{std::bit_cast<const char*>(m_id.begin()),
-                          m_id.size()};
+  return std::string_view{m_id};
 }
 
 std::ostream& operator<<(std::ostream& stream,

@@ -3,10 +3,12 @@
 
 #include <array>
 #include <cstdint>
+#include <cstddef>
+#include <ostream>
 #include <span>
 #include <string_view>
 
-#define TAG_LENGTH 20
+constexpr std::size_t TAG_LENGTH = 20;
 
 namespace gitxx {
 
@@ -15,8 +17,8 @@ class ObjectId {
   static constexpr std::uint8_t TagLength{20};
 
  public:
-  using Tag = std::array<std::byte, TagLength>;
-  using TagView = std::span<const std::byte, TagLength>;
+  using Tag = std::array<char, TagLength>;
+  using TagView = std::span<const char, TagLength>;
 
   /// @brief Default constructable.
   ObjectId() = default;

@@ -7,6 +7,10 @@
 #include <gitxx/reference.hpp>
 #include <gitxx/status_options.hpp>
 #include <optional>
+#include <cstddef>
+#include <memory>
+#include <string_view>
+#include <string>
 
 // forward declaration to hide libgit2 headers
 struct git_repository;

@@ -2,6 +2,7 @@
 #define INCLUDE_GITXX_ERROR_HPP_
 
 #include <cstdint>
+#include <string>
 #include <system_error>
 #include <type_traits>
 

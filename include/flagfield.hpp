@@ -8,8 +8,10 @@
 #include <ostream>
 #include <string>
 #include <type_traits>
+#include <cstddef>
+#include <initializer_list>
 
-#define FLAGFIELD_DEFAULT_SIZE 32
+constexpr std::size_t FLAGFIELD_DEFAULT_SIZE = 32;
 
 namespace gitxx {
 

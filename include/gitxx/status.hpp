@@ -6,7 +6,11 @@
 #include <gitxx/repository.hpp>
 #include <gitxx/status_options.hpp>
 #include <memory>
+#include <cstdint>
+#include <cstddef>
 #include <optional>
+#include <string_view>
+#include <iterator>
 
 // forward declaration to hide libgit2 headers
 struct git_status_list;

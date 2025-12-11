@@ -1,17 +1,23 @@
 
 #include <git2/errors.h>
 #include <git2/repository.h>
+#include <git2/types.h>
 
-#include <converters/diff_delta.hpp>
-#include <converters/error.hpp>
-#include <expected>
 #include <gitxx/error.hpp>
 #include <gitxx/repository.hpp>
+#include <gitxx/reference.hpp>
 #include <gitxx/status.hpp>
+#include <gitxx/status_options.hpp>
+#include <converters/error.hpp>
 #include <log/logger.hpp>
+
+#include <expected>
 #include <memory>
+#include <cstddef>
 #include <optional>
+#include <filesystem>
 #include <string>
+#include <string_view>
 
 namespace gitxx {
 
@@ -22,7 +28,7 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 
   using char_allocator =
       typename std::allocator_traits<Allocator>::template rebind_alloc<char>;
-  char_allocator alloc{};
+  const char_allocator alloc{};
 
   const auto path_str =
       path.string<char, std::char_traits<char>, char_allocator>(alloc);
@@ -43,10 +49,10 @@ BasicRepository<Allocator>::BasicRepository(std::string_view path,
                                             int *resOut) noexcept {
   git_repository *repo = nullptr;
 
-  int openRes = git_repository_open(&repo, path.cbegin());
+  const int openRes = git_repository_open(&repo, path.cbegin());
 
   if (openRes != 0) {
-    ERROR() << git_error_last()->message;
+      logging::ERROR() << git_error_last()->message;
     *resOut = -1;
     return;
   }
@@ -69,7 +75,7 @@ template <typename Allocator>
 std::optional<Reference> BasicRepository<Allocator>::head() const noexcept {
   git_reference *ref = nullptr;
 
-  int res = git_repository_head(&ref, m_repo.get());
+  const int res = git_repository_head(&ref, m_repo.get());
   if (res != 0) {
     return std::nullopt;
   }

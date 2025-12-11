@@ -3,10 +3,14 @@
 
 #include <git2/diff.h>
 
+#include <optional>
+
 #include <converters/base.hpp>
 #include <converters/diff_file.hpp>
 #include <gitxx/diff_delta.hpp>
-#include <optional>
+#include <gitxx/diff_file.hpp>
+#include <gitxx/diff_flag.hpp>
+#include <flagfield.hpp>
 
 namespace gitxx::internal {
 

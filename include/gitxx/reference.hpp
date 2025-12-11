@@ -2,6 +2,7 @@
 #define INCLUDE_GITXX_REFERENCE_HPP_
 #include <memory>
 #include <string>
+#include <cstdint>
 
 // forward declaration to hide libgit2 headers
 struct git_reference;
