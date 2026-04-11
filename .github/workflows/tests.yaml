@@ -24,6 +24,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y googletest ninja-build
+      - name: "Cache FetchContent dependencies"
+        if: runner.os == 'Linux'
+        uses: actions/cache@v4
+        with:
+          path: build/${{ matrix.preset }}/_deps
+          key: ${{ runner.os }}-fetchcontent-libgit2-v1.9.1
       - name: "CMake configure"
         run: cmake --preset ${{ matrix.preset }}
       - name: "CMake build"
@@ -46,7 +52,12 @@ jobs:
       - name: "Install dependencies"
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build libgit2-dev
+          sudo apt-get install -y ninja-build
+      - name: "Cache FetchContent dependencies"
+        uses: actions/cache@v4
+        with:
+          path: build/integration/tests/integration/fetch_content/example/_deps
+          key: ${{ runner.os }}-fetchcontent-libgit2-v1.9.1
       - name: "CMake configure"
         run: cmake --preset integration
       - name: "CMake build"
