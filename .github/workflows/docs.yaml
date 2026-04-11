@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
@@ -20,7 +20,7 @@ jobs:
           doxygen ./docs/Doxyfile
 
       - name: Archive documentation artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: doxygen-docs
           path: build/docs/html/ # Path based on OUTPUT_DIRECTORY and HTML_OUTPUT in Doxyfile
