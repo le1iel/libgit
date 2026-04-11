@@ -3,10 +3,11 @@
 
 #include <gitxx/reference.hpp>
 #include <memory>
+#include <string>
 
 namespace gitxx {
 
-Reference::Reference(git_reference *ptr)
+Reference::Reference(git_reference* ptr)
     : m_ref(std::shared_ptr<git_reference>(ptr, git_reference_free)) {};
 
 std::string Reference::name() const noexcept {
@@ -42,8 +43,8 @@ std::string Reference::shorthand() const noexcept {
 }
 
 int Reference::resolve() noexcept {
-  git_reference *ref = nullptr;
-  int res = git_reference_resolve(&ref, m_ref.get());
+  git_reference* ref = nullptr;
+  const int res = git_reference_resolve(&ref, m_ref.get());
   if (res < 0) {
     return -1;
   }

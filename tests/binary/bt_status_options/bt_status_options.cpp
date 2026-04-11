@@ -66,7 +66,7 @@ TEST_F(status_options_ut, deleted_file) {
   EXPECT_TRUE(status.begin().operator*().status[gitxx::FileStatus::WtDeleted]);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

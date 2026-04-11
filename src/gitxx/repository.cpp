@@ -1,16 +1,22 @@
 
 #include <git2/errors.h>
 #include <git2/repository.h>
+#include <git2/types.h>
 
-#include <converters.hpp>
+#include <converters/error.hpp>
+#include <cstddef>
 #include <expected>
+#include <filesystem>
 #include <gitxx/error.hpp>
+#include <gitxx/reference.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
+#include <gitxx/status_options.hpp>
 #include <log/logger.hpp>
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 
 namespace gitxx {
 
@@ -21,7 +27,7 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 
   using char_allocator =
       typename std::allocator_traits<Allocator>::template rebind_alloc<char>;
-  char_allocator alloc{};
+  const char_allocator alloc{};
 
   const auto path_str =
       path.string<char, std::char_traits<char>, char_allocator>(alloc);
@@ -29,7 +35,9 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 
   BasicRepository repo(path_str, &resOut);
   if (resOut != 0) {
-    return std::unexpected<GitErrc>(internal::Error(git_error_last()->klass));
+    return std::unexpected<GitErrc>(
+        internal::conversion_traits<GitErrc, int>::from_c(
+            git_error_last()->klass));
   }
 
   return repo;
@@ -37,13 +45,13 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 
 template <typename Allocator>
 BasicRepository<Allocator>::BasicRepository(std::string_view path,
-                                            int *resOut) noexcept {
-  git_repository *repo = nullptr;
+                                            int* resOut) noexcept {
+  git_repository* repo = nullptr;
 
-  int openRes = git_repository_open(&repo, path.cbegin());
+  const int openRes = git_repository_open(&repo, path.cbegin());
 
   if (openRes != 0) {
-    ERROR() << git_error_last()->message;
+    logging::ERROR() << git_error_last()->message;
     *resOut = -1;
     return;
   }
@@ -52,7 +60,8 @@ BasicRepository<Allocator>::BasicRepository(std::string_view path,
 }
 
 template <typename Allocator>
-BasicRepository<Allocator>::string_type BasicRepository<Allocator>::path() const noexcept {
+BasicRepository<Allocator>::string_type BasicRepository<Allocator>::path()
+    const noexcept {
   BasicRepository<Allocator>::string_type path;
   if (m_repo) {
     path = git_repository_path(m_repo.get());
@@ -63,9 +72,9 @@ BasicRepository<Allocator>::string_type BasicRepository<Allocator>::path() const
 
 template <typename Allocator>
 std::optional<Reference> BasicRepository<Allocator>::head() const noexcept {
-  git_reference *ref = nullptr;
+  git_reference* ref = nullptr;
 
-  int res = git_repository_head(&ref, m_repo.get());
+  const int res = git_repository_head(&ref, m_repo.get());
   if (res != 0) {
     return std::nullopt;
   }
@@ -88,7 +97,8 @@ std::expected<Status, GitErrc> BasicRepository<Allocator>::status(
   if (res == 0) {
     return status;
   } else {
-    return std::unexpected(internal::Error(res));
+    return std::unexpected(
+        internal::conversion_traits<GitErrc, int>::from_c(res));
   }
 }
 

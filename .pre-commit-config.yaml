@@ -11,5 +11,6 @@ repos:
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: master
     hooks:
+      - id: clang-tidy
       - id: clang-format
         args: [-i]

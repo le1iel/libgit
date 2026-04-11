@@ -2,14 +2,16 @@
 #define INCLUDE_FLAGFIELD_HPP_
 
 #include <bitset>
+#include <cstddef>
 #include <cstdint>
+#include <initializer_list>
 #include <iostream>
 #include <numeric>
 #include <ostream>
 #include <string>
 #include <type_traits>
 
-#define FLAGFIELD_DEFAULT_SIZE 32
+constexpr std::size_t FLAGFIELD_DEFAULT_SIZE = 32;
 
 namespace gitxx {
 
@@ -44,7 +46,9 @@ class FlagField {
   }
 
   /// @brief Check if the given enum is set.
-  [[nodiscard]] constexpr bool operator[](ValueType flag) const { return test(flag); }
+  [[nodiscard]] constexpr bool operator[](ValueType flag) const {
+    return test(flag);
+  }
 
   /// @brief Returns a reference to the bit at the given index which you
   /// can mutate.
@@ -78,7 +82,8 @@ class FlagField {
 
 /// @brief Stream insertion operator for FlagField.
 template <typename T, std::size_t Size, typename E>
-[[nodiscard]] std::ostream& operator<<(std::ostream& outstream, const FlagField<T, Size, E>& flags) {
+[[nodiscard]] std::ostream& operator<<(std::ostream& outstream,
+                                       const FlagField<T, Size, E>& flags) {
   return outstream << flags.to_string();
 }
 

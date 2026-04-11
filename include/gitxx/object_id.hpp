@@ -2,20 +2,24 @@
 #define INCLUDE_GITXX_OBJECT_ID_HPP_
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
+#include <ostream>
 #include <span>
 #include <string_view>
 
-#define TAG_LENGTH 20
+constexpr std::size_t TAG_LENGTH = 20;
 
 namespace gitxx {
 
 /// @brief Unique identity of any object (commit, tree, blob, tag).
 class ObjectId {
-    using Tag = std::span<std::uint8_t, TAG_LENGTH>;
-    using TagView = std::span<const std::uint8_t, TAG_LENGTH>;
+  static constexpr std::uint8_t TagLength{20};
 
  public:
+  using Tag = std::array<char, TagLength>;
+  using TagView = std::span<const char, TagLength>;
+
   /// @brief Default constructable.
   ObjectId() = default;
 
@@ -36,11 +40,11 @@ class ObjectId {
   /// @brief Constructor from string_view.
   explicit ObjectId(std::string_view tag) noexcept;
 
-  /// @brief Internal representaion of the id.
-  std::array<std::uint8_t, TAG_LENGTH> m_id{};
+  /// @brief Internal representation of the id.
+  Tag m_id{};
 };
 
-  /// @brief Equality operator.
+/// @brief Equality operator.
 [[nodiscard]] bool operator==(const ObjectId& lhs,
                               const ObjectId& rhs) noexcept;
 

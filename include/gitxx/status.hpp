@@ -1,12 +1,16 @@
 #ifndef INCLUDE_GITXX_STATUS_HPP_
 #define INCLUDE_GITXX_STATUS_HPP_
 
+#include <cstddef>
+#include <cstdint>
 #include <flagfield.hpp>
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status_options.hpp>
+#include <iterator>
 #include <memory>
 #include <optional>
+#include <string_view>
 
 // forward declaration to hide libgit2 headers
 struct git_status_list;
@@ -14,7 +18,7 @@ struct git_status_list;
 namespace gitxx {
 
 /// @brief Enum representing the status of a file in the repository.
-enum class FileStatus: std::uint8_t {
+enum class FileStatus : std::uint8_t {
   /// @brief No changes.
   Current = 0,
   /// @brief New in index.

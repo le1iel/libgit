@@ -4,7 +4,7 @@
 #include <sstream>
 
 TEST(stream, string) {
-  std::array<std::uint8_t, 20> id_data{'a', 20};
+  gitxx::ObjectId::Tag id_data{'a'};
 
   gitxx::ObjectId id{id_data};
 
@@ -16,7 +16,7 @@ TEST(stream, string) {
 }
 
 TEST(compare, eq) {
-  std::array<std::uint8_t, 20> id_data{'a', 20};
+  gitxx::ObjectId::Tag id_data{'a'};
 
   gitxx::ObjectId id1{id_data};
   gitxx::ObjectId id2{id_data};
@@ -25,8 +25,8 @@ TEST(compare, eq) {
 }
 
 TEST(compare, neq) {
-  std::array<std::uint8_t, 20> id_data1{'a', 20};
-  std::array<std::uint8_t, 20> id_data2{'b', 20};
+  gitxx::ObjectId::Tag id_data1{'a'};
+  gitxx::ObjectId::Tag id_data2{'b'};
 
   gitxx::ObjectId id1{id_data1};
   gitxx::ObjectId id2{id_data2};

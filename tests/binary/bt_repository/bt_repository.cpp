@@ -42,13 +42,11 @@ TEST_F(repository_ut, path) {
   auto repoRes = gitxx::Repository::Open(repo.path());
   ASSERT_TRUE(repoRes.has_value());
 
-  std::string repo_path_str = repoRes->path();
   EXPECT_TRUE(
       std::filesystem::equivalent(repoRes->path(), (repo.path() / ".git")));
-  std::cout << repo.path() << std::endl;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

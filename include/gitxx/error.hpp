@@ -1,10 +1,12 @@
 #ifndef INCLUDE_GITXX_ERROR_HPP_
 #define INCLUDE_GITXX_ERROR_HPP_
 
-#include <system_error>
 #include <cstdint>
+#include <string>
+#include <system_error>
+#include <type_traits>
 
-enum class GitErrc: std::uint8_t {
+enum class GitErrc : std::uint8_t {
   /// @brief Requested object could not be found.
   not_found = 3,
   /// @brief Object exists preventing operation.
@@ -87,7 +89,7 @@ struct GitErrcCategory : std::error_category {
 namespace std {
 
 template <>
-struct is_error_code_enum<GitErrc> : true_type {};
+struct is_error_code_enum<GitErrc> : std::true_type {};
 
 }  // namespace std
 

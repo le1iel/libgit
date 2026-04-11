@@ -1,5 +1,7 @@
+#include <converters/error.hpp>
 #include <gitxx/error.hpp>
 #include <string>
+#include <system_error>
 
 const char* GitErrcCategory::name() const noexcept { return "Git error code"; }
 
