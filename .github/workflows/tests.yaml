@@ -44,20 +44,13 @@ jobs:
           path: build/${{ matrix.preset }}/Testing
 
   integration:
-    name: "Integration (Ubuntu)"
-    runs-on: ubuntu-latest
+    name: "Integration (macOS)"
+    runs-on: macos-latest
     steps:
       - name: "Checkout"
         uses: actions/checkout@v6
       - name: "Install dependencies"
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ninja-build
-      - name: "Cache FetchContent dependencies"
-        uses: actions/cache@v4
-        with:
-          path: build/integration/tests/integration/fetch_content/example/_deps
-          key: ${{ runner.os }}-fetchcontent-libgit2-v1.9.1
+        run: brew install libgit2 ninja
       - name: "CMake configure"
         run: cmake --preset integration
       - name: "CMake build"
