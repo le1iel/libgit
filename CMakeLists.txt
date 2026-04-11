@@ -16,6 +16,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(cmake/options.cmake)
 
 add_library(gitxx-lib SHARED)
+add_library(gitxx::gitxx ALIAS gitxx-lib)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
