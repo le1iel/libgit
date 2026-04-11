@@ -57,3 +57,20 @@ jobs:
         with:
           name: ubuntu-${{ matrix.preset }}-test-results
           path: build/${{ matrix.preset }}/Testing
+
+  integration:
+    name: "Integration (Ubuntu)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+      - name: "Install dependencies"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+      - name: "CMake configure"
+        run: cmake --preset integration
+      - name: "CMake build"
+        run: cmake --build --preset integration
+      - name: "Test"
+        run: ctest --preset integration
