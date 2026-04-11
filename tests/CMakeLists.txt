@@ -16,3 +16,7 @@ add_subdirectory(common)
 
 add_subdirectory(unit)
 add_subdirectory(binary)
+
+if(GITXX_INTEGRATION_TESTS)
+    add_subdirectory(integration)
+endif()
