@@ -2,14 +2,14 @@
 #define INCLUDE_FLAGFIELD_HPP_
 
 #include <bitset>
+#include <cstddef>
 #include <cstdint>
+#include <initializer_list>
 #include <iostream>
 #include <numeric>
 #include <ostream>
 #include <string>
 #include <type_traits>
-#include <cstddef>
-#include <initializer_list>
 
 constexpr std::size_t FLAGFIELD_DEFAULT_SIZE = 32;
 

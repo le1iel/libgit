@@ -2,26 +2,25 @@
 #include <git2/status.h>
 #include <git2/types.h>
 
-#include <ranges>
-#include <memory>
-#include <string_view>
 #include <algorithm>
-#include <cstddef>
-
 #include <converters/diff_delta.hpp>
 #include <converters/status_options.hpp>
+#include <cstddef>
 #include <flagfield.hpp>
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
+#include <memory>
+#include <ranges>
+#include <string_view>
 
 namespace gitxx {
 
 template <typename Allocator>
-Status::Status(const BasicRepository<Allocator> *repo,
-               const StatusOptions &options, int *res) {
-  git_status_list *status_list = nullptr;
+Status::Status(const BasicRepository<Allocator>* repo,
+               const StatusOptions& options, int* res) {
+  git_status_list* status_list = nullptr;
   const git_status_options opts =
       internal::conversion_traits<git_status_options,
                                   gitxx::StatusOptions>::from_cpp(options);
@@ -53,11 +52,11 @@ StatusEntry Status::file(std::string_view file) const noexcept {
       })
       // for each entry filter our null entries
       | std::views::filter(
-            [](const git_status_entry *entry) { return entry != nullptr; });
+            [](const git_status_entry* entry) { return entry != nullptr; });
 
   auto entry_it =
-      std::ranges::find_if(entries, [&file](const git_status_entry *entry) {
-        const git_diff_delta *delta = nullptr;
+      std::ranges::find_if(entries, [&file](const git_status_entry* entry) {
+        const git_diff_delta* delta = nullptr;
         if (entry->head_to_index != nullptr) {
           delta = entry->head_to_index;
         }
@@ -70,7 +69,7 @@ StatusEntry Status::file(std::string_view file) const noexcept {
       });
 
   if (entry_it != entries.end()) {
-    const auto *entry = *entry_it;
+    const auto* entry = *entry_it;
     result.status = gitxx::FlagField<gitxx::FileStatus>(entry->status);
     result.head_to_index =
         internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(
@@ -94,7 +93,7 @@ StatusIterator Status::end() const noexcept {
 
 // Explicit template instantiation for the Status constructor with the
 // BasicRepository type used in tests
-template Status::Status(const BasicRepository<std::allocator<std::byte>> *repo,
-                        const StatusOptions &options, int *res);
+template Status::Status(const BasicRepository<std::allocator<std::byte>>* repo,
+                        const StatusOptions& options, int* res);
 
 }  // namespace gitxx

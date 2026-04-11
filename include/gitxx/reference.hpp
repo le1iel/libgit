@@ -1,8 +1,8 @@
 #ifndef INCLUDE_GITXX_REFERENCE_HPP_
 #define INCLUDE_GITXX_REFERENCE_HPP_
+#include <cstdint>
 #include <memory>
 #include <string>
-#include <cstdint>
 
 // forward declaration to hide libgit2 headers
 struct git_reference;
@@ -26,19 +26,19 @@ class Reference {
  public:
   /// @brief Constructorable from the libgit2 object.
   // will probably make this private later
-  explicit Reference(git_reference *ptr);
+  explicit Reference(git_reference* ptr);
 
   /// @brief Move constructable.
-  Reference(Reference &&other) = default;
+  Reference(Reference&& other) = default;
 
   /// @brief Move assignable.
-  Reference &operator=(Reference &&other) = default;
+  Reference& operator=(Reference&& other) = default;
 
   /// @brief Copy constructable.
-  Reference(const Reference &other) = default;
+  Reference(const Reference& other) = default;
 
   /// @brief Copy assignable.
-  Reference &operator=(const Reference &other) = default;
+  Reference& operator=(const Reference& other) = default;
 
   /// @brief Destructor.
   ~Reference() = default;

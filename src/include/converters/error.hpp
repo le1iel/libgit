@@ -1,9 +1,9 @@
 #ifndef SRC_INCLUDE_CONVERTERS_ERROR_HPP_
 #define SRC_INCLUDE_CONVERTERS_ERROR_HPP_
 
+#include <cmath>
 #include <converters/base.hpp>
 #include <gitxx/error.hpp>
-#include <cmath>
 
 namespace gitxx::internal {
 

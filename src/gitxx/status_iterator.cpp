@@ -1,10 +1,10 @@
-#include <git2/status.h>
 #include <git2/diff.h>
+#include <git2/status.h>
 
 #include <algorithm>
-#include <gitxx/status.hpp>
-#include <gitxx/diff_delta.hpp>
 #include <converters/diff_delta.hpp>
+#include <gitxx/diff_delta.hpp>
+#include <gitxx/status.hpp>
 
 #include "flagfield.hpp"
 
@@ -120,8 +120,12 @@ void StatusIterator::updateStatusEntry() noexcept {
     return;
   }
   m_statusEntry.status = gitxx::FlagField<gitxx::FileStatus>{entry->status};
-  m_statusEntry.head_to_index = internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(entry->head_to_index);
-  m_statusEntry.index_to_workdir = internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(entry->index_to_workdir);
+  m_statusEntry.head_to_index =
+      internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(
+          entry->head_to_index);
+  m_statusEntry.index_to_workdir =
+      internal::conversion_traits<gitxx::DiffDelta, git_diff_delta>::from_c(
+          entry->index_to_workdir);
 }
 
 StatusIterator::ReferenceType StatusIterator::operator*() noexcept {

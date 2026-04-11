@@ -2,8 +2,8 @@
 #define INCLUDE_GITXX_OBJECT_ID_HPP_
 
 #include <array>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <ostream>
 #include <span>
 #include <string_view>

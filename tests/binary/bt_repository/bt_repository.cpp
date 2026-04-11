@@ -46,7 +46,7 @@ TEST_F(repository_ut, path) {
       std::filesystem::equivalent(repoRes->path(), (repo.path() / ".git")));
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

@@ -1,16 +1,16 @@
 #ifndef INCLUDE_GITXX_REPOSITORY_HPP_
 #define INCLUDE_GITXX_REPOSITORY_HPP_
 
+#include <cstddef>
 #include <expected>
 #include <filesystem>
 #include <gitxx/error.hpp>
 #include <gitxx/reference.hpp>
 #include <gitxx/status_options.hpp>
-#include <optional>
-#include <cstddef>
 #include <memory>
-#include <string_view>
+#include <optional>
 #include <string>
+#include <string_view>
 
 // forward declaration to hide libgit2 headers
 struct git_repository;
@@ -39,16 +39,16 @@ class BasicRepository {
   ~BasicRepository() = default;
 
   /// @brief Move constructable.
-  BasicRepository(BasicRepository &&other) = default;
+  BasicRepository(BasicRepository&& other) = default;
 
   /// @brief Move assignable.
-  BasicRepository &operator=(BasicRepository &&other) = default;
+  BasicRepository& operator=(BasicRepository&& other) = default;
 
   /// @brief Copy constructable.
-  BasicRepository(const BasicRepository &other) = default;
+  BasicRepository(const BasicRepository& other) = default;
 
   /// @brief Not copy assignable.
-  BasicRepository &operator=(const BasicRepository &other) = default;
+  BasicRepository& operator=(const BasicRepository& other) = default;
 
   /// @brief returns the path of the repo.
   /// @details std::filesystem::path does not support custom allocators, so
@@ -72,7 +72,7 @@ class BasicRepository {
   /// @warning The path shall be null-terminated.
   /// @param path The path to the repository.
   /// @param res The result of the operation.
-  BasicRepository(std::string_view path, int *res) noexcept;
+  BasicRepository(std::string_view path, int* res) noexcept;
 
   /// @brief The libgit2 repository object.
   std::shared_ptr<git_repository> m_repo{nullptr};

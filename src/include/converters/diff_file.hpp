@@ -4,10 +4,10 @@
 #include <git2/diff.h>
 
 #include <converters/base.hpp>
+#include <flagfield.hpp>
 #include <gitxx/diff_file.hpp>
 #include <gitxx/diff_flag.hpp>
 #include <string>
-#include <flagfield.hpp>
 
 namespace gitxx::internal {
 

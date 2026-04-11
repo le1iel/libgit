@@ -109,7 +109,7 @@ TEST(set, multiple) {
   EXPECT_TRUE(flags.test(TestFlags::Flag3));
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

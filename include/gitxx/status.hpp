@@ -1,16 +1,16 @@
 #ifndef INCLUDE_GITXX_STATUS_HPP_
 #define INCLUDE_GITXX_STATUS_HPP_
 
+#include <cstddef>
+#include <cstdint>
 #include <flagfield.hpp>
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status_options.hpp>
+#include <iterator>
 #include <memory>
-#include <cstdint>
-#include <cstddef>
 #include <optional>
 #include <string_view>
-#include <iterator>
 
 // forward declaration to hide libgit2 headers
 struct git_status_list;
