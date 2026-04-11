@@ -38,8 +38,14 @@ function(create_test)
   set_property(TARGET ${target} PROPERTY CXX_STANDARD 23)
 
   set_target_properties(${target} PROPERTIES OUTPUT_NAME "${ARG_NAME}")
-  target_compile_options(${target} PRIVATE -fsanitize=address)
-  target_link_options(${target} PRIVATE -fsanitize=address)
+  if(GITXX_SANITIZERS)
+    target_compile_options(${target} PRIVATE -fsanitize=address,undefined)
+    target_link_options(${target} PRIVATE -fsanitize=address,undefined)
+  endif()
+
+  if(NOT GITXX_COVERAGE)
+    target_compile_options(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:-O3>)
+  endif()
 
   target_compile_definitions(${target} PRIVATE TEST_GIT_HOME="${TEST_GIT_HOME}")
 

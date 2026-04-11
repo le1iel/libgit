@@ -21,7 +21,7 @@ struct conversion_traits<gitxx::DiffDelta, git_diff_delta> {
     }
 
     return gitxx::DiffDelta{
-        .status = gitxx::DiffDeltaStatus::Unmodified,
+        .status = static_cast<gitxx::DiffDeltaStatus>(delta->status * 2 + 1),
         .flags = gitxx::FlagField<gitxx::DiffFlag>{delta->flags},
         .similarity = delta->similarity,
         .nfiles = delta->nfiles,

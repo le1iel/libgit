@@ -5,18 +5,18 @@
 using gitxx::FlagField;
 
 /// @brief Test enum
-enum class TestFlags { Flag1 = 0, Flag2 = 1, Flag3 = 2 };
+enum class TestFlags: uint8_t { Flag1 = 0, Flag2 = 1, Flag3 = 2 };
 
 /// @brief C style flag enum
-enum class OldStyle {
-  Flag1 = 1 << 0,
-  Flag2 = 1 << 1,
-  Flag3 = 1 << 2,
+enum class OldStyle: uint8_t {
+  Flag1 = 1U << 0U,
+  Flag2 = 1U << 1U,
+  Flag3 = 1U << 2U,
 };
 
 TEST(constructor, from_old_style) {
-  auto data = static_cast<OldStyle>(static_cast<int>(OldStyle::Flag1) |
-                                    static_cast<int>(OldStyle::Flag2));
+  auto data = static_cast<OldStyle>(static_cast<unsigned int>(OldStyle::Flag1) |
+                                    static_cast<unsigned int>(OldStyle::Flag2));
 
   FlagField<TestFlags> converted{static_cast<std::uint32_t>(data)};
   EXPECT_TRUE(converted.test(TestFlags::Flag1));

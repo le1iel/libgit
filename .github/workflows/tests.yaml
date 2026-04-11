@@ -4,70 +4,56 @@ name: "Tests"
 on:
   - pull_request
 
-env:
-  BUILD_DIR: build
-
 jobs:
   build-macos:
-    name: "MacOS Build"
+    name: "MacOS (${{ matrix.preset }})"
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [sanitize, release]
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
       - name: "Install dependencies"
         run: |
-          brew install libgit2 googletest
+          brew install libgit2 googletest ninja
       - name: "CMake configure"
-        run: |
-          cmake -S . -B ${{env.BUILD_DIR}}
+        run: cmake --preset ${{ matrix.preset }}
       - name: "CMake build"
-        run: |
-          cmake --build ${{env.BUILD_DIR}}
-      - name: "Tar files"
-        run: tar -czf build-macos-aarch64.tar.gz "${{env.BUILD_DIR}}"
-      - name: "Upload artifact"
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-macos-aarch64
-          path: build-macos-aarch64.tar.gz
+        run: cmake --build --preset ${{ matrix.preset }}
       - name: "Test"
-        run: |
-          cd ${{env.BUILD_DIR}} && ctest
+        run: ctest --preset ${{ matrix.preset }}
       - name: "Upload results"
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: macos-aarch64-test-results
-          path: "${{env.BUILD_DIR}}/Testing"
+          name: macos-aarch64-${{ matrix.preset }}-test-results
+          path: build/${{ matrix.preset }}/Testing
+
   build-ubuntu:
-    name: "Ubuntu Build"
+    name: "Ubuntu (${{ matrix.preset }})"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [sanitize, release]
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
       - name: "Install dependencies"
         run: |
           sudo apt-get update
-          sudo apt-get install -y googletest
+          sudo apt-get install -y googletest ninja-build
       - name: "CMake configure"
-        run: |
-          cmake -S . -B ${{env.BUILD_DIR}}
+        run: cmake --preset ${{ matrix.preset }}
       - name: "CMake build"
-        run: |
-          cmake --build ${{env.BUILD_DIR}}
-      - name: "Tar files"
-        run: tar -czf build-ubuntu.tar.gz "${{env.BUILD_DIR}}"
-      - name: "Upload artifact"
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-ubuntu
-          path: build-ubuntu.tar.gz
+        run: cmake --build --preset ${{ matrix.preset }}
       - name: "Test"
-        run: |
-          cd ${{env.BUILD_DIR}} && ctest
+        run: ctest --preset ${{ matrix.preset }}
       - name: "Upload results"
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ubuntu-test-results
-          path: "${{env.BUILD_DIR}}/Testing"
+          name: ubuntu-${{ matrix.preset }}-test-results
+          path: build/${{ matrix.preset }}/Testing

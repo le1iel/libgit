@@ -1,8 +1,7 @@
-#include <git_commands.h>
 #include <gtest/gtest.h>
 
-#include <filesystem>
 #include <flagfield.hpp>
+#include <git_commands.hpp>
 #include <gitxx/init.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>

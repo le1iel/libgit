@@ -24,3 +24,13 @@ INSTANTIATE_TEST_SUITE_P(
         GitErrc::apply_fail, GitErrc::owner, GitErrc::timeout,
         GitErrc::unchanged, GitErrc::not_supported, GitErrc::readonly,
         static_cast<GitErrc>(1)));
+
+TEST(bt_error_category, name_non_empty) {
+  EXPECT_STRNE(gitErrcCategory.name(), "");
+}
+
+TEST(bt_error_category, make_error_code_value) {
+  std::error_code error = make_error_code(GitErrc::not_found);
+  EXPECT_EQ(error.value(), static_cast<int>(GitErrc::not_found));
+  EXPECT_STREQ(error.category().name(), gitErrcCategory.name());
+}
