@@ -5,14 +5,11 @@
 
 TEST(stream, string) {
   gitxx::ObjectId::Tag id_data{'a'};
+  gitxx::ObjectId object_id{id_data};
 
-  gitxx::ObjectId id{id_data};
-
-  std::stringstream ss{};
-
-  ss << id;
-
-  EXPECT_EQ(ss.view(), id.id());
+  std::stringstream stream{};
+  stream << object_id;
+  EXPECT_EQ(stream.view(), object_id.id());
 }
 
 TEST(compare, eq) {
@@ -32,4 +29,10 @@ TEST(compare, neq) {
   gitxx::ObjectId id2{id_data2};
 
   EXPECT_NE(id1, id2);
+}
+
+TEST(id, full_length) {
+  gitxx::ObjectId::Tag id_data{};
+  gitxx::ObjectId object_id{id_data};
+  EXPECT_EQ(object_id.id().size(), TAG_LENGTH);
 }
