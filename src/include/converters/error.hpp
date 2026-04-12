@@ -13,7 +13,6 @@ struct conversion_traits<GitErrc, int> {
     return static_cast<GitErrc>(std::abs(error));
   }
 
-  static int from_cpp(const GitErrc& error) { return static_cast<int>(error); }
 };
 
 };  // namespace gitxx::internal

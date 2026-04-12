@@ -2,6 +2,7 @@
 #define INCLUDE_GITXX_ERROR_HPP_
 
 #include <cstdint>
+#include <format>
 #include <string>
 #include <system_error>
 #include <type_traits>
@@ -96,5 +97,11 @@ struct is_error_code_enum<GitErrc> : std::true_type {};
 std::error_code make_error_code(GitErrc);
 
 const GitErrcCategory gitErrcCategory{};
+
+template <>
+struct std::formatter<GitErrc> : std::formatter<std::string> {
+  std::format_context::iterator format(GitErrc errc,
+                                       std::format_context& ctx) const;
+};
 
 #endif  // INCLUDE_GITXX_ERROR_HPP_

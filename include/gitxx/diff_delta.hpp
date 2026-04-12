@@ -1,7 +1,10 @@
 #ifndef INCLUDE_GITXX_DIFF_DELTA_HPP_
 #define INCLUDE_GITXX_DIFF_DELTA_HPP_
 
+#include <array>
 #include <cstdint>
+#include <string_view>
+#include <utility>
 #include <flagfield.hpp>
 #include <gitxx/diff_file.hpp>
 #include <gitxx/diff_flag.hpp>
@@ -48,6 +51,17 @@ struct DiffDelta {
   DiffFile old_file;
   /// @brief The new file.
   DiffFile new_file;
+};
+
+template <>
+struct FlagFieldEnumValues<DiffFlag> {
+  static constexpr std::array<std::pair<DiffFlag, std::string_view>, 5> values = {{
+    {DiffFlag::Binary,    "Binary"},
+    {DiffFlag::NotBinary, "NotBinary"},
+    {DiffFlag::ValidId,   "ValidId"},
+    {DiffFlag::Exists,    "Exists"},
+    {DiffFlag::Valid_size,"Valid_size"},
+  }};
 };
 
 }  // namespace gitxx

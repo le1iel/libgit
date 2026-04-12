@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v6
       - name: "Install dependencies (macOS)"
         if: runner.os == 'macOS'
-        run: brew install libgit2 googletest ninja
+        run: brew install libgit2 googletest
       - name: "Install dependencies (Linux)"
         if: runner.os == 'Linux'
         run: |
@@ -26,7 +26,7 @@ jobs:
           sudo apt-get install -y googletest ninja-build
       - name: "Cache FetchContent dependencies"
         if: runner.os == 'Linux'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: build/${{ matrix.preset }}/_deps
           key: ${{ runner.os }}-fetchcontent-libgit2-v1.9.1
@@ -50,10 +50,45 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v6
       - name: "Install dependencies"
-        run: brew install libgit2 ninja
+        run: brew install libgit2
       - name: "CMake configure"
         run: cmake --preset integration
       - name: "CMake build"
         run: cmake --build --preset integration
       - name: "Test"
         run: ctest --preset integration
+
+  coverage:
+    name: "Coverage (macOS)"
+    runs-on: macos-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+      - name: "Install dependencies"
+        run: brew install libgit2 googletest llvm
+      - name: "CMake configure"
+        run: cmake --preset coverage
+        env:
+          CC: /opt/homebrew/opt/llvm/bin/clang
+          CXX: /opt/homebrew/opt/llvm/bin/clang++
+      - name: "CMake build"
+        run: cmake --build --preset coverage
+      - name: "Test"
+        run: ctest --preset coverage
+      - name: "Check coverage thresholds"
+        run: cmake --build --preset coverage --target coverage-check
+      - name: "Publish coverage summary"
+        if: always()
+        run: |
+          jq -r '
+            .data[0].totals |
+            [
+              "## Coverage Report",
+              "",
+              "| Metric | Covered | Total | Percentage | Threshold | Status |",
+              "|--------|---------|-------|------------|-----------|--------|",
+              "| Lines    | \(.lines.covered)    | \(.lines.count)    | \(.lines.percent)%                                        | 100%  | \(if .lines.percent    == 100 then "✅" else "❌" end) |",
+              "| Regions  | \(.regions.covered)  | \(.regions.count)  | \(.regions.percent)%                                      | 100%  | \(if .regions.percent  == 100 then "✅" else "❌" end) |",
+              "| Branches | \(.branches.covered) | \(.branches.count) | \((.branches.percent * 100 | round) / 100)% | ≥95%  | \(if .branches.percent >=  95 then "✅" else "❌" end) |"
+            ] | join("\n")
+          ' build/coverage/coverage.json >> $GITHUB_STEP_SUMMARY

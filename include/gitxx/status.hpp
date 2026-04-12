@@ -167,8 +167,8 @@ class StatusIterator {
                                   const StatusIterator& rhs) noexcept;
 
   /// @brief Spaceship operator.
-  friend auto operator<=>(const StatusIterator& lhs,
-                          const StatusIterator& rhs) noexcept;
+  friend std::strong_ordering operator<=>(const StatusIterator& lhs,
+                                         const StatusIterator& rhs) noexcept;
 
   /// @brief Equality operator.
   // shouldn't the spaceship define this???
@@ -202,8 +202,8 @@ class StatusIterator {
     const StatusIterator& lhs, const StatusIterator& rhs) noexcept;
 
 /// @brief Spaceship operator.
-[[nodiscard]] auto operator<=>(const StatusIterator& lhs,
-                               const StatusIterator& rhs) noexcept;
+[[nodiscard]] std::strong_ordering operator<=>(const StatusIterator& lhs,
+                                              const StatusIterator& rhs) noexcept;
 
 /// @brief Equality operator.
 // shouldn't the spaceship define this???
