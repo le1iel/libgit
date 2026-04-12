@@ -38,6 +38,17 @@
         "GITXX_SANITIZERS": "OFF",
         "GITXX_INTEGRATION_TESTS": "ON"
       }
+    },
+    {
+      "name": "coverage",
+      "displayName": "Coverage",
+      "inherits": "base",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "GITXX_SANITIZERS": "OFF",
+        "GITXX_COVERAGE": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -52,6 +63,10 @@
     {
       "name": "integration",
       "configurePreset": "integration"
+    },
+    {
+      "name": "coverage",
+      "configurePreset": "coverage"
     }
   ],
   "testPresets": [
@@ -79,6 +94,13 @@
         "include": {
           "name": "^integration\\."
         }
+      }
+    },
+    {
+      "name": "coverage",
+      "configurePreset": "coverage",
+      "output": {
+        "outputOnFailure": true
       }
     }
   ]

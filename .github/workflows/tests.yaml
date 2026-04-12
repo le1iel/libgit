@@ -57,3 +57,23 @@ jobs:
         run: cmake --build --preset integration
       - name: "Test"
         run: ctest --preset integration
+
+  coverage:
+    name: "Coverage (macOS)"
+    runs-on: macos-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+      - name: "Install dependencies"
+        run: brew install libgit2 googletest llvm jq
+      - name: "CMake configure"
+        run: cmake --preset coverage
+        env:
+          CC: /opt/homebrew/opt/llvm/bin/clang
+          CXX: /opt/homebrew/opt/llvm/bin/clang++
+      - name: "CMake build"
+        run: cmake --build --preset coverage
+      - name: "Test"
+        run: ctest --preset coverage
+      - name: "Check coverage thresholds"
+        run: cmake --build --preset coverage --target coverage-check
