@@ -1,17 +1,11 @@
 #include <gtest/gtest.h>
 
 #include <filesystem>
-#include <gitxx/init.hpp>
 #include <gitxx/repository.hpp>
 
 #include "git_commands.hpp"
 
-class bt_repository : public ::testing::Test {
- public:
-  static void SetUpTestSuite() { init_libgit(); }
-
-  static void TearDownTestSuite() { deinit_libgit(); }
-};
+class bt_repository : public ::testing::Test {};
 
 TEST_F(bt_repository, open_non_repo) {
   std::filesystem::path repo_path("/tmp/random_dir");

@@ -7,5 +7,4 @@ target_sources(gitxx-lib
     repository.cpp
     status.cpp
     status_iterator.cpp
-    init.cpp
 )

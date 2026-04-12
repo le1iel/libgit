@@ -9,5 +9,4 @@ target_sources(gitxx-lib
     repository.hpp
     status.hpp
     status_options.hpp
-    init.hpp
 )
