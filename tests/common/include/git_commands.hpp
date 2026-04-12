@@ -30,6 +30,8 @@ class GitCommands {
   explicit GitCommands(
       const std::source_location location = std::source_location::current())
       : m_path(TEST_OUTPUT_DIR "/gitxx_test2") {
+    git_libgit2_init();
+
     const std::string func_name = location.function_name();
     const auto first = func_name.rfind(' ') + 1;
     const auto end = func_name.rfind("_Test");
@@ -41,7 +43,10 @@ class GitCommands {
     m_repo = openOrInit(m_path);
   }
 
-  ~GitCommands() { std::filesystem::remove_all(m_path); }
+  ~GitCommands() {
+    std::filesystem::remove_all(m_path);
+    git_libgit2_shutdown();
+  }
   GitCommands(const GitCommands&) = delete;
   GitCommands& operator=(const GitCommands&) = delete;
   GitCommands(GitCommands&&) = default;

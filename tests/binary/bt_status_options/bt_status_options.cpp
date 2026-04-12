@@ -1,17 +1,11 @@
 #include <gtest/gtest.h>
 
 #include <git_commands.hpp>
-#include <gitxx/init.hpp>
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
 
-class status_options_ut : public ::testing::Test {
- public:
-  static void SetUpTestSuite() { init_libgit(); }
-
-  static void TearDownTestSuite() { deinit_libgit(); }
-};
+class status_options_ut : public ::testing::Test {};
 
 TEST_F(status_options_ut, new_file) {
   gitxx::GitCommands internalRepo{};

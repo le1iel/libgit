@@ -1,5 +1,6 @@
 
 #include <git2/errors.h>
+#include <git2/global.h>
 #include <git2/repository.h>
 #include <git2/types.h>
 
@@ -12,7 +13,6 @@
 #include <gitxx/repository.hpp>
 #include <gitxx/status.hpp>
 #include <gitxx/status_options.hpp>
-#include <log/logger.hpp>
 #include <memory>
 #include <optional>
 #include <string>
@@ -23,8 +23,6 @@ namespace gitxx {
 template <typename Allocator>
 std::expected<BasicRepository<Allocator>, GitErrc>
 BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
-  // will need to be converted to a string at some point
-
   using char_allocator =
       typename std::allocator_traits<Allocator>::template rebind_alloc<char>;
   const char_allocator alloc{};
@@ -45,17 +43,22 @@ BasicRepository<Allocator>::Open(const std::filesystem::path path) noexcept {
 template <typename Allocator>
 BasicRepository<Allocator>::BasicRepository(std::string_view path,
                                             int* resOut) noexcept {
+  git_libgit2_init();
+
   git_repository* repo = nullptr;
 
   const int openRes = git_repository_open(&repo, path.cbegin());
 
   if (openRes != 0) {
-    logging::ERROR() << git_error_last()->message;
     *resOut = openRes;
+    git_libgit2_shutdown();
     return;
   }
 
-  m_repo = std::shared_ptr<git_repository>(repo, git_repository_free);
+  m_repo = std::shared_ptr<git_repository>(repo, [](git_repository* raw) {
+    git_repository_free(raw);
+    git_libgit2_shutdown();
+  });
 }
 
 template <typename Allocator>
