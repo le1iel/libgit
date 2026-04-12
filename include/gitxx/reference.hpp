@@ -1,8 +1,11 @@
 #ifndef INCLUDE_GITXX_REFERENCE_HPP_
 #define INCLUDE_GITXX_REFERENCE_HPP_
 #include <cstdint>
+#include <expected>
 #include <memory>
 #include <string>
+
+#include <gitxx/error.hpp>
 
 // forward declaration to hide libgit2 headers
 struct git_reference;
@@ -62,7 +65,7 @@ class Reference {
   [[nodiscard]] std::string shorthand() const noexcept;
 
   /// @brief Resolves the reference.
-  [[nodiscard]] int resolve() noexcept;
+  [[nodiscard]] std::expected<void, GitErrc> resolve() noexcept;
 
   /// @brief Returns the type of the reference.
   [[nodiscard]] ReferenceType type() const noexcept;

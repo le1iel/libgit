@@ -132,8 +132,8 @@ StatusIterator::ReferenceType StatusIterator::operator*() noexcept {
   return m_statusEntry;
 }
 
-auto operator<=>(const StatusIterator& lhs,
-                 const StatusIterator& rhs) noexcept {
+std::strong_ordering operator<=>(const StatusIterator& lhs,
+                                 const StatusIterator& rhs) noexcept {
   // Compare m_index first
   if (lhs.m_index < rhs.m_index) {
     return std::strong_ordering::less;

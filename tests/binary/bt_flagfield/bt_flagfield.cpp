@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <array>
+#include <format>
+#include <string_view>
+#include <utility>
 #include <flagfield.hpp>
 
 using gitxx::FlagField;
@@ -107,6 +111,36 @@ TEST(set, multiple) {
   EXPECT_TRUE(flags[TestFlags::Flag1]);
   EXPECT_FALSE(flags.test(TestFlags::Flag2));
   EXPECT_TRUE(flags.test(TestFlags::Flag3));
+}
+
+template <>
+struct gitxx::FlagFieldEnumValues<TestFlags> {
+  static constexpr std::array<std::pair<TestFlags, std::string_view>, 3> values = {{
+    {TestFlags::Flag1, "Flag1"},
+    {TestFlags::Flag2, "Flag2"},
+    {TestFlags::Flag3, "Flag3"},
+  }};
+};
+
+TEST(format, no_flags_set) {
+  FlagField<TestFlags> flags(0);
+  EXPECT_EQ(std::format("{}", flags), "[]");
+}
+
+TEST(format, single_flag) {
+  FlagField<TestFlags> flags{TestFlags::Flag2};
+  EXPECT_EQ(std::format("{}", flags), "[Flag2]");
+}
+
+TEST(format, multiple_flags) {
+  FlagField<TestFlags> flags{TestFlags::Flag1, TestFlags::Flag3};
+  EXPECT_EQ(std::format("{}", flags), "[Flag1, Flag3]");
+}
+
+TEST(format, fallback_no_specialization) {
+  FlagField<OldStyle> flags{OldStyle::Flag1};
+  // No FlagFieldEnumValues<OldStyle> specialization — falls back to bitset string
+  EXPECT_EQ(std::format("{}", flags), "[" + flags.to_string() + "]");
 }
 
 int main(int argc, char** argv) {

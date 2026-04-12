@@ -227,6 +227,249 @@ TEST_F(status_options_ut, ignored_file) {
   // Check for ignored status
 }
 
+class status_iterator_ut : public ::testing::Test {};
+
+TEST_F(status_iterator_ut, pre_increment_advances) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin();
+  ++it;
+  EXPECT_EQ(status.end() - it, 2U);
+}
+
+TEST_F(status_iterator_ut, post_increment_returns_previous_position) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin();
+  auto prev = it++;
+  EXPECT_EQ(status.end() - prev, 3U);
+  EXPECT_EQ(status.end() - it, 2U);
+}
+
+TEST_F(status_iterator_ut, pre_decrement_moves_back) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin() + 2;
+  --it;
+  EXPECT_EQ(status.end() - it, 2U);
+}
+
+TEST_F(status_iterator_ut, pre_decrement_at_begin_stays) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin();
+  --it;
+  EXPECT_EQ(status.end() - it, 3U);
+}
+
+TEST_F(status_iterator_ut, post_decrement_returns_previous_position) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin() + 2;
+  auto prev = it--;
+  EXPECT_EQ(status.end() - prev, 1U);
+  EXPECT_EQ(status.end() - it, 2U);
+}
+
+TEST_F(status_iterator_ut, operator_plus_advances_by_n) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin() + 2;
+  EXPECT_EQ(status.end() - it, 1U);
+}
+
+TEST_F(status_iterator_ut, operator_plus_clamped_to_end) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin() + 100;
+  EXPECT_EQ(status.end() - it, 0U);
+}
+
+TEST_F(status_iterator_ut, operator_plus_equals_advances) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin();
+  it += 2;
+  EXPECT_EQ(status.end() - it, 1U);
+}
+
+TEST_F(status_iterator_ut, operator_minus_retreats_by_n) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = (status.begin() + 2) - 1;
+  EXPECT_EQ(status.end() - it, 2U);
+}
+
+TEST_F(status_iterator_ut, operator_minus_clamped_to_begin) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin() - 100;
+  EXPECT_EQ(status.end() - it, 3U);
+}
+
+TEST_F(status_iterator_ut, operator_minus_equals_retreats) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  auto it = status.begin() + 2;
+  it -= 1;
+  EXPECT_EQ(status.end() - it, 2U);
+}
+
+TEST_F(status_iterator_ut, spaceship_begin_less_than_end) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  EXPECT_LT(status.begin(), status.end());
+}
+
+TEST_F(status_iterator_ut, friend_sum_gives_index_sum) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+  ASSERT_TRUE(repo.createFile("a.txt", "a"));
+  ASSERT_TRUE(repo.createFile("b.txt", "b"));
+  ASSERT_TRUE(repo.createFile("c.txt", "c"));
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+  auto statusRes = repoRes->status(gitxx::StatusOptions{
+      .flags = gitxx::FlagField<gitxx::StatusFlags>{
+          gitxx::StatusFlags::IncludeUntracked}});
+  ASSERT_TRUE(statusRes.has_value());
+  const auto& status = statusRes.value();
+
+  const auto it1 = status.begin() + 1;
+  const auto it2 = status.begin() + 2;
+  EXPECT_EQ(it1 + it2, 3U);
+}
+
 TEST_F(status_options_ut, conflicting_file) {
   gitxx::GitCommands internalRepo{};
 

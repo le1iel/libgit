@@ -34,3 +34,14 @@ TEST(bt_error_category, make_error_code_value) {
   EXPECT_EQ(error.value(), static_cast<int>(GitErrc::not_found));
   EXPECT_STREQ(error.category().name(), gitErrcCategory.name());
 }
+
+TEST(bt_error_formatter, formats_to_message) {
+  std::string formatted = std::format("{}", GitErrc::not_found);
+  std::string expected = make_error_code(GitErrc::not_found).message();
+  EXPECT_EQ(formatted, expected);
+}
+
+TEST(bt_error_formatter, formatted_non_empty) {
+  std::string formatted = std::format("{}", GitErrc::not_found);
+  EXPECT_FALSE(formatted.empty());
+}

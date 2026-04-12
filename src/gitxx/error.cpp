@@ -84,3 +84,9 @@ std::string GitErrcCategory::message(int error_code) const {
 std::error_code make_error_code(GitErrc error) {
   return {static_cast<int>(error), gitErrcCategory};
 }
+
+std::format_context::iterator std::formatter<GitErrc>::format(
+    GitErrc errc, std::format_context& ctx) const {
+  return std::formatter<std::string>::format(
+      make_error_code(errc).message(), ctx);
+}
