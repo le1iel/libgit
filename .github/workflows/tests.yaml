@@ -77,3 +77,18 @@ jobs:
         run: ctest --preset coverage
       - name: "Check coverage thresholds"
         run: cmake --build --preset coverage --target coverage-check
+      - name: "Publish coverage summary"
+        if: always()
+        run: |
+          jq -r '
+            .data[0].totals |
+            [
+              "## Coverage Report",
+              "",
+              "| Metric | Covered | Total | Percentage | Threshold | Status |",
+              "|--------|---------|-------|------------|-----------|--------|",
+              "| Lines    | \(.lines.covered)    | \(.lines.count)    | \(.lines.percent)%                                        | 100%  | \(if .lines.percent    == 100 then "✅" else "❌" end) |",
+              "| Regions  | \(.regions.covered)  | \(.regions.count)  | \(.regions.percent)%                                      | 100%  | \(if .regions.percent  == 100 then "✅" else "❌" end) |",
+              "| Branches | \(.branches.covered) | \(.branches.count) | \((.branches.percent * 100 | round) / 100)% | ≥95%  | \(if .branches.percent >=  95 then "✅" else "❌" end) |"
+            ] | join("\n")
+          ' build/coverage/coverage.json >> $GITHUB_STEP_SUMMARY
