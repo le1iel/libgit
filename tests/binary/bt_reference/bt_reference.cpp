@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <string>
 #include <gitxx/reference.hpp>
 #include <gitxx/repository.hpp>
 
@@ -125,6 +126,30 @@ TEST_F(bt_reference, name_unchanged_after_resolve) {
   ASSERT_TRUE(head->resolve().has_value());
 
   EXPECT_EQ(head->name(), name_before);
+}
+
+TEST_F(bt_reference, resolve_fails_on_unborn_symbolic_ref) {
+  const std::string test_dir =
+      std::string(TEST_OUTPUT_DIR) + "/gitxx_unborn_head_resolve_test";
+
+  git_libgit2_init();
+  git_repository* raw_repo = nullptr;
+  ASSERT_EQ(git_repository_init(&raw_repo, test_dir.c_str(), /*is_bare=*/0), 0);
+
+  git_reference* raw_ref = nullptr;
+  ASSERT_EQ(git_reference_lookup(&raw_ref, raw_repo, "HEAD"), 0);
+
+  bool result_has_value{};
+  {
+    gitxx::Reference ref{raw_ref};
+    result_has_value = ref.resolve().has_value();
+    // ref destructs here, freeing raw_ref before the repo is freed
+  }
+
+  git_repository_free(raw_repo);
+  git_libgit2_shutdown();
+
+  EXPECT_FALSE(result_has_value);
 }
 
 TEST_F(bt_reference, name_changes_after_branch_switch) {

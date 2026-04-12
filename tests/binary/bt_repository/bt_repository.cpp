@@ -40,6 +40,17 @@ TEST_F(bt_repository, path) {
       std::filesystem::equivalent(repoRes->path(), (repo.path() / ".git")));
 }
 
+TEST_F(bt_repository, path_moved_from) {
+  gitxx::GitCommands repo{};
+  ASSERT_TRUE(repo.makeEmptyCommit("1"));
+
+  auto repoRes = gitxx::Repository::Open(repo.path());
+  ASSERT_TRUE(repoRes.has_value());
+
+  auto moved = std::move(*repoRes);
+  EXPECT_EQ(repoRes->path(), "");
+}
+
 TEST_F(bt_repository, open_error_code) {
   std::filesystem::path repo_path("/tmp/random_dir_for_error_test");
   std::filesystem::create_directories(repo_path);
