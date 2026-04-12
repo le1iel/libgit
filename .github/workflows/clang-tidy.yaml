@@ -1,13 +1,6 @@
 name: Clang-Tidy
 
 on:
-  push:
-    paths:
-      - "src/**"
-      - "include/**"
-      - "tests/**"
-      - ".clang-tidy"
-      - ".github/workflows/clang-tidy.yaml"
   pull_request:
     paths:
       - "src/**"
@@ -30,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy ninja-build
+          sudo apt-get install -y clang clang-tidy ninja-build
 
       - name: Cache FetchContent dependencies
         uses: actions/cache@v5
@@ -40,6 +33,9 @@ jobs:
 
       - name: Configure CMake
         run: cmake --preset release
+        env:
+          CC: clang
+          CXX: clang++
 
       - name: Run clang-tidy
         run: |
