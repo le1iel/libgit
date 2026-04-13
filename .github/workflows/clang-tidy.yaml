@@ -1,0 +1,45 @@
+name: Clang-Tidy
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "include/**"
+      - ".clang-tidy"
+      - ".github/workflows/clang-tidy.yaml"
+
+jobs:
+  clang-tidy:
+    name: Run clang-tidy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-18 clang-tidy-18 ninja-build
+
+      - name: Cache FetchContent dependencies
+        uses: actions/cache@v5
+        with:
+          path: build/release/_deps
+          key: Linux-fetchcontent-libgit2-v1.9.1
+
+      - name: Configure CMake
+        run: cmake --preset release
+        env:
+          CC: clang-18
+          CXX: clang++-18
+
+      - name: Build
+        run: cmake --build --preset release
+
+      - name: Run clang-tidy
+        run: |
+          find src include -type f \( -name "*.cpp" -o -name "*.cc" -o -name "*.cxx" -o -name "*.c" \) -print0 | \
+          xargs -0 -P$(nproc) clang-tidy-18 -p build/release --config-file=.clang-tidy

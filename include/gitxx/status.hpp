@@ -4,13 +4,15 @@
 #include <cstddef>
 #include <cstdint>
 #include <flagfield.hpp>
-#include <gitxx/diff_delta.hpp>
-#include <gitxx/repository.hpp>
-#include <gitxx/status_options.hpp>
 #include <iterator>
 #include <memory>
 #include <optional>
 #include <string_view>
+#include <compare>
+
+#include <gitxx/diff_delta.hpp>
+#include <gitxx/repository.hpp>
+#include <gitxx/status_options.hpp>
 
 // forward declaration to hide libgit2 headers
 struct git_status_list;
@@ -134,10 +136,10 @@ class StatusIterator {
   /// @brief Post-increment operator.
   StatusIterator operator++(int) noexcept;
 
-  /// @brief Pre-increment operator.
+  /// @brief Pre-decrement operator.
   StatusIterator& operator--() noexcept;
 
-  /// @brief Post-increment operator.
+  /// @brief Post-decrement operator.
   StatusIterator operator--(int) noexcept;
 
   /// @brief Subscript operator.
@@ -185,7 +187,7 @@ class StatusIterator {
   void updateStatusEntry() noexcept;
 
   /// @brief The index of the current status entry.
-  std::size_t m_index;
+  std::size_t m_index {0U};
 
   /// @brief The status list.
   std::shared_ptr<git_status_list> m_statusList;

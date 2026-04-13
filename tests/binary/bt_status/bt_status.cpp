@@ -97,7 +97,7 @@ TEST_F(status_options_ut, 2_new_file_untracked) {
 TEST_F(status_options_ut, modified_file) {
   gitxx::GitCommands internal_repo{};
 
-  std::string modified_file = "test.txt";
+  const std::string modified_file = "test.txt";
 
   ASSERT_TRUE(internal_repo.createFile(modified_file, "content"));
   ASSERT_TRUE(internal_repo.add(modified_file));

@@ -5,7 +5,7 @@
 
 TEST(stream, string) {
   gitxx::ObjectId::Tag id_data{'a'};
-  gitxx::ObjectId object_id{id_data};
+  const gitxx::ObjectId object_id{id_data};
 
   std::stringstream stream{};
   stream << object_id;
@@ -15,8 +15,8 @@ TEST(stream, string) {
 TEST(compare, eq) {
   gitxx::ObjectId::Tag id_data{'a'};
 
-  gitxx::ObjectId id1{id_data};
-  gitxx::ObjectId id2{id_data};
+  const gitxx::ObjectId id1{id_data};
+  const gitxx::ObjectId id2{id_data};
 
   EXPECT_EQ(id1, id2);
 }
@@ -25,14 +25,14 @@ TEST(compare, neq) {
   gitxx::ObjectId::Tag id_data1{'a'};
   gitxx::ObjectId::Tag id_data2{'b'};
 
-  gitxx::ObjectId id1{id_data1};
-  gitxx::ObjectId id2{id_data2};
+  const gitxx::ObjectId id1{id_data1};
+  const gitxx::ObjectId id2{id_data2};
 
   EXPECT_NE(id1, id2);
 }
 
 TEST(id, full_length) {
   gitxx::ObjectId::Tag id_data{};
-  gitxx::ObjectId object_id{id_data};
+  const gitxx::ObjectId object_id{id_data};
   EXPECT_EQ(object_id.id().size(), TAG_LENGTH);
 }

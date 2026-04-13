@@ -25,7 +25,7 @@ TEST_F(status_options_ut, new_file) {
 TEST_F(status_options_ut, modified_file) {
   gitxx::GitCommands internalRepo{};
 
-  std::string modified_file = "test.txt";
+  const std::string modified_file = "test.txt";
 
   ASSERT_TRUE(internalRepo.createFile(modified_file, "content"));
   ASSERT_TRUE(internalRepo.add(modified_file));

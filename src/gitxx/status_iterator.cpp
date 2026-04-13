@@ -2,6 +2,7 @@
 #include <git2/status.h>
 
 #include <algorithm>
+#include <compare>
 #include <converters/diff_delta.hpp>
 #include <gitxx/diff_delta.hpp>
 #include <gitxx/status.hpp>
@@ -11,8 +12,7 @@
 namespace gitxx {
 
 StatusIterator::StatusIterator(const Status& status)
-    : m_index(0U),
-      m_statusList(status.m_statusList),
+    : m_statusList(status.m_statusList),
       m_statusCount(
           m_statusList ? git_status_list_entrycount(m_statusList.get()) : 0U) {
   updateStatusEntry();

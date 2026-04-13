@@ -1,12 +1,15 @@
 #include <gtest/gtest.h>
 
+#include <system_error>
+#include <string>
+
 #include <gitxx/error.hpp>
 
 class bt_error : public ::testing::TestWithParam<GitErrc> {};
 
 TEST_P(bt_error, message) {
-  std::error_code error_code = GetParam();
-  std::string message = error_code.message();
+  const std::error_code error_code = GetParam();
+  const std::string message = error_code.message();
   EXPECT_FALSE(message.empty());
 }
 

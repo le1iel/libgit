@@ -2,8 +2,6 @@
 #include <git2/types.h>
 
 #include <converters/error.hpp>
-#include <expected>
-#include <gitxx/error.hpp>
 #include <gitxx/reference.hpp>
 #include <memory>
 #include <string>
