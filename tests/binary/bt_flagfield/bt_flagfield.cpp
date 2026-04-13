@@ -22,14 +22,14 @@ TEST(constructor, from_old_style) {
   auto data = static_cast<OldStyle>(static_cast<unsigned int>(OldStyle::Flag1) |
                                     static_cast<unsigned int>(OldStyle::Flag2));
 
-  FlagField<TestFlags> converted{static_cast<std::uint32_t>(data)};
+  const FlagField<TestFlags> converted{static_cast<std::uint32_t>(data)};
   EXPECT_TRUE(converted.test(TestFlags::Flag1));
   EXPECT_TRUE(converted.test(TestFlags::Flag2));
   EXPECT_FALSE(converted.test(TestFlags::Flag3));
 }
 
 TEST(constructor, from_new_style) {
-  FlagField<TestFlags> converted{TestFlags::Flag1};
+  const FlagField<TestFlags> converted{TestFlags::Flag1};
   EXPECT_TRUE(converted.test(TestFlags::Flag1));
   EXPECT_FALSE(converted.test(TestFlags::Flag2));
   EXPECT_FALSE(converted.test(TestFlags::Flag3));
@@ -81,12 +81,12 @@ TEST(indexing, write_multiple) {
 }
 
 TEST(empty, no_flags) {
-  FlagField<TestFlags> flags(0);
+  const FlagField<TestFlags> flags(0);
   EXPECT_TRUE(flags.none());
 }
 
 TEST(empty, with_flags) {
-  FlagField<TestFlags> flags(1);
+  const FlagField<TestFlags> flags(1);
   EXPECT_FALSE(flags.none());
 }
 

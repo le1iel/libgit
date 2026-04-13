@@ -8,14 +8,14 @@
 class bt_repository : public ::testing::Test {};
 
 TEST_F(bt_repository, open_non_repo) {
-  std::filesystem::path repo_path("/tmp/random_dir");
+  const std::filesystem::path repo_path("/tmp/random_dir");
   std::filesystem::create_directories(repo_path);
   EXPECT_FALSE(gitxx::Repository::Open(repo_path));
   std::filesystem::remove(repo_path);
 }
 
 TEST_F(bt_repository, open_success) {
-  gitxx::GitCommands internalRepo{};
+  const gitxx::GitCommands internalRepo{};
   EXPECT_TRUE(gitxx::Repository::Open(internalRepo.path()));
 }
 
@@ -52,7 +52,7 @@ TEST_F(bt_repository, path_moved_from) {
 }
 
 TEST_F(bt_repository, open_error_code) {
-  std::filesystem::path repo_path("/tmp/random_dir_for_error_test");
+  const std::filesystem::path repo_path("/tmp/random_dir_for_error_test");
   std::filesystem::create_directories(repo_path);
 
   auto res = gitxx::Repository::Open(repo_path);
@@ -64,7 +64,7 @@ TEST_F(bt_repository, open_error_code) {
 }
 
 TEST_F(bt_repository, head_unborn) {
-  gitxx::GitCommands repo{};
+  const gitxx::GitCommands repo{};
 
   auto repoRes = gitxx::Repository::Open(repo.path());
   ASSERT_TRUE(repoRes.has_value());

@@ -1,5 +1,4 @@
 
-#include <git2/errors.h>
 #include <git2/global.h>
 #include <git2/repository.h>
 #include <git2/types.h>
