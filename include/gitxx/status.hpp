@@ -136,10 +136,10 @@ class StatusIterator {
   /// @brief Post-increment operator.
   StatusIterator operator++(int) noexcept;
 
-  /// @brief Pre-increment operator.
+  /// @brief Pre-decrement operator.
   StatusIterator& operator--() noexcept;
 
-  /// @brief Post-increment operator.
+  /// @brief Post-decrement operator.
   StatusIterator operator--(int) noexcept;
 
   /// @brief Subscript operator.

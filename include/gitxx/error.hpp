@@ -94,7 +94,7 @@ struct is_error_code_enum<GitErrc> : std::true_type {};
 
 }  // namespace std
 
-std::error_code make_error_code(GitErrc);
+std::error_code make_error_code(GitErrc error);
 
 const GitErrcCategory gitErrcCategory{};
 
