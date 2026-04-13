@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang clang-tidy ninja-build
+          sudo apt-get install -y clang-18 clang-tidy-18 ninja-build
 
       - name: Cache FetchContent dependencies
         uses: actions/cache@v5
@@ -33,12 +33,13 @@ jobs:
       - name: Configure CMake
         run: cmake --preset release
         env:
-          CC: clang
-          CXX: clang++
+          CC: clang-18
+          CXX: clang++-18
 
       - name: Build
         run: cmake --build --preset release
+
       - name: Run clang-tidy
         run: |
           find src include -type f \( -name "*.cpp" -o -name "*.cc" -o -name "*.cxx" -o -name "*.c" \) -print0 | \
-          xargs -0 -P$(nproc) clang-tidy -p build/release --config-file=.clang-tidy
+          xargs -0 -P$(nproc) clang-tidy-18 -p build/release --config-file=.clang-tidy
